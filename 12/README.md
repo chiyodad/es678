@@ -1,9 +1,7 @@
-12. Callable entities in ECMAScript 6
+# 12. ECMAScript6 호출 할수 있는 개체들
+이 챕터는 너가가 ES6안에서 호출 할 수 있는 개체(function calls, method calls, 등)를 어떻게 적절하게 사용하는 방법에 충고를 준다.
 
-This chapter gives advice on how to properly use entities you can call (via function calls, method calls, etc.) in ES6.
-
-Sections in this chapter:
-
+이 챕터의 섹션: 
 An overview of callable entities in ES6
 Ways of calling in ES6
 Recommendations for using callable entities
@@ -11,27 +9,29 @@ ES6 callable entities in detail
 Dispatched and direct method calls in ES5 and ES6
 The name property of functions
 FAQ: callable entities
-12.1 An overview of callable entities in ES6
-In ES5, a single construct, the (traditional) function, played three roles:
 
-Real (non-method) function
-Method
-Constructor
-In ES6, there is more specialization. The three duties are now handled as follows1 (a class definition is either one of the two constructs for creating classes – a class declaration or a class expression):
+## 12.1 ES6안에서 호출 할 수 있는 개체의 개요
+ES5에서는, 싱글 생성자, 전통적이 함수의 세가지 역할:
+진짜(메소드가 아닌) 함수 
+메소드
+생성자
 
-Real (non-method) function:
-Arrow functions (only have an expression form)
-Traditional functions (created via function expressions and function declarations)
-Generator functions (created via generator function expressions and generator function declarations)
-Method:
-Methods (created by method definitions in object literals and class definitions)
-Generator methods (created by generator method definitions in object literals and class definitions)
-Constructor:
-Classes (created via class definitions)
-Note that I distinguish:
+ES6안에서 더 특화되었다. 이 세개의 의무들은 아래처럼 처리되어있다. (클래스 정의는 클래스 생성을 위한 두개의 생성자중 하나 입니다.- 클래스 선언 또는 클래스 표현식)
 
-The entity: e.g. traditional function
-The syntax that creates the entity: e.g. function expression and function declaration
+* 진짜(메스드가 아닌) 함수:
+** 애로우 함수 (오직 표현식형태만 갖는다.)
+** 전통적인 함수 (함수 표현식이나 함수 선언식을 통해 생성된다.)
+** 제너레이터 함수 (제너레이터 함수 표현식이나 제너레이터 함수 선언식을 통해 생성된다.)
+* 메소드:
+** 메소드들 (오브젝트 안에서 메소드 정의나 클래스 정의에 의해 생성)
+** 제너레이터 메소드 (오브젝트 리터럴안에 메소드 정의나 클래스 정의에 의해 생성)
+* 생성자:
+** 클래스 (클래스 정의를 통해 생성)
+
+나는 아래와 같이 구분합니다.
+개체: 예 전통적인 함수
+개체를 생성하는 신택스: 예 함수표현식, 함수 선언
+
 Even though their behaviors differ (as explained later), all of these entities are functions. For example:
 
 > typeof (() => {}) // arrow function
