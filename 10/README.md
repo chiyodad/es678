@@ -1,7 +1,7 @@
 ----
 #Destructuring
 
-ECMAScript 6 supports destructuring, a convenient way to extract values from data stored in (possibly nested) objects and Arrays. This chapter describes how it works and gives examples of its usefulness.
+ECMAScript6 에서는 객체나 배열(possibly nested)의 값을 추출하기위한 편리한 방법으로 해체(destructuring)를 지원한다. 이번 챕터에서는 유용한 예제를 통해 해체가 어떻게 동작하는지 설명할 것이다.
 
 10.1 Overview
 In locations that receive data (such as the left-hand side of an assignment), destructuring lets you use patterns to extract parts of that data.
