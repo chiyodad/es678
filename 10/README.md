@@ -7,7 +7,7 @@ ECMAScript6 에서는 객체나 배열(possibly nested)의 값을 추출하기�
 
 ##10.1.1 객체 해체(Object destructuring)
 객체 해체하기:
-`
+```
 const obj = { first: 'Jane', last: 'Doe' };
 const {first: f, last: l} = obj;
 // f = 'Jane'; l = 'Doe'
@@ -15,33 +15,33 @@ const {first: f, last: l} = obj;
 // {prop} is short for {prop: prop}
 const {first, last} = obj;
 // first = 'Jane'; last = 'Doe'
-`    
+```    
     
 Destructuring helps with processing return values:
-`
+```
 const obj = { foo: 123 };
 
 const {writable, configurable} = Object.getOwnPropertyDescriptor(obj, 'foo');
 
 console.log(writable, configurable); // true true
-`
+```
 ##10.1.2 배열해체(Array destructuring)
 
 모든 이터러블은 배열 해체가 가능하다.
-`
+```
 const iterable = ['a', 'b'];
 const [x, y] = iterable;
     // x = 'a'; y = 'b'
-`
+```
 Destructuring helps with processing return values:
 
-`
+```
 const [all, year, month, day] = /^(\d\d\d\d)-(\d\d)-(\d\d)$/.exec('2999-12-31');
-`
+```
 
 ##10.1.3 해체는 어디에서 쓰이는가?
 해체는 다음과 같은 곳에서 쓰일 수 있다:
-
+```
 // 변수 선언:
 const [x] = ['a'];
 let [x] = ['a'];
@@ -54,10 +54,10 @@ var [x] = ['a'];
 `
 function f([x]) { ··· }
 f(['a']);
-`
+```
 해체는 for-of 루프에서도 동작한다:
 
-`
+```
 const arr1 = ['a', 'b'];
 for (const [index, element] of arr1.entries()) {
     console.log(index, element);
@@ -77,43 +77,44 @@ for (const {name, age} of arr2) {
 // 결과:
 // Jane 41
 // John 40
-`
+```
 
 ##10.2 배경지식: 데이터 생성 vs 데이터 추출
 10.2 Background: Constructing data versus extracting data
 
 해체가 무엇인지 완벽히 이해하기 위해서 먼저 broader context를 알아보자. 자바스크립트는 데이터생성을 위한 operations을 가진다.
 To fully understand what destructuring is, let’s first examine its broader context. JavaScript has operations for constructing data:
-
+```
 const obj = {};
 obj.first = 'Jane';
 obj.last = 'Doe';
-
+```
 그리고 데이터 추출을 위한 operations를 가진다.
 And it has operations for extracting data:
-
+```
 const f = obj.first;
 const l = obj.last;
-
+```
 우리가 constructing에 사용해오던 똑같은 문법임을 주목하라.
 Note that we are using the same syntax that we have used for constructing.
 
 constructing 을 위한 더 나은 문법이 있다. - 객체 리터럴
 There is nicer syntax for constructing – an object literal:
-
+```
 const obj = { first: 'Jane', last: 'Doe' };
-
+```
 ECMAScript6의 해체는 데이터 추출을 위한 동일한 문법을 가능케한다. 
 Destructuring in ECMAScript 6 enables the same syntax for extracting data, where it is called an object pattern:
-
+```
 const { first: f, last: l } = obj;
+```
 Just as the object literal lets us create multiple properties at the same time, the object pattern lets us extract multiple properties at the same time.
 
 패턴을 이용하면 배열을 해체하는 것도 가능하다.
 You can also destructure Arrays via patterns:
-
+```
 const [x, y] = ['a', 'b']; // x = 'a'; y = 'b'
-
+```
 
 ##10.3 패턴(Patterns)
 
@@ -131,27 +132,32 @@ The parts of an object pattern are properties, the property values are again pat
 Array pattern. For example: [ «pattern», «pattern» ]
 The parts of an Array pattern are elements, the elements are again patterns (recursively).
 That means that you can nest patterns, arbitrarily deeply:
-
+```
 const obj = { a: [{ foo: 123, bar: 'abc' }, {}], b: true };
 const { a: [{foo: f}] } = obj; // f = 123
-10.3.1 Pick what you need
+```
+
+##10.3.1 Pick what you need
 If you destructure an object, you mention only those properties that you are interested in:
-
+```
 const { x: x } = { x: 7, y: 3 }; // x = 7
+```
 If you destructure an Array, you can choose to only extract a prefix:
-
+```
 const [x,y] = ['a', 'b', 'c']; // x='a'; y='b';
-10.4 How do patterns access the innards of values?
+```
+##10.4 How do patterns access the innards of values?
 In an assignment pattern = someValue, how does the pattern access what’s inside someValue?
 
-10.4.1 Object patterns coerce values to objects
+##10.4.1 Object patterns coerce values to objects
 The object pattern coerces destructuring sources to objects before accessing properties. That means that it works with primitive values:
-
+```
 const {length : len} = 'abc'; // len = 3
 const {toString: s} = 123; // s = Number.prototype.toString
-10.4.1.1 Failing to object-destructure a value
+```
+##10.4.1.1 Failing to object-destructure a value
 The coercion to object is not performed via Object(), but via the internal operation ToObject(). Object() never fails:
-
+```
 > typeof Object('abc')
 'object'
 > var obj = {};
@@ -161,18 +167,21 @@ true
 {}
 > Object(null)
 {}
+```
 ToObject() throws a TypeError if it encounters undefined or null. Therefore, the following destructurings fail, even before destructuring accesses any properties:
-
+```
 const { prop: x } = undefined; // TypeError
 const { prop: y } = null; // TypeError
+```
 위 결과로써, 값이 객체에 강제되는지 여부를 알기위해 빈 객체 패턴{}을 사용 할 수 있음을 알 수 있다.
 As a consequence, you can use the empty object pattern {} to check whether a value is coercible to an object. As we have seen, only undefined and null aren’t:
-
+```
 ({} = [true, false]); // OK, 배열은 객체에 coercible 하다.
 ({} = 'abc'); // OK, 문자열은 객체에 coercible 하다.
 
 ({} = undefined); // TypeError
 ({} = null); // TypeError
+```
 자바스크립트에서 문(statements)은 중괄호로 시작되면 안되기 때문에 표현식을 둘러싸고 있는 소괄호가 필요하다.
 The parentheses around the expressions are necessary because statements must not begin with curly braces in JavaScript.
 
@@ -182,31 +191,37 @@ Array destructuring uses an iterator to get to the elements of a source. Therefo
 
 문자열은 이터러블이다 : 
 Strings are iterable:
-
+```
 const [x,...y] = 'abc'; // x='a'; y=['b', 'c']
-
+```
 
 Don’t forget that the iterator over strings returns code points (“Unicode characters”, 21 bits), not code units (“JavaScript characters”, 16 bits). (For more information on Unicode, consult the chapter “Chapter 24. Unicode and JavaScript” in “Speaking JavaScript”.) For example:
-
+```
 const [x,y,z] = 'a\uD83D\uDCA9c'; // x='a'; y='\uD83D\uDCA9'; z='c'
+```
 You can’t access the elements of a Set via indices, but you can do so via an iterator. Therefore, Array destructuring works for Sets:
 
+```
 const [x,y] = new Set(['a', 'b']); // x='a'; y='b’;
+```
 The Set iterator always returns elements in the order in which they were inserted, which is why the result of the previous destructuring is always the same.
 
 Infinite sequences. Destructuring also works for iterators over infinite sequences. The generator function allNaturalNumbers() returns an iterator that yields 0, 1, 2, etc.
-
+```
 function* allNaturalNumbers() {
   for (let n = 0; ; n++) {
     yield n;
   }
 }
+```
 The following destructuring extracts the first three elements of that infinite sequence.
-
+```
 const [x, y, z] = allNaturalNumbers(); // x=0; y=1; z=2
+```
+
 ##10.4.2.1 Failing to Array-destructure a value
 A value is iterable if it has a method whose key is Symbol.iterator that returns an object. Array-destructuring throws a TypeError if the value to be destructured isn’t iterable:
-
+```
 let x;
 [x] = [true, false]; // OK, Arrays are iterable
 [x] = 'abc'; // OK, strings are iterable
@@ -215,17 +230,20 @@ let x;
 [x] = {}; // TypeError, empty objecdts are not iterable
 [x] = undefined; // TypeError, not iterable
 [x] = null; // TypeError, not iterable
+```
 The TypeError is thrown even before accessing elements of the iterable, which means that you can use the empty Array pattern [] to check whether a value is iterable:
-
+```
 [] = {}; // TypeError, empty objects are not iterable
 [] = undefined; // TypeError, not iterable
 [] = null; // TypeError, not iterable
+```
 
 ##10.5 If a part has no match
 Similarly to how JavaScript handles non-existent properties and Array elements, destructuring fails silently if the target mentions a part that doesn’t exist in the source: the interior of the part is matched against undefined. If the interior is a variable that means that the variable is set to undefined:
-
+```
 const [x] = []; // x = undefined
 const {prop:y} = {}; // y = undefined
+```
 Remember that object patterns and Array patterns throw a TypeError if they are matched against undefined.
 
 ##10.5.1 Default values
@@ -236,32 +254,38 @@ undefined (otherwise)
 That is, providing a default value is optional.
 
 Let’s look at an example. In the following destructuring, the element at index 0 has no match on the right-hand side. Therefore, destructuring continues by matching x against 3, which leads to x being set to 3.
-
+```
 const [x=3, y] = []; // x = 3; y = undefined
+```
 You can also use default values in object patterns:
-
+```
 const {foo: x=3, bar: y} = {}; // x = 3; y = undefined
+```
 ##10.5.1.1 undefined triggers default values
 Default values are also used if a part does have a match and that match is undefined:
-
+```
 const [x=1] = [undefined]; // x = 1
 const {prop: y=2} = {prop: undefined}; // y = 2
+```
 The rationale for this behavior is explained in the next chapter, in the section on parameter default values.
 
 ##10.5.1.2 Default values are computed on demand
 The default values themselves are only computed when they are needed. In other words, this destructuring:
-
+```
 const {prop: y=someFunc()} = someValue;
-is equivalent to:
-
+```
+위 코드는 아래와 같다.
+```
 let y;
 if (someValue.prop === undefined) {
     y = someFunc();
 } else {
     y = someValue.prop;
 }
-You can observe that if you use console.log():
+```
 
+You can observe that if you use console.log():
+```
 > function log(x) { console.log(x); return 'YES' }
 
 > const [a=log('hello')] = [];
@@ -272,68 +296,89 @@ hello
 > const [b=log('hello')] = [123];
 > b
 123
+```
 In the second destructuring, the default value is not triggered and log() is not called.
 
 ##10.5.1.3 Default values can refer to other variables in the pattern
 A default value can refer to any variable, including another variable in the same pattern:
-
+```
 const [x=3, y=x] = [];     // x=3; y=3
 const [x=3, y=x] = [7];    // x=7; y=7
 const [x=3, y=x] = [7, 2]; // x=7; y=2
+```
 However, order matters: the variables x and y are declared from left to right and produce a ReferenceError if they are accessed before their declaration:
-
+```
 const [x=y, y=3] = []; // ReferenceError
+```
+
 ##10.5.1.4 Default values for patterns
 So far we have only seen default values for variables, but you can also associate them with patterns:
-
+```
 const [{ prop: x } = {}] = [];
+```
 What does this mean? Recall the rule for default values:
 
 If the part has no match in the source, destructuring continues with the default value […].
 
 The element at index 0 has no match, which is why destructuring continues with:
-
+```
 const { prop: x } = {}; // x = undefined
+```
 You can more easily see why things work this way if you replace the pattern { prop: x } with the variable pattern:
-
+```
 const [pattern = {}] = [];
+```
 More complex default values. Let’s further explore default values for patterns. In the following example, we assign a value to x via the default value { prop: 123 }:
-
+```
 const [{ prop: x } = { prop: 123 }] = [];
+```
+
 Because the Array element at index 0 has no match on the right-hand side, destructuring continues as follows and x is set to 123.
-
+```
 const { prop: x } = { prop: 123 };  // x = 123
+```
+
 However, x is not assigned a value in this manner if the right-hand side has an element at index 0, because then the default value isn’t triggered.
-
+```
 const [{ prop: x } = { prop: 123 }] = [{}];
+```
 In this case, destructuring continues with:
-
+```
 const { prop: x } = {}; // x = undefined
+```
 Thus, if you want x to be 123 if either the object or the property is missing, you need to specify a default value for x itself:
-
+```
 const [{ prop: x=123 } = {}] = [{}];
+```
 Here, destructuring continues as follows, independently of whether the right-hand side is [{}] or [].
-
+```
 const { prop: x=123 } = {}; // x = 123
+```
+
 Still confused?
 A later section explains destructuring from a different angle, as an algorithm. That may give you additional insight.
 
 ##10.6 More object destructuring features
 ##10.6.1 Property value shorthands
 Property value shorthands are a feature of object literals: If the value of a property is provided via a variable whose name is the same as the key, you can omit the key. This works for destructuring, too:
-
+```
 const { x, y } = { x: 11, y: 8 }; // x = 11; y = 8
+```
+
 This declaration is equivalent to:
 
 const { x: x, y: y } = { x: 11, y: 8 };
 You can also combine property value shorthands with default values:
-
+```
 const { x, y = 1 } = {}; // x = undefined; y = 1
+```
+
 ##10.6.2 Computed property keys
 Computed property keys are another object literal feature that also works for destructuring: You can specify the key of a property via an expression, if you put it in square brackets:
-
+```
 const FOO = 'foo';
 const { [FOO]: f } = { foo: 123 }; // f = 123
+```
 Computed property keys allow you to destructure properties whose keys are symbols:
 
 // Create and destructure a property whose key is a symbol
@@ -347,21 +392,27 @@ console.log(typeof func); // function
 ##10.7 More Array destructuring features
 ##10.7.1 Elision
 Elision lets you use the syntax of Array “holes” to skip elements during destructuring:
-
+```
 const [,, x, y] = ['a', 'b', 'c', 'd']; // x = 'c'; y = 'd'
+```
+
 ##10.7.2 Rest operator (...)
 The rest operator lets you extract the remaining elements of an Array into an Array. You can only use the operator as the last part inside an Array pattern:
-
+```
 const [x, ...y] = ['a', 'b', 'c']; // x='a'; y=['b', 'c']
+```
 The rest operator operator extracts data. The same syntax (...) is used by the spread operator, which contributes data to Array literals and function calls and is explained in the next chapter.
 
 If the operator can’t find any elements, it matches its operand against the empty Array. That is, it never produces undefined or null. For example:
-
+```
 const [x, y, ...z] = ['a']; // x='a'; y=undefined; z=[]
+```
 The operand of the rest operator doesn’t have to be a variable, you can use patterns, too:
-
+```
 const [x, ...[y, z]] = ['a', 'b', 'c'];
     // x = 'a'; y = 'b'; z = 'c'
+```
+
 The rest operator triggers the following destructuring:
 
 [y, z] = ['b', 'c']
@@ -369,7 +420,7 @@ The spread operator (...) looks exactly like the rest operator, but it is used i
 
 10.8 You can assign to more than just variables
 If you assign via destructuring, each assignment target can be everything that is allowed on the left-hand side of a normal assignment, including a reference to a property (obj.prop) and a reference to an Array element (arr[0]).
-
+```
 const obj = {};
 const arr = [];
 
@@ -377,11 +428,14 @@ const arr = [];
 
 console.log(obj); // {prop:123}
 console.log(arr); // [true]
-You can also assign to object properties and Array elements via the rest operator (...):
+```
 
+You can also assign to object properties and Array elements via the rest operator (...):
+```
 const obj = {};
 [first, ...obj.prop] = ['a', 'b', 'c'];
     // first = 'a'; obj.prop = ['b', 'c']
+```
 If you declare variables or define parameters via destructuring then you must use simple identifiers, you can’t refer to object properties and Array elements.
 
 ##10.9 Pitfalls of destructuring
@@ -435,23 +489,23 @@ const [all, year, month, day] =
     /^(\d\d\d\d)-(\d\d)-(\d\d)$/
     .exec('2999-12-31');
 If you are only interested in the groups (and not in the complete match, all), you can use elision to skip the array element at index 0:
-
-const [, year, month, day] =
-    /^(\d\d\d\d)-(\d\d)-(\d\d)$/
-    .exec('2999-12-31');
+```
+const [, year, month, day] = /^(\d\d\d\d)-(\d\d)-(\d\d)$/.exec('2999-12-31');
+```
 exec() returns null if the regular expression doesn’t match. Unfortunately, you can’t handle null via default values, which is why you must use the Or operator (||) in this case:
-
-const [, year, month, day] =
-    /^(\d\d\d\d)-(\d\d)-(\d\d)$/
-    .exec(someStr) || [];
+```
+const [, year, month, day] = /^(\d\d\d\d)-(\d\d)-(\d\d)$/.exec(someStr) || [];
+```
 Array.prototype.split() returns an Array. Therefore, destructuring is useful if you are interested in the elements, not the Array:
-
+```
 const cells = 'Jane\tDoe\tCTO'
 const [firstName, lastName, title] = cells.split('\t');
 console.log(firstName, lastName, title);
-10.10.2 Destructuring returned objects
-Destructuring is also useful for extracting data from objects that are returned by functions or methods. For example, the iterator method next() returns an object with two properties, done and value. The following code logs all elements of Array arr via the iterator iter. Destructuring is used in line A.
+```
 
+##10.10.2 Destructuring returned objects
+Destructuring is also useful for extracting data from objects that are returned by functions or methods. For example, the iterator method next() returns an object with two properties, done and value. The following code logs all elements of Array arr via the iterator iter. Destructuring is used in line A.
+```
 const arr = ['a', 'b'];
 const iter = arr[Symbol.iterator]();
 while (true) {
@@ -459,17 +513,21 @@ while (true) {
     if (done) break;
     console.log(value);
 }
+```
+
 ##10.10.3 Array-destructuring iterable values
 Array-destructuring works with any iterable value. That is occasionally useful:
-
+```
 const [x,y] = new Set().add('a').add('b');
     // x = 'a'; y = 'b'
 
 const [a,b] = 'foo';
     // a = 'f'; b = 'o'
+```
+
 ##10.10.4 Multiple return values
 To see the usefulness of multiple return values, let’s implement a function findElement(a, p) that searches for the first element in the Array a for which the function p returns true. The question is: what should that function return? Sometimes one is interested in the element itself, sometimes in its index, sometimes in both. The following implementation returns both.
-
+```
 function findElement(array, predicate) {
     for (const [index, element] of array.entries()) { // (A)
         if (predicate(element)) {
@@ -478,18 +536,21 @@ function findElement(array, predicate) {
     }
     return { element: undefined, index: -1 };
 }
+```
+
 In line A, the Array method entries() returns an iterable over [index,element] pairs. We destructure one pair per iteration. In line B, we use property value shorthands to return the object { element: element, index: index }.
 
-Let’s use findElement(). In the following example, several ECMAScript 6 features allow us to write more concise code: The callback is an arrow function, the return value is destructured via an object pattern with property value shorthands.
-
+findElement()를 사용해봅시다. In the following example, several ECMAScript 6 features allow us to write more concise code: The callback is an arrow function, the return value is destructured via an object pattern with property value shorthands.
+```
 const arr = [7, 8, 6];
 const {element, index} = findElement(arr, x => x % 2 === 0);
     // element = 8, index = 1
+```
 Due to index and element also referring to property keys, the order in which we mention them doesn’t matter:
 
 const {index, element} = findElement(···);
 We have successfully handled the case of needing both index and element. What if we are only interested in one of them? It turns out that, thanks to ECMAScript 6, our implementation can take care of that, too. And the syntactic overhead compared to functions with single return values is minimal.
-
+```
 const a = [7, 8, 6];
 
 const {element} = findElement(a, x => x % 2 === 0);
@@ -497,6 +558,8 @@ const {element} = findElement(a, x => x % 2 === 0);
 
 const {index} = findElement(a, x => x % 2 === 0);
     // index = 1
+```
+
 Each time, we only extract the value of the one property that we need.
 
 ##10.11 The destructuring algorithm
@@ -505,9 +568,10 @@ This section looks at destructuring from a different angle: as a recursive patte
 This different angle should especially help with understanding default values. If you feel you don’t fully understand them yet, read on.
 
 At the end, I’ll use the algorithm to explain the difference between the following two function declarations.
-
+```
 function move({x=0, y=0} = {})         { ··· }
 function move({x, y} = { x: 0, y: 0 }) { ··· }
+```
 ##10.11.1 The algorithm
 A destructuring assignment looks like this:
 
@@ -523,7 +587,7 @@ I only show the algorithm for destructuring assignment. Destructuring variable d
 
 I don’t cover advanced features (computed property keys; property value shorthands; object properties and array elements as assignment targets), either. Only the basics.
 
-10.11.1.1 Patterns
+##10.11.1.1 Patterns
 A pattern is either:
 
 A variable: x
