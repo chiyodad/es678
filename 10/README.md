@@ -1,13 +1,12 @@
-----
 #해체(Destructuring)
 
-ECMAScript6 에서는 객체나 배열(possibly nested)의 값을 추출하기위한 편리한 방법으로 해체(destructuring)를 지원한다. 이번 챕터에서는 해체가 어떻게 동작하는지 설명하고 유용한 예제도 제공한다.
+ECMAScript6 에서는 객체나 배열(possibly nested)의 값을 추출하기위한 편리한 방법으로 *해체(destructuring)*를 지원한다. 이번 챕터에서는 해체가 어떻게 동작하는지 설명하고 유용한 예제도 함께 제공한다.
 
 ##10.1 개요
-In locations that receive data (such as the left-hand side of an assignment), destructuring lets you use patterns to extract parts of that data.
+해체는 데이터 할당을 받는 곳에서(이를테면 할당 연산자의 좌측), 그 데이터의 일부를 추출하기 위한 패턴 사용을 가능하게 한다.
 
 ##10.1.1 객체 해체(Object destructuring)
-Destructuring objects:
+객체 해체하기:
 
 const obj = { first: 'Jane', last: 'Doe' };
 const {first: f, last: l} = obj;
@@ -17,7 +16,7 @@ const {first: f, last: l} = obj;
 const {first, last} = obj;
     // first = 'Jane'; last = 'Doe'
     
-    해체는 반환값의 처리를 돕는다.
+    
 Destructuring helps with processing return values:
 
 const obj = { foo: 123 };
@@ -30,7 +29,6 @@ console.log(writable, configurable); // true true
 ##10.1.2 배열해체(Array destructuring)
 
 모든 이터러블은 배열 해체가 가능하다.
-Array destructuring (works for all iterable values):
 
 const iterable = ['a', 'b'];
 const [x, y] = iterable;
@@ -40,6 +38,7 @@ Destructuring helps with processing return values:
 const [all, year, month, day] =
     /^(\d\d\d\d)-(\d\d)-(\d\d)$/
     .exec('2999-12-31');
+    
 ##10.1.3 해체는 어디에서 쓰이는가?
 해체는 다음과 같은 곳에서 쓰일 수 있다:
 
