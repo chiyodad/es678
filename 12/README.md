@@ -32,7 +32,7 @@ ES6안에서 더 특화되었다. 이 세개의 의무들은 아래처럼 처리
 * 개체: 예 전통적인 함수
 * 개체를 생성하는 신택스: 예 함수표현식, 함수 선언
 
-비록 그들의 동작이 다르나(뒤에 설명하겠음), 개체 중 모두 함수다. 예를 들면:
+비록 그들의 동작이 다르나(뒤에 설명하겠음), 모든 개체 함수다. 예를 들면:
 ```
 > typeof (() => {}) // arrow function
 'function'
@@ -41,35 +41,34 @@ ES6안에서 더 특화되었다. 이 세개의 의무들은 아래처럼 처리
 > typeof class {} // class
 'function'
 ```
-# 12.2 ES6에서 호출 방법
+## 12.2 ES6에서 호출 방법
 어떤 호출은 아무때나 발생된다. 그 외는 제한된 특정 지역에서만 호출 된다.
-## 12.2.1 아무때나 발생되는 호출
+### 12.2.1 아무때나 발생되는 호출
 ES6안에의 아무때나 호출 되는 3가지 종류:
 * 함수 호출: func(3, 1)
 * 메서드 호출: obj.method('abc')
 * 생성자 호출: new Constr(8)
 모든 함수 호출들, 대부분의 ES6 코드는 모듈에 포함되고, 그 모듈 몸통은 암시적으로 stric mode이라는 것을 기억하는것이 중요하다.
 
-## 12.2.2 super에 의한 호출은 특별한 지역으로 제한되어 있다.
-Two kinds of calls can be made via the super keyword; their use is restricted to specific locations:
+### 12.2.2 super에 의한 호출은 특별한 지역으로 제한되어 있다.
+호출의 두가지 종류는 super키워드를 통해 만들어 진다; 그것들의 사용은 특정지역으로 제한된다.
+*Super-메소드 호출: super.method('abc')
+오직 객체 리터럴 이나 파생 클래스 정의 안에서의 메소드 정의에서만 가능하다.
+*Super-생성자 호출: super(8)
+오직 파생 클래스 정의 안의 특별 메소드인 constructor()에서만 가능하다.
 
-Super-method calls: super.method('abc')
-Only available within method definitions inside either object literals or derived class definitions.
-Super-constructor calls: super(8)
-Only available inside the special method constructor() inside a derived class definition.
-12.2.3 Non-method functions versus methods
-The difference between non-method functions and methods is becoming more pronounced in ECMAScript 6. There are now special entities for both and things that only they can do:
+### 12.2.3 비 메소드 함수 대 메소드
+미 메소드 함수와 메소드의 차이는 ECMAScript 6 안에서 더욱더 명백하다. 지금 둘다 그들만의 할 수 있는 특별한 개체가 있다.
+* 애로우 함수는 비 메소드 함수를 만든다. 이것은 this(과 다른 변수들)을 둘러쌓인 스코프(어휘적 this)를 통해 가져온다. 
+* 메소드 정의는 메소드를 만든다. 이것은 super, 부모 프로퍼티의 인용 그리고 부모 메소드 호출을 지원을 제공합니다.
 
-Arrow functions are made for non-method functions. They pick up this (and other variables) from their surrounding scopes (“lexical this”).
-Method definitions are made for methods. They provide support for super, to refer to super-properties and to make super-method calls.
-12.3 Recommendations for using callable entities
-This section gives tips for using callable entities: When it’s best to use which entity; etc.
+## 12.3 호출 개체 사용을 위한 추천
+이 섹션은 호출 개체 사용에 대한 팁을 준다: 언제 어느 개체 사용이 최선인가에 대하여: 등.
 
-12.3.1 Prefer arrow functions as callbacks
-As callbacks, arrow functions have two advantages over traditional functions:
-
-this is lexical and therefore safer to use.
-Their syntax is more compact. That matters especially in functional programming, where there are many higher-order functions and methods (functions and methods whose parameters are functions).
+### 12.3.1 콜백으로 애로우 함수를 선호
+콜백으로써, 애로우 함수는 전통적인 함수에 비해 두 가지 이점을 갖는다.:
+* this는 어휘적그러므로 사용하기 안전하다.
+* 이 신택스는 더 간결하다. 많은 고차 함수나 메서드가 사용된  함수형 프로그래밍에서 특히 중요하다. (파라메터가 함수인 함수와 메서드)
 For callbacks that span multiple lines, I find traditional function expressions acceptable, too. But you have to be careful with this.
 
 12.3.1.1 Problem: this as an implicit parameter
