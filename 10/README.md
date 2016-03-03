@@ -438,14 +438,16 @@ const obj = {};
 ```
 If you declare variables or define parameters via destructuring then you must use simple identifiers, you can’t refer to object properties and Array elements.
 
-##10.9 Pitfalls of destructuring
-There are two things to be mindful of when using destructuring:
+##10.9 해체의 Pitfalls
+해체를 사용할 때 2가지 유념해야할 사항이 있다.
 
+중괄호로 선언문을 시작하면 안된다.
 You can’t start a statement with a curly brace.
+
 During destructuring, you can either declare variables or assign to them, but not both.
 The next two sections have the details.
 
-##10.9.1 Don’t start a statement with a curly brace
+##10.9.1 중괄호로 선언문을 시작하지 말아라
 Because code blocks begin with a curly brace, statements must not begin with one. This is unfortunate when using object destructuring in an assignment:
 
 { a, b } = someObject; // SyntaxError
