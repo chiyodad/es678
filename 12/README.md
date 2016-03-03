@@ -19,39 +19,38 @@ ES5에서는, 싱글 생성자, 전통적이 함수의 세가지 역할:
 ES6안에서 더 특화되었다. 이 세개의 의무들은 아래처럼 처리되어있다. (클래스 정의는 클래스 생성을 위한 두개의 생성자중 하나 입니다.- 클래스 선언 또는 클래스 표현식)
 
 * 진짜(메스드가 아닌) 함수:
-** 애로우 함수 (오직 표현식형태만 갖는다.)
-** 전통적인 함수 (함수 표현식이나 함수 선언식을 통해 생성된다.)
-** 제너레이터 함수 (제너레이터 함수 표현식이나 제너레이터 함수 선언식을 통해 생성된다.)
+* * 애로우 함수 (오직 표현식형태만 갖는다.)
+* * 전통적인 함수 (함수 표현식이나 함수 선언식을 통해 생성된다.)
+* * 제너레이터 함수 (제너레이터 함수 표현식이나 제너레이터 함수 선언식을 통해 생성된다.)
 * 메소드:
-** 메소드들 (오브젝트 안에서 메소드 정의나 클래스 정의에 의해 생성)
-** 제너레이터 메소드 (오브젝트 리터럴안에 메소드 정의나 클래스 정의에 의해 생성)
+* * 메소드들 (오브젝트 안에서 메소드 정의나 클래스 정의에 의해 생성)
+* * 제너레이터 메소드 (오브젝트 리터럴안에 메소드 정의나 클래스 정의에 의해 생성)
 * 생성자:
-** 클래스 (클래스 정의를 통해 생성)
+* * 클래스 (클래스 정의를 통해 생성)
 
 나는 아래와 같이 구분합니다.
-개체: 예 전통적인 함수
-개체를 생성하는 신택스: 예 함수표현식, 함수 선언
+* 개체: 예 전통적인 함수
+* 개체를 생성하는 신택스: 예 함수표현식, 함수 선언
 
-Even though their behaviors differ (as explained later), all of these entities are functions. For example:
-
+비록 그들의 동작이 다르나(뒤에 설명하겠음), 개체 중 모두 함수다. 예를 들면:
+```
 > typeof (() => {}) // arrow function
 'function'
 > typeof function* () {} // generator function
 'function'
 > typeof class {} // class
 'function'
-12.2 Ways of calling in ES6
-Some calls can be made anywhere, others are restricted to specific locations.
+```
+# 12.2 ES6에서 호출 방법
+어떤 호출은 아무때나 발생된다. 그 외는 제한된 특정 지역에서만 호출 된다.
+## 12.2.1 아무때나 발생되는 호출
+ES6안에의 아무때나 호출 되는 3가지 종류:
+* 함수 호출: func(3, 1)
+* 메서드 호출: obj.method('abc')
+* 생성자 호출: new Constr(8)
+모든 함수 호출들, 대부분의 ES6 코드는 모듈에 포함되고, 그 모듈 몸통은 암시적으로 stric mode이라는 것을 기억하는것이 중요하다.
 
-12.2.1 Calls that can be made anywhere
-Three kinds of calls can be made anywhere in ES6:
-
-Function calls: func(3, 1)
-Method calls: obj.method('abc')
-Constructor calls: new Constr(8)
-For function calls, it is important to remember that most ES6 code will be contained in modules and that module bodies are implicitly in strict mode.
-
-12.2.2 Calls via super are restricted to specific locations
+## 12.2.2 super에 의한 호출은 특별한 지역으로 제한되어 있다.
 Two kinds of calls can be made via the super keyword; their use is restricted to specific locations:
 
 Super-method calls: super.method('abc')
