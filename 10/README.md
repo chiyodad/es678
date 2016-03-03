@@ -1,9 +1,9 @@
 ----
-#Destructuring
+#해체(Destructuring)
 
 ECMAScript6 에서는 객체나 배열(possibly nested)의 값을 추출하기위한 편리한 방법으로 해체(destructuring)를 지원한다. 이번 챕터에서는 해체가 어떻게 동작하는지 설명하고 유용한 예제도 제공한다.
 
-##10.1 Overview
+##10.1 개요
 In locations that receive data (such as the left-hand side of an assignment), destructuring lets you use patterns to extract parts of that data.
 
 ##10.1.1 객체 해체(Object destructuring)
@@ -17,7 +17,7 @@ const {first: f, last: l} = obj;
 const {first, last} = obj;
     // first = 'Jane'; last = 'Doe'
     
-    해체는 반환값 처리에 유용하다.
+    해체는 반환값의 처리를 돕는다.
 Destructuring helps with processing return values:
 
 const obj = { foo: 123 };
@@ -26,9 +26,10 @@ const {writable, configurable} =
     Object.getOwnPropertyDescriptor(obj, 'foo');
 
 console.log(writable, configurable); // true true
+
 ##10.1.2 배열해체(Array destructuring)
 
-모든 이터러블 값은 배열 해체가 가능하다.
+모든 이터러블은 배열 해체가 가능하다.
 Array destructuring (works for all iterable values):
 
 const iterable = ['a', 'b'];
@@ -40,7 +41,7 @@ const [all, year, month, day] =
     /^(\d\d\d\d)-(\d\d)-(\d\d)$/
     .exec('2999-12-31');
 ##10.1.3 해체는 어디에서 쓰이는가?
-해체는 다음과 같은 상황에서 쓰일 수 있다:
+해체는 다음과 같은 곳에서 쓰일 수 있다:
 
 // 변수 선언:
 const [x] = ['a'];
@@ -59,7 +60,7 @@ const arr1 = ['a', 'b'];
 for (const [index, element] of arr1.entries()) {
     console.log(index, element);
 }
-// Output:
+// 결과:
 // 0 a
 // 1 b
 
@@ -67,14 +68,15 @@ const arr2 = [
     {name: 'Jane', age: 41},
     {name: 'John', age: 40},
 ];
+
 for (const {name, age} of arr2) {
     console.log(name, age);
 }
-// Output:
+// 결과:
 // Jane 41
 // John 40
 ##10.2 배경지식: 데이터 생성 vs 데이터 추출
-##10.2 Background: Constructing data versus extracting data
+10.2 Background: Constructing data versus extracting data
 
 해체가 무엇인지 완벽히 이해하기 위해서 먼저 broader context를 알아보자. 자바스크립트는 데이터생성을 위한 operations을 가진다.
 To fully understand what destructuring is, let’s first examine its broader context. JavaScript has operations for constructing data:
@@ -82,10 +84,14 @@ To fully understand what destructuring is, let’s first examine its broader con
 const obj = {};
 obj.first = 'Jane';
 obj.last = 'Doe';
+
+그리고 데이터 추출을 위한 operations를 가진다.
 And it has operations for extracting data:
 
 const f = obj.first;
 const l = obj.last;
+
+우리가 constructing에 사용해오던 똑같은 문법임을 주목하라.
 Note that we are using the same syntax that we have used for constructing.
 
 constructing 을 위한 더 나은 문법이 있다. - 객체 리터럴
@@ -99,16 +105,18 @@ Destructuring in ECMAScript 6 enables the same syntax for extracting data, where
 const { first: f, last: l } = obj;
 Just as the object literal lets us create multiple properties at the same time, the object pattern lets us extract multiple properties at the same time.
 
-패턴들을 이용하면 배열을 해체하는 것도 가능하다.
+패턴을 이용하면 배열을 해체하는 것도 가능하다.
 You can also destructure Arrays via patterns:
 
 const [x, y] = ['a', 'b']; // x = 'a'; y = 'b'
-10.3 Patterns
+
+
+##10.3 패턴(Patterns)
+
 The following two parties are involved in destructuring:
 
-소스 해체
 Destructuring source: the data to be destructured. For example, the right-hand side of a destructuring assignment.
-타겟 해체
+
 Destructuring target: the pattern used for destructuring. For example, the left-hand side of a destructuring assignment.
 The destructuring target is either one of three patterns:
 
@@ -153,21 +161,27 @@ ToObject() throws a TypeError if it encounters undefined or null. Therefore, the
 
 const { prop: x } = undefined; // TypeError
 const { prop: y } = null; // TypeError
+위 결과로써, 값이 객체에 강제되는지 여부를 알기위해 빈 객체 패턴{}을 사용 할 수 있음을 알 수 있다.
 As a consequence, you can use the empty object pattern {} to check whether a value is coercible to an object. As we have seen, only undefined and null aren’t:
 
-({} = [true, false]); // OK, Arrays are coercible to objects
-({} = 'abc'); // OK, strings are coercible to objects
+({} = [true, false]); // OK, 배열은 객체에 coercible 하다.
+({} = 'abc'); // OK, 문자열은 객체에 coercible 하다.
 
 ({} = undefined); // TypeError
 ({} = null); // TypeError
+자바스크립트에서 문(statements)은 중괄호로 시작되면 안되기 때문에 표현식을 둘러싸고 있는 소괄호가 필요하다.
 The parentheses around the expressions are necessary because statements must not begin with curly braces in JavaScript.
 
-10.4.2 Array patterns work with iterables
-Array destructuring uses an iterator to get to the elements of a source. Therefore, you can Array-destructure any value that is iterable. Let’s look at examples of iterable values.
+##10.4.2 Array patterns work with iterables
+배열해체는 소스의 요소(Elements)를 얻기위해 이터레이터를 사용한다. 그러므로 
+Array destructuring uses an iterator to get to the elements of a source. Therefore, you can Array-destructure any value that is iterable. 이터러블 값의 예제를 보자. Let’s look at examples of iterable values.
 
+문자열은 이터러블이다 : 
 Strings are iterable:
 
 const [x,...y] = 'abc'; // x='a'; y=['b', 'c']
+
+
 Don’t forget that the iterator over strings returns code points (“Unicode characters”, 21 bits), not code units (“JavaScript characters”, 16 bits). (For more information on Unicode, consult the chapter “Chapter 24. Unicode and JavaScript” in “Speaking JavaScript”.) For example:
 
 const [x,y,z] = 'a\uD83D\uDCA9c'; // x='a'; y='\uD83D\uDCA9'; z='c'
@@ -194,7 +208,7 @@ let x;
 [x] = 'abc'; // OK, strings are iterable
 [x] = { * [Symbol.iterator]() { yield 1 } }; // OK, iterable
 
-[x] = {}; // TypeError, empty objects are not iterable
+[x] = {}; // TypeError, empty objecdts are not iterable
 [x] = undefined; // TypeError, not iterable
 [x] = null; // TypeError, not iterable
 The TypeError is thrown even before accessing elements of the iterable, which means that you can use the empty Array pattern [] to check whether a value is iterable:
@@ -202,6 +216,7 @@ The TypeError is thrown even before accessing elements of the iterable, which me
 [] = {}; // TypeError, empty objects are not iterable
 [] = undefined; // TypeError, not iterable
 [] = null; // TypeError, not iterable
+
 ##10.5 If a part has no match
 Similarly to how JavaScript handles non-existent properties and Array elements, destructuring fails silently if the target mentions a part that doesn’t exist in the source: the interior of the part is matched against undefined. If the interior is a variable that means that the variable is set to undefined:
 
