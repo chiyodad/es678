@@ -2,13 +2,13 @@
 이 챕터는 너가가 ES6안에서 호출 할 수 있는 개체(function calls, method calls, 등)를 어떻게 적절하게 사용하는 방법에 충고를 준다.
 
 이 챕터의 섹션: 
-An overview of callable entities in ES6
-Ways of calling in ES6
-Recommendations for using callable entities
-ES6 callable entities in detail
-Dispatched and direct method calls in ES5 and ES6
-The name property of functions
-FAQ: callable entities
+* An overview of callable entities in ES6
+* Ways of calling in ES6
+* Recommendations for using callable entities
+* ES6 callable entities in detail
+* Dispatched and direct method calls in ES5 and ES6
+* The name property of functions
+* FAQ: callable entities
 
 ## 12.1 ES6안에서 호출 할 수 있는 개체의 개요
 ES5에서는, 싱글 생성자, 전통적이 함수의 세가지 역할:
