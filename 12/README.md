@@ -130,7 +130,7 @@ function foo(arg1, arg2) {
 * 그것은 제너레이터 함수 선언과 비슷하고, 코드를 일관성 있게 보여진다.
 
 하나의 경고가 있다. 일반적으로 너는 독립적인 함수안에서 this는 필요 없다. 만일 너가 이것을 사용한다면, 너는 둘러쌓인 스코프의 this를 접근하길 원한다.(예: 독립적인 함수를 포함한 메소드). 아아, 함수 선언은 너를 
-There is one caveat: Normally, you don’t need this in stand-alone functions. If you use it, you want to access the this of the surrounding scope (e.g. a method which contains the stand-alone function). Alas, function declarations don’t let you do that – they have their own this, which shadows the this of the surrounding scope. Therefore, you may want to let a linter warn you about this in function declarations.
+ Alas, function declarations don’t let you do that – they have their own this, which shadows the this of the surrounding scope. Therefore, you may want to let a linter warn you about this in function declarations.
 
 독립적 함수의 다른 옵션은 애로우 함수에 변수들은 할당 하는 것이다. 이것은 this에 대한 문제를 피한다. 왜냐하면 이것은 어휘적이기 때문이다.
 
@@ -140,18 +140,15 @@ const foo = (arg1, arg2) => {
 };
 ```
 
-### 12.3..2 메서드를 위한 메서드 정의 선호
-메서드 정의는 super를 사용하는 메서드를 만드는 유일한 방법이다. 그것은 객체 리터럴과 클래스 안에서 명백한 선택이다. 그러나 기존의 객체에 메소드를 어떻게 추가하지? 예를 들면
-
-Method definitions are the only way to create methods that use super. They are the obvious choice in object literals and classes (where they are the only way to define methods), but what about adding a method to an existing object? For example:
+### 12.3.3 메서드를 위한 메서드 정의 선호
+메서드 정의는 super를 사용하는 메서드를 만드는 유일한 방법이다. 그것은 객체 리터럴과 클래스 안에서 명백한 선택이다(어디서나 그것들은 메서드를 정의하는 유일한 방법 이다.). 그러나 기존의 객체에 메소드를 어떻게 추가하지? 예를 들면
 
 ```
 MyClass.prototype.foo = function (arg1, arg2) {
     ···
 };
 ```
-The following is a quick way to do the same thing in ES6 (caveat: Object.assing() doesn’t move methods with super properly).
-
+다음은 ES6에서 같은것을 하는 빠른 방법이다(주의: Object.assing()은 super 프로퍼티를 사용하는 메서드를 못 옮긴다.).
 ```
 Object.assign(MyClass.prototype, {
     foo(arg1, arg2) {
@@ -159,16 +156,16 @@ Object.assign(MyClass.prototype, {
     }
 });
 ```
+더 많은 정보와 주의를 위하여 Object.assign()섹션을 찾아라.
 
-For more information and caveats, consult the section on Object.assign().
+### 12.3.4 메서드 대 콜백
+객체 메소드와 객체의 콜백은 세밀한 차이가 있다.
 
-12.3.4 Methods versus callbacks
-There is a subtle difference between an object with methods and an object with callbacks.
+#### 12.3.4.1 프로퍼티가 메소드인 객체
+메소드의 this는 메소드 콜의 수신자(receiver)이다. (예: 만약 메소드 콜이 obj.m(..)이라면 obj이다)
 
-12.3.4.1 An object whose properties are methods
-The this of a method is the receiver of the method call (e.g. obj if the method call is obj.m(···)).
+예를 들면, 너는 WHATWG 스트림 API를 아래와 같이 사용할 수 있다.
 
-For example, you can use the WHATWG streams API as follows:
 ```
 const surroundingObject = {
     surroundingMethod() {
@@ -191,14 +188,15 @@ const surroundingObject = {
     },
 };
 ```
+obj는 start, pull, calls 메소드를 갖는 객체이다.
+따라사, 이 메소드는 객체-지역 상태(줄 \*) 그리고 각각의 호출 (줄 \*\*)을 위하여 this를 사용 할 수 있다.
 
-That is, obj is an object whose properties start, pull and cancel are methods. Accordingly, these methods can use this to access object-local state (line *) and to call each other (line **).
+#### 12.3.4.2 프로퍼티가 콜백인 객체
 
-12.3.4.2 An object whose properties are callbacks
-The this of an arrow function is the this of the surrounding scope (lexical this). Arrow functions make great callbacks, because that is the behavior you normally want for callbacks (real, non-method functions). A callback shouldn’t have its own this that shadows the this of the surrounding scope.
+애로우 함수의 this는 둘러쌓인 스코프의 this(어휘적 this)이다. 애로우 함수는 좋은 콜백을 만든다 왜냐하면 그것은 콜백을 위하여 너가 일반적으로 원하는 행동(진짜, 비 메소드 함수들)이기 때문이다. 콜백은 그것 둘러쌓인 스코프의 this를 덮는 자신의 this가 없어야 한다.
 
-If the properties start, pull and cancel are arrow functions then they pick up the this of surroundingMethod() (their surrounding scope):
-
+만약 stat, pull, cancel 프로퍼티가 애로우 함수라면 그들은 surroundingMethod()의 this를 사용한다. (그들에 둘러싸인 스코프)
+```
 const surroundingObject = {
     surroundingData: 'xyz',
     surroundingMethod() {
@@ -220,9 +218,11 @@ const surroundingObject = {
         const stream = new ReadableStream(obj);
     },
 };
-const stream = new ReadableStream();
-If the output in line * surprises you then consider the following code:
 
+const stream = new ReadableStream();
+```
+만일 줄 *에서 출력은 너를 놀라게 하고 아래의 코드를 고려하게 된다.
+```
 const obj = {
     foo: 123,
     bar() {
@@ -232,31 +232,35 @@ const obj = {
         };
     },
 }
-Inside method bar(), f and o.p work the same, because both arrow functions have the same surrounding lexical scope, bar(). The latter arrow function being surrounded by an object literal does not change that.
+```
+메소드 bar() 안에서, f, o.p 동작은 같다. 왜냐하면 둘다 애로우 함수는 같은 어휘적 스코프, bar()를 갖기 때문이다. 마지막 객체 리터럴로 둘러싸여 있는 애로우 함수는 바뀌지 않는다.  
 
-12.3.5 Avoid IIFEs in ES6
-This section gives tips for avoiding IIFEs in ES6.
+### 12.3.5 ES6에서 IIFEs를 피해라
+이 섹션은 ES6에서 IIFEs를 피하는 팁을 준다.
 
-12.3.5.1 Replace an IIFE with a block
-In ES5, you had to use an IIFE if you wanted to keep a variable local:
-
+#### 12.3.5.1 IIFE를 블럭으로 치환
+ES5에서는 너가 지역 변수를 유지하기 원한다면 너는 IIFE를 사용했다.
+```
 (function () {  // open IIFE
     var tmp = ···;
     ···
 }());  // close IIFE
 
 console.log(tmp); // ReferenceError
-In ECMAScript 6, you can simply use a block and a let or const declaration:
-
+```
+ES6 안에서 너는 간단하게 블럭과 let또는 const 선언을 사용할 수 있다.
+```
 {  // open block
     let tmp = ···;
     ···
 }  // close block
 
 console.log(tmp); // ReferenceError
-12.3.5.2 Replace an IIFE with a module
-In ECMAScript 5 code that doesn’t use modules via libraries (such as RequireJS, browserify or webpack), the revealing module pattern is popular, and based on an IIFE. Its advantage is that it clearly separates between what is public and what is private:
+```
+#### 12.3.5.2 IIFE를 모듈로 치환
 
+In ECMAScript 5 code that doesn’t use modules via libraries (such as RequireJS, browserify or webpack), the revealing module pattern is popular, and based on an IIFE. Its advantage is that it clearly separates between what is public and what is private:
+```
 var my_module = (function () {
     // Module-private variable:
     var countInvocations = 0;
@@ -271,11 +275,13 @@ var my_module = (function () {
         myFunc: myFunc
     };
 }());
+```
 This module pattern produces a global variable and is used as follows:
-
+```
 my_module.myFunc(33);
+```
 In ECMAScript 6, modules are built in, which is why the barrier to adopting them is low:
-
+```
 // my_module.js
 
 // Module-private variable:
@@ -285,11 +291,13 @@ export function myFunc(x) {
     countInvocations++;
     ···
 }
+```
 This module does not produce a global variable and is used as follows:
-
+```
 import { myFunc } from 'my_module.js';
 
 myFunc(33);
+```
 12.3.5.3 Immediately-invoked arrow functions
 There is one use case where you still need an immediately-invoked function in ES6: Sometimes you only can produce a result via a sequence of statements, not via a single expression. If you want to inline those statements, you have to immediately invoke a function. In ES6, you can use immediately-invoked arrow functions if you want to:
 
