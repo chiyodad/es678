@@ -84,11 +84,12 @@ beforeEach(function () { // (A)
     });  
 });
 ```
-This pattern is less explicit and prevents you from using arrow functions.
+이 패턴은 명백하지 않고, 애로우 함수 사용을 막는다.
 
-12.3.1.2 Solution 1: change the API
-This is easy to fix, but requires the API to change:
+#### 12.3.1.2 해결 1: API 변경
+이것은 고치기 쉬운 방법이나 API변경이 요구 된다:
 
+```
 beforeEach(api => {
     api.addMatchers({
         toBeInRange(start, end) {
@@ -96,21 +97,26 @@ beforeEach(api => {
         }
     });
 });
-We have turned the API from an implicit parameter this into an explicit parameter api. I like this kind of explicitness.
+```
+우리는 API를 this의 함축적 파라미터에서 명백한 파라미더 API로 변경했다. 나는 이런 종류의 명확성을 좋아한다.
 
-12.3.1.3 Solution 2: access the value of this in some other way
-In some APIs, there are alternate ways to get to the value of this. For example, the following code uses this.
+#### 12.3.1.3 해결 2: this를 다른 방법으로 접근
+어떤 API는 this를 얻는 다른 방법이 있다. 아래코드에서 사용된 this를 예를 들면
 
+```
 var $button = $('#myButton');
 $button.on('click', function () {
     this.classList.toggle('clicked');
 });
-But the target of the event can also be accessed via event.target:
+```
+그러나 이벤트의 target은 event.target을 통해 접근 할 수 있어야 한다:
 
+```
 var $button = $('#myButton');
 $button.on('click', event => {
     event.target.classList.toggle('clicked');
 });
+```
 12.3.2 Prefer function declarations as stand-alone functions
 As stand-alone functions (versus callbacks), I prefer function declarations:
 
