@@ -3,7 +3,7 @@
 ECMAScript6 에서는 객체나 배열(possibly nested)의 값을 추출하기위한 편리한 방법으로 *해체(destructuring)*를 지원한다. 이번 챕터에서는 해체가 어떻게 동작하는지 설명하고 유용한 예제도 함께 제공한다.
 
 ##10.1 개요
-해체는 데이터 할당을 받는 곳에서(이를테면 할당 연산자의 좌측), 데이터의 일부를 추출하기 위한 패턴 사용을 가능하게 한다.
+해체는 데이터 할당을 받는 곳에서(이를테면 할당 연산자의 좌변), 데이터의 일부를 추출하기 위한 패턴 사용을 가능하게 한다.
 
 ##10.1.1 객체 해체(Object destructuring)
 객체 해체하기:
@@ -116,20 +116,22 @@ const [x, y] = ['a', 'b']; // x = 'a'; y = 'b'
 
 The following two parties are involved in destructuring:
 
-Destructuring source: the data to be destructured. For example, the right-hand side of a destructuring assignment.
+Destructuring source: 해체될 데이터. 예를 들면, 해체 할당식의 우변.
 
-Destructuring target: the pattern used for destructuring. For example, the left-hand side of a destructuring assignment.
-The destructuring target is either one of three patterns:
+Destructuring target: 해체를 위해 사용되는 패턴. 해체 할당식의 좌변.
 
-Assignment target. For example: x
+destructuring target은 다음중 하나이다.:
 
+Assignment target. 예 : 없음.
 변수선언과 매개변수 정의에서는, 오직 변수에 대한 참조만 허용된다. 해체 할당에서 여러가지 옵션이 있지만 나중에 설명하겠다.
+
 객체 패턴. 예: { first: «pattern», last: «pattern» }
 객체 패턴의 parts는 프로퍼티이고 이 프로퍼티 값은 다시 패턴이다(재귀적으로).
+
 배열 배턴. 예: [ «pattern», «pattern» ]
 배열패턴의 parts는 요소이고 이 요소들은 다시 패턴이다(재귀적으로).
 
-That means that you can nest patterns, arbitrarily deeply:
+말인즉슨, 얼마든지 깊게 패턴을 응용할 수 있다 :
 ```
 const obj = { a: [{ foo: 123, bar: 'abc' }, {}], b: true };
 const { a: [{foo: f}] } = obj; // f = 123
@@ -145,7 +147,7 @@ const { x: x } = { x: 7, y: 3 }; // x = 7
 const [x,y] = ['a', 'b', 'c']; // x='a'; y='b';
 ```
 ##10.4 패턴이 값의 내부에 접근하는 방법?
-In an assignment pattern = someValue, how does the pattern access what’s inside someValue?
+할당패턴 = 값, how does the pattern access what’s inside someValue?
 
 
 ##10.4.1 객체 패턴은 객체에 값을 강제한다.
@@ -247,7 +249,7 @@ const {prop:y} = {}; // y = undefined
 
 객체 패턴과 배열 패턴이 undefined로 매치되면 타입에러를 내는것을 기억하라 
 
-##10.5.1 초기값
+##10.5.1 기본값
 
 Default values are a feature of patterns: If a part (an object property or an Array element) has no match in the source, it is matched against:
 
@@ -255,24 +257,26 @@ its default value (if specified)
 undefined (otherwise)
 That is, providing a default value is optional.
 
-예제를 살펴보자. 다음 해체 구문에서, 인덱스가 0인 요소는 우측과 매치되지 않는다. 그러므로, destructuring continues by matching x against 3, which leads to x being set to 3.
+예제를 살펴보자. 다음 해체 구문에서, 인덱스가 0인 요소는 우변과 매치되지 않는다. 그러므로, destructuring continues by matching x against 3, which leads to x being set to 3.
 ```
 const [x=3, y] = []; // x = 3; y = undefined
 ```
-객체 패턴의 초기값 사용 또한 가능하다:
+객체 패턴의 기본값 사용도 가능하다:
 ```
 const {foo: x=3, bar: y} = {}; // x = 3; y = undefined
 ```
-##10.5.1.1 undefined 는 초기값을 triggers 한다.
+##10.5.1.1 undefined 는 기본값을 triggers 한다.
+만약 매칭되는 값이 없거나 undefined 인 경우에는 기본값이 사용된다.
 Default values are also used if a part does have a match and that match is undefined:
 ```
 const [x=1] = [undefined]; // x = 1
 const {prop: y=2} = {prop: undefined}; // y = 2
 ```
-이런 동작을 위한 합리적인 이유는, 매개변수 초기값 섹션인다음 장에서 설명한다. 
+이런 동작을 위한 합리적인 이유는, 파라미터 기본값 섹션인다음 장에서 설명한다. 
 
 ##10.5.1.2 Default values are computed on demand
-The default values themselves are only computed when they are needed. In other words, this destructuring:
+필요한 경우 기본값은 스스로 연산된다. 다시 말하면 이 해체 구문은 :
+
 ```
 const {prop: y=someFunc()} = someValue;
 ```
@@ -303,8 +307,8 @@ hello
 두 번째 해체 구문에서 초기값은 triggered 되지 않고 log() 또한 호출되지 않는다.
 
 
-##10.5.1.3 Default values can refer to other variables in the pattern
-A default value can refer to any variable, including another variable in the same pattern:
+##10.5.1.3 기본 값은 패턴안의 다른 변수를 참조 할 수 있다.
+기본값은 같은 패턴안의 다른 변수를 포함하여 어떤 변수도 참조가능하다 : 
 ```
 const [x=3, y=x] = [];     // x=3; y=3
 const [x=3, y=x] = [7];    // x=7; y=7
@@ -317,15 +321,14 @@ However, order matters: the variables x and y are declared from left to right an
 const [x=y, y=3] = []; // ReferenceError
 ```
 
-##10.5.1.4 Default values for patterns
-So far we have only seen default values for variables, but you can also associate them with patterns:
+##10.5.1.4 패턴의 기본값
+우리는 변수의 기본값만을 봐왔지만, 기본값은 패턴에도 연관지을 수 있다 :
 ```
 const [{ prop: x } = {}] = [];
 ```
 이게 무엇을 의미하는가? Recall the rule for default values:
 
-소스에서 매칭되는 부분이 없다면 해체는 디폴트값으로 계속한다.
-If the part has no match in the source, destructuring continues with the default value […].
+소스에서 매칭되는 부분이 없다면 해체는 기본값으로 계속한다.[…]
 
 The element at index 0 has no match, which is why destructuring continues with:
 ```
@@ -388,33 +391,35 @@ const { [FOO]: f } = { foo: 123 }; // f = 123
 ```
 Computed property keys allow you to destructure properties whose keys are symbols:
 
-// Create and destructure a property whose key is a symbol
+// 심볼키를 가지는 속성의 생성과 해체
 const KEY = Symbol();
 const obj = { [KEY]: 'abc' };
 const { [KEY]: x } = obj; // x = 'abc'
 
-// Extract Array.prototype[Symbol.iterator]
+// Array.prototype[Symbol.iterator] 추출
 const { [Symbol.iterator]: func } = [];
 console.log(typeof func); // function
-##10.7 More Array destructuring features
-##10.7.1 Elision
+
+##10.7 더 많은 배열 해체의 특징
+##10.7.1 생략
 Elision lets you use the syntax of Array “holes” to skip elements during destructuring:
 ```
 const [,, x, y] = ['a', 'b', 'c', 'd']; // x = 'c'; y = 'd'
 ```
 
-##10.7.2 Rest operator (...)
-The rest operator lets you extract the remaining elements of an Array into an Array. You can only use the operator as the last part inside an Array pattern:
+##10.7.2 나머지 연산자(rest operator) (...)
+나머지 연산자는 배열의 각 요소의 추출한 배열가능케 한다. 배열 패턴의 마지막 파라미터로 나머지 연산자를 사용할 수 있다.:
 ```
 const [x, ...y] = ['a', 'b', 'c']; // x='a'; y=['b', 'c']
 ```
-The rest operator operator extracts data. The same syntax (...) is used by the spread operator, which contributes data to Array literals and function calls and is explained in the next chapter.
+나머지 연산자는 데이터를 추출한다. 펼침 연산자(...) 의 문법도 똑같다. 펼침 연산자는 데이터를 배열 리터럴과 함수 호출에 공헌한다. 이건 다음 챕터에서 설명한다.
 
-If the operator can’t find any elements, it matches its operand against the empty Array. That is, it never produces undefined or null. For example:
+만약 연산자가 요소를 찾지 못한다면, 빈배열로 매칭된다. 때문에 undefined나 null은 절대 할당되지 않는다.
+
 ```
 const [x, y, ...z] = ['a']; // x='a'; y=undefined; z=[]
 ```
-The operand of the rest operator doesn’t have to be a variable, you can use patterns, too:
+나머지 연산자의 피연산자가 변수일 필요는 없다. 이 역시 패턴을 사용하면 된다. :
 ```
 const [x, ...[y, z]] = ['a', 'b', 'c'];
     // x = 'a'; y = 'b'; z = 'c'
@@ -423,10 +428,10 @@ const [x, ...[y, z]] = ['a', 'b', 'c'];
 The rest operator triggers the following destructuring:
 
 [y, z] = ['b', 'c']
-The spread operator (...) looks exactly like the rest operator, but it is used inside function calls and Array literals (not inside destructuring patterns).
+펼침 연산자는  (...) 나머지 연산자와 완전히 똑같이 생겼다. 그러나 나머지 연산자는 함수 호출과 배열 리터럴 안에서만 사용된다.(해체 패턴 안이 아니라)
 
-10.8 You can assign to more than just variables
-If you assign via destructuring, each assignment target can be everything that is allowed on the left-hand side of a normal assignment, including a reference to a property (obj.prop) and a reference to an Array element (arr[0]).
+10.8 변수가 아닌 곳에도 할당가능하다.
+해체를 통한 할당이라면, 각 할당 타겟은 객체의 프로퍼티(obj.prop) 참조나 배열의 요소(arr[0]) 참조를 포함하여 일반적인 할당문의 좌변에서 허용되는 모든 것이 될 수 있다. 
 ```
 const obj = {};
 const arr = [];
@@ -437,13 +442,15 @@ console.log(obj); // {prop:123}
 console.log(arr); // [true]
 ```
 
-You can also assign to object properties and Array elements via the rest operator (...):
+또한 나머지 연산자(...)를 이용해서 객체 프로퍼티와 배열 요소를 할당 할 수도 있다.
+
 ```
 const obj = {};
 [first, ...obj.prop] = ['a', 'b', 'c'];
     // first = 'a'; obj.prop = ['b', 'c']
 ```
-If you declare variables or define parameters via destructuring then you must use simple identifiers, you can’t refer to object properties and Array elements.
+만약 해체를 이용해서 변수를 선언하거나 파라미터를 정의 한다면, simple identifiers를 사용해야한다. 객체 프로퍼티나 배열의 요소를 참조하면 안된다.
+
 
 ##10.9 해체의 Pitfalls
 해체를 사용할 때 2가지 유념해야할 사항이 있다.
@@ -451,17 +458,18 @@ If you declare variables or define parameters via destructuring then you must us
 중괄호로 선언문을 시작하면 안된다.
 You can’t start a statement with a curly brace.
 
-During destructuring, you can either declare variables or assign to them, but not both.
-The next two sections have the details.
+해체문에는 변수 선언이나 변수 할당이 가능하다. 둘 다 동시에 하는 것은 불가능하다.
+다음 두 섹션에 자세한 내용이 있다.
 
 ##10.9.1 중괄호로 선언문을 시작하지 말아라
-Because code blocks begin with a curly brace, statements must not begin with one. This is unfortunate when using object destructuring in an assignment:
+코드 블럭이 중괄호로 시작하기 때문에, 선언문은 그렇게 하면 안된다. 이것은 할당문에서 객체 해체를 사용할 때 불편하다 :
 
 { a, b } = someObject; // SyntaxError
 The work-around is to put the complete expression in parentheses:
 
 ({ a, b } = someObject); // ok
-##10.9.2 You can’t mix declaring and assigning to existing variables
+
+##10.9.2 이미 존재하는 변수에 선언과 할당을 조합하면 안된다.
 Within a destructuring variable declaration, every variable in the source is declared. In the following example, we are trying to declare the variable b and refer to the existing variable f, which doesn’t work.
 
 let f;
@@ -535,6 +543,7 @@ const [a,b] = 'foo';
 ```
 
 ##10.10.4 Multiple return values
+
 To see the usefulness of multiple return values, let’s implement a function findElement(a, p) that searches for the first element in the Array a for which the function p returns true. The question is: what should that function return? Sometimes one is interested in the element itself, sometimes in its index, sometimes in both. The following implementation returns both.
 ```
 function findElement(array, predicate) {
@@ -751,7 +760,7 @@ The first element of the Array pattern has a match on the right-hand side and th
 
 {x=0, y=0} ← {z:3}
 
-첫 번 째 예제처럼 x와 y 프로퍼티는 우측에 없고 default values 가 사용된다:
+첫 번 째 예제처럼 x와 y 프로퍼티는 우변에 없고 default values 가 사용된다:
 x = 0
 y = 0
 
