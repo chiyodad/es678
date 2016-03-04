@@ -244,30 +244,32 @@ Similarly to how JavaScript handles non-existent properties and Array elements, 
 const [x] = []; // x = undefined
 const {prop:y} = {}; // y = undefined
 ```
-Remember that object patterns and Array patterns throw a TypeError if they are matched against undefined.
 
-##10.5.1 Default values
+객체 패턴과 배열 패턴이 undefined로 매치되면 타입에러를 내는것을 기억하라 
+
+##10.5.1 초기값
+
 Default values are a feature of patterns: If a part (an object property or an Array element) has no match in the source, it is matched against:
 
 its default value (if specified)
 undefined (otherwise)
 That is, providing a default value is optional.
 
-Let’s look at an example. In the following destructuring, the element at index 0 has no match on the right-hand side. Therefore, destructuring continues by matching x against 3, which leads to x being set to 3.
+예제를 살펴보자. 다음 해체 구문에서, 인덱스가 0인 요소는 우측과 매치되지 않는다. 그러므로, destructuring continues by matching x against 3, which leads to x being set to 3.
 ```
 const [x=3, y] = []; // x = 3; y = undefined
 ```
-You can also use default values in object patterns:
+객체 패턴의 초기값 사용 또한 가능하다:
 ```
 const {foo: x=3, bar: y} = {}; // x = 3; y = undefined
 ```
-##10.5.1.1 undefined triggers default values
+##10.5.1.1 undefined 는 초기값을 triggers 한다.
 Default values are also used if a part does have a match and that match is undefined:
 ```
 const [x=1] = [undefined]; // x = 1
 const {prop: y=2} = {prop: undefined}; // y = 2
 ```
-The rationale for this behavior is explained in the next chapter, in the section on parameter default values.
+이런 동작을 위한 합리적인 이유는, 매개변수 초기값 섹션인다음 장에서 설명한다. 
 
 ##10.5.1.2 Default values are computed on demand
 The default values themselves are only computed when they are needed. In other words, this destructuring:
@@ -284,7 +286,7 @@ if (someValue.prop === undefined) {
 }
 ```
 
-You can observe that if you use console.log():
+console.log()를 사용해서 이를 관찰 할 수 있다.
 ```
 > function log(x) { console.log(x); return 'YES' }
 
@@ -297,7 +299,9 @@ hello
 > b
 123
 ```
-In the second destructuring, the default value is not triggered and log() is not called.
+
+두 번째 해체 구문에서 초기값은 triggered 되지 않고 log() 또한 호출되지 않는다.
+
 
 ##10.5.1.3 Default values can refer to other variables in the pattern
 A default value can refer to any variable, including another variable in the same pattern:
@@ -306,6 +310,8 @@ const [x=3, y=x] = [];     // x=3; y=3
 const [x=3, y=x] = [7];    // x=7; y=7
 const [x=3, y=x] = [7, 2]; // x=7; y=2
 ```
+
+
 However, order matters: the variables x and y are declared from left to right and produce a ReferenceError if they are accessed before their declaration:
 ```
 const [x=y, y=3] = []; // ReferenceError
@@ -316,8 +322,9 @@ So far we have only seen default values for variables, but you can also associat
 ```
 const [{ prop: x } = {}] = [];
 ```
-What does this mean? Recall the rule for default values:
+이게 무엇을 의미하는가? Recall the rule for default values:
 
+소스에서 매칭되는 부분이 없다면 해체는 디폴트값으로 계속한다.
 If the part has no match in the source, destructuring continues with the default value […].
 
 The element at index 0 has no match, which is why destructuring continues with:
@@ -355,8 +362,8 @@ Here, destructuring continues as follows, independently of whether the right-han
 const { prop: x=123 } = {}; // x = 123
 ```
 
-Still confused?
-A later section explains destructuring from a different angle, as an algorithm. That may give you additional insight.
+아직 혼란스러운가?
+나중에 알고리즘으로써의 관점에서 해체를 살펴보겠다. 이것은 또 다른 인사이트를 줄 것이다.
 
 ##10.6 More object destructuring features
 ##10.6.1 Property value shorthands
