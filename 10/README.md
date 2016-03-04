@@ -185,27 +185,27 @@ As a consequence, you can use the empty object pattern {} to check whether a val
 The parentheses around the expressions are necessary because statements must not begin with curly braces in JavaScript.
 
 ##10.4.2 Array patterns work with iterables
-배열해체는 소스의 요소(Elements)를 얻기위해 이터레이터를 사용한다. 그러므로 
-Array destructuring uses an iterator to get to the elements of a source. Therefore, you can Array-destructure any value that is iterable. 이터러블 값의 예제를 보자. Let’s look at examples of iterable values.
+배열해체는 소스의 요소(Elements)를 얻기위해 이터레이터를 사용한다. 그러므로 어떤 값이 이터러블이라면 배열해체가 가능하다.
+이터러블 값의 예제를 보자. 
 
 문자열은 이터러블이다 : 
-Strings are iterable:
 ```
 const [x,...y] = 'abc'; // x='a'; y=['b', 'c']
 ```
 
-Don’t forget that the iterator over strings returns code points (“Unicode characters”, 21 bits), not code units (“JavaScript characters”, 16 bits). (For more information on Unicode, consult the chapter “Chapter 24. Unicode and JavaScript” in “Speaking JavaScript”.) For example:
+이터레이터는 code points (“Unicode characters”, 21 bits)를 반환하는 것이지 code units(“JavaScript characters”, 16 bits)를 반환하는게 아님을 유념하라. (자세한 내용은 “Chapter 24. Unicode and JavaScript” in “Speaking JavaScript”. 를 참고하라. 예를 들어 :
 ```
 const [x,y,z] = 'a\uD83D\uDCA9c'; // x='a'; y='\uD83D\uDCA9'; z='c'
 ```
-You can’t access the elements of a Set via indices, but you can do so via an iterator. Therefore, Array destructuring works for Sets:
 
+인덱스로 Set 의 요소에 접근 할 수는 없지만, 이터레이터를 이용하면 접근이 가능하다. 그러므로 Set도 배열해체가 가능하다. :
 ```
 const [x,y] = new Set(['a', 'b']); // x='a'; y='b’;
 ```
-The Set iterator always returns elements in the order in which they were inserted, which is why the result of the previous destructuring is always the same.
+Set 이터레이터는 요소가 삽입된 그 위치에서 순서대로 요소(elements)를 리턴한다. 이것이 이전의 해체 결과가 항상 같은 이유이다.
 
-Infinite sequences. Destructuring also works for iterators over infinite sequences. The generator function allNaturalNumbers() returns an iterator that yields 0, 1, 2, etc.
+무한수열. 해체는 무한 수열에도 동작한다. 제너레이터 allNaturalNumbers() 는 0,1,2.... 을 yield하는 이터레이터를 반환한다.
+
 ```
 function* allNaturalNumbers() {
   for (let n = 0; ; n++) {
@@ -213,13 +213,14 @@ function* allNaturalNumbers() {
   }
 }
 ```
-The following destructuring extracts the first three elements of that infinite sequence.
+
+무한 수열에서 처음 3개의 요소를 추출하는 해체 코드이다.
 ```
 const [x, y, z] = allNaturalNumbers(); // x=0; y=1; z=2
 ```
 
-##10.4.2.1 Failing to Array-destructure a value
-A value is iterable if it has a method whose key is Symbol.iterator that returns an object. Array-destructuring throws a TypeError if the value to be destructured isn’t iterable:
+##10.4.2.1 값 배열해체의 실패 Failing to Array-destructure a value
+객체를 반환하는 Symbol.iterator가 key인 메소드를 가지고 있다면 이 값은 이터러블이다. 배열해체는 해체하려는 값이 이터러블이 아니면 타입에러를 낸다. :
 ```
 let x;
 [x] = [true, false]; // OK, Arrays are iterable
@@ -230,14 +231,14 @@ let x;
 [x] = undefined; // TypeError, not iterable
 [x] = null; // TypeError, not iterable
 ```
-The TypeError is thrown even before accessing elements of the iterable, which means that you can use the empty Array pattern [] to check whether a value is iterable:
+이 타입에러는 이터러블의 각 요소에 접근하기 이전에도 발생한다. 이 말인 즉슨, 값이 이터러블인지 아닌지 체크하기 위해 빈배열 패턴을 사용 할 수 있다. 
 ```
 [] = {}; // TypeError, empty objects are not iterable
 [] = undefined; // TypeError, not iterable
 [] = null; // TypeError, not iterable
 ```
 
-##10.5 If a part has no match
+##10.5 매칭되는 부분이 없다면?
 Similarly to how JavaScript handles non-existent properties and Array elements, destructuring fails silently if the target mentions a part that doesn’t exist in the source: the interior of the part is matched against undefined. If the interior is a variable that means that the variable is set to undefined:
 ```
 const [x] = []; // x = undefined
