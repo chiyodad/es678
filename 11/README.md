@@ -4,8 +4,11 @@
 11. Parameter handling
 
 Parameter handling has been significantly upgraded in ECMAScript 6. It now supports parameter default values, rest parameters (varargs) and destructuring.
+ECMAScript 6에서 parameter handling은 크게 향상되었다. 이제 parameter 기본값, rest parameter, 그리고 destructing을 지원한다.
 
 For this chapter, it is useful to be familiar with destructuring (which is explained in the previous chapter).
+
+앞 장에서 나온 
 
 11.1 Overview
 Default parameter values:
@@ -33,8 +36,16 @@ selectEntries({ start: 10, end: 30, step: 2 });
 selectEntries({ step: 3 });
 selectEntries({});
 selectEntries();
+
+
 11.1.1 Spread operator (...)
+
+Spread operator (...)
+
 In function and constructor calls, the spread operator turns iterable values into arguments:
+
+functions이나 생성자에서 호출시, 이 spread operator는 iterable value를 argument로 변환한다.
+
 
 > Math.max(-1, 5, 11, 3)
 11
@@ -43,6 +54,8 @@ In function and constructor calls, the spread operator turns iterable values int
 > Math.max(-1, ...[-1, 5, 11], 3)
 11
 In Array literals, the spread operator turns iterable values into Array elements:
+
+배열 리터럴에서 spread operator는 iterable 변수들을 배열 element로 변환한다.
 
 > [1, ...[2,3], 4]
 [1, 2, 3, 4]
@@ -55,6 +68,8 @@ function func(«FORMAL_PARAMETERS») {
 func(«ACTUAL_PARAMETERS»);
 is roughly equivalent to:
 
+이는 대강 아래와 같다
+
 {
     let [«FORMAL_PARAMETERS»] = [«ACTUAL_PARAMETERS»];
     {
@@ -63,11 +78,15 @@ is roughly equivalent to:
 }
 Example – the following function call:
 
+예를 들어 아래의 function을 호출하면
+
 function logSum(x=0, y=0) {
     console.log(x + y);
 }
 logSum(7, 8);
 becomes:
+
+이렇게 된다.
 
 {
     let [x=0, y=0] = [7, 8];
@@ -77,13 +96,17 @@ becomes:
 }
 Let’s look at specific features next.
 
+다음에서는  을 보도록 하자
+
 11.3 Parameter default values
 ECMAScript 6 lets you specify default values for parameters:
+ECMAScript 6는 parameter를 위해 구체적인 default value를 가능하게 해준다???????
 
 function f(x, y=0) {
   return [x, y];
 }
 Omitting the second parameter triggers the default value:
+두번째 parameter를 생략함으로써 default value가 되도록 한다.
 
 > f(1)
 [1, 0]
@@ -91,9 +114,14 @@ Omitting the second parameter triggers the default value:
 [undefined, 0]
 Watch out – undefined triggers the default value, too:
 
+undefined 역시 default value를 발생시키는 것을 볼 수 있다.
+
 > f(undefined, undefined)
 [undefined, 0]
 The default value is computed on demand, only when it is actually needed:
+
+이 default value는 실질적인 필요가 있을때에는 언제든지 산출된다.
+
 
 > const log = console.log.bind(console);
 > function g(x=log('x'), y=log('y')) {return 'DONE'}
@@ -107,9 +135,19 @@ y
 > g(1, 2)
 'DONE'
 11.3.1 Why does undefined trigger default values?
-It isn’t immediately obvious why undefined should be interpreted as a missing parameter or a missing part of an object or Array. The rationale for doing so is that it enables you to delegate the definition of default values. Let’s look at two examples.
+
+왜 undefined가 default value를 발생시키는가?
+
+It isn’t immediately obvious why undefined should be interpreted as a missing parameter or a missing part of an object or Array.
+The rationale for doing so is that it enables you to delegate the definition of default values. Let’s look at two examples.
+
+왜 undefined가 missing parameter 혹은 object나 array의 missing part처럼 interprete되는지 아주 명확하지는 않다.
+이에 대한 이론적인 근거는 default value의 정의를 위임할 수 있다는 것이다. 아래의 두 예제를 보자.
+
 
 In the first example (source: Rick Waldron’s TC39 meeting notes from 2012-07-24), we don’t have to define a default value in setOptions(), we can delegate that task to setLevel().
+
+첫번째 예제에서, 우리는 setOption()에서 default value를 정의내릴 필요가 없다. 우리는 이 작업을 setLevel()에 위임할 수 있다.
 
 function setLevel(newLevel = 0) {
     light.intensity = newLevel;
@@ -123,6 +161,8 @@ function setOptions(options) {
 setOptions({speed:5});
 In the second example, square() doesn’t have to define a default for x, it can delegate that task to multiply():
 
+두 번째 예제에서 squrare()는 x의 default를 정의할 필요가 없다. 이는 multiply()에 위임하여 처리할 수 있다.
+
 function multiply(x=1, y=1) {
     return x * y;
 }
@@ -131,17 +171,34 @@ function square(x) {
 }
 Default values further entrench the role of undefined as indicating that something doesn’t exist, versus null indicating emptiness.
 
+null이 빈 값을 지칭하는 것과는 대조적으로. default value는 undefined가 존재하지 않는 어떤 것을 보여주는 역할로 자리잡게 해준다.
+
+
 11.3.2 Referring to other parameters in default values
+
+default value에서 다른 파라미터 참조하기
+
 Within a parameter default value, you can refer to any variable, including other parameters:
+
+default value parameter에서 당신은 다른 parameter를 포함한 어떤 변수든지 참조할 수 있다.
 
 function foo(x=3, y=x) { ··· }
 foo();     // x=3; y=3
 foo(7);    // x=7; y=7
 foo(7, 2); // x=7; y=2
 However, order matters: parameters are declared from left to right and within a default value, you get a ReferenceError if you access a parameter that hasn’t been declared, yet.
+??
+그러나 order matter는 parameter는 왼쪽에서 오른쪽으로 정의되어야 하는데 default value내에서는 아직 정의되지 않은 parameter에 접근했다는 referenceError를 얻게된다.
 
 11.3.3 Referring to “inner” variables in default values
+default value에서 내부에 있는 변수들을 참조하기
+
 Default values exist in their own scope, which is between the “outer” scope surrounding the function and the “inner” scope of the function body. Therefore, you can’t access “inner” variables from the default values:
+????
+default value는 그들의 고유한 scope에서 존재한다. 이 영역은 function으로 둘러싸인 외부 영역과 functions의 내부 영역 사이에 있다.
+따라서 당신은 default value로부터 내부 변수에 접근할 수 없는 것이다.
+
+
 
 const x = 'outer';
 function foo(a = x) {
@@ -149,8 +206,16 @@ function foo(a = x) {
     console.log(a); // outer
 }
 If there were no outer x in the previous example, the default value x would produce a ReferenceError (if triggered).
+위 예시에서 만약에 외부의 x가 없었다면 default value x는 ReferenceError를 발생시킬 것이다.
+
 
 This restriction is probably most surprising if default values are closures:
+
+
+
+
+
+
 
 function bar(callback = () => QUX) {
     const QUX = 3; // can’t be accessed from default value
