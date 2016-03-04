@@ -211,8 +211,7 @@ If there were no outer x in the previous example, the default value x would prod
 
 This restriction is probably most surprising if default values are closures:
 
-
-
+이런 제약은 만약 default value들이 
 
 
 
