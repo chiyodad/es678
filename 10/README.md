@@ -597,10 +597,10 @@ An object pattern: {«properties»}
 An Array pattern: [«elements»]
 Each of the following sections describes one of these three cases.
 
-##10.11.1.2 Variable
+##10.11.1.2 변수
 (1) x ← value (including undefined and null)
   x = value
-##10.11.1.3 Object pattern
+##10.11.1.3 객체패턴
 (2a) {«properties»} ← undefined
   throw new TypeError();
 (2b) {«properties»} ← null
@@ -635,7 +635,7 @@ function isIterable(value) {
         && typeof value === 'object'
         && typeof value[Symbol.iterator] === 'function');
 }
-Array elements and iterator. The algorithm continues with the elements of the pattern (left-hand side of the arrow) and the iterator that was obtained from the iterable (right-hand side of the arrow).
+배열 요소와 이터레이터. The algorithm continues with the elements of the pattern (left-hand side of the arrow) and the iterator that was obtained from the iterable (right-hand side of the arrow).
 
 (3c) «pattern», «elements» ← iterator
   «pattern» ← getNext(iterator) // undefined after last item
@@ -682,7 +682,7 @@ function move2({x, y} = { x: 0, y: 0 }) {
 }
 To see why move1() is correct, let’s use both functions for two examples. Before we do that, let’s see how the passing of parameters can be explained via matching.
 
-##10.11.2.1 Background: passing parameters via matching
+##10.11.2.1 Background: 매칭을 이용한 매개변수 전달
 For function calls, formal parameters (inside function definitions) are matched against actual parameters (inside function calls). As an example, take the following function definition and the following function call.
 
 function func(a=0, b=0) { ··· }
@@ -739,12 +739,16 @@ y = 0
 Example 2: move1({z:3})
 
 [{x=0, y=0} = {}] ← [{z:3}]
+
 The first element of the Array pattern has a match on the right-hand side and that match is used to continue destructuring (rule 3d):
 
 {x=0, y=0} ← {z:3}
-Like in example 1, there are no properties x and y on the right-hand side and the default values are used:
 
+첫 번 째 예제처럼 x와 y 프로퍼티는 우측에 없고 default values 가 사용된다:
 x = 0
 y = 0
-10.11.3 Conclusion
+
+
+##10.11.3 결론 
+
 The examples demonstrate that default values are a feature of pattern parts (object properties or Array elements). If a part has no match or is matched against undefined then the default value is used. That is, the pattern is matched against the default value, instead.
