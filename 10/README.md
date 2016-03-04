@@ -17,7 +17,7 @@ const {first, last} = obj;
 // first = 'Jane'; last = 'Doe'
 ```    
     
-Destructuring helps with processing return values:
+해체는 반환된 값의 처리를 돕는다 : 
 ```
 const obj = { foo: 123 };
 
@@ -33,7 +33,7 @@ const iterable = ['a', 'b'];
 const [x, y] = iterable;
     // x = 'a'; y = 'b'
 ```
-Destructuring helps with processing return values:
+해체는 반환된 값의 처리를 돕는다 : 
 
 ```
 const [all, year, month, day] = /^(\d\d\d\d)-(\d\d)-(\d\d)$/.exec('2999-12-31');
@@ -80,26 +80,21 @@ for (const {name, age} of arr2) {
 ```
 
 ##10.2 배경지식: 데이터 생성 vs 데이터 추출
-10.2 Background: Constructing data versus extracting data
 
-해체가 무엇인지 완벽히 이해하기 위해서 먼저 broader context를 알아보자. 자바스크립트는 데이터생성을 위한 operations을 가진다.
-To fully understand what destructuring is, let’s first examine its broader context. JavaScript has operations for constructing data:
+해체가 무엇인지 완벽히 이해하기 위해서 먼저 broader context를 알아보자. 자바스크립트는 데이터 생성을 위한 operations을 가진다 :
 ```
 const obj = {};
 obj.first = 'Jane';
 obj.last = 'Doe';
 ```
-그리고 데이터 추출을 위한 operations를 가진다.
-And it has operations for extracting data:
+그리고 데이터 추출을 위한 operations도 가진다:
 ```
 const f = obj.first;
 const l = obj.last;
 ```
 우리가 constructing에 사용해오던 똑같은 문법임을 주목하라.
-Note that we are using the same syntax that we have used for constructing.
 
-constructing 을 위한 더 나은 문법이 있다. - 객체 리터럴
-There is nicer syntax for constructing – an object literal:
+constructing 을 위한 더 나은 문법인 객체 리터럴 :
 ```
 const obj = { first: 'Jane', last: 'Doe' };
 ```
@@ -108,15 +103,16 @@ Destructuring in ECMAScript 6 enables the same syntax for extracting data, where
 ```
 const { first: f, last: l } = obj;
 ```
-Just as the object literal lets us create multiple properties at the same time, the object pattern lets us extract multiple properties at the same time.
+객체 리터럴을 통해 여러개의 프로퍼티를 한 번에 만들 수 있듯이, 객체 해체 패턴도 여러래의 프로퍼티를 한 번에 추출 할 수 있다.  
 
-패턴을 이용하면 배열을 해체하는 것도 가능하다.
-You can also destructure Arrays via patterns:
+
+이러한 패턴들을 통하여 배열을 해체하는 것도 가능하다 :
 ```
 const [x, y] = ['a', 'b']; // x = 'a'; y = 'b'
 ```
 
 ##10.3 패턴(Patterns)
+
 
 The following two parties are involved in destructuring:
 
@@ -126,11 +122,13 @@ Destructuring target: the pattern used for destructuring. For example, the left-
 The destructuring target is either one of three patterns:
 
 Assignment target. For example: x
-In variable declarations and parameter definitions, only references to variables are allowed. In destructuring assignment, you have more options, as I’ll explain later.
-Object pattern. For example: { first: «pattern», last: «pattern» }
-The parts of an object pattern are properties, the property values are again patterns (recursively).
-Array pattern. For example: [ «pattern», «pattern» ]
-The parts of an Array pattern are elements, the elements are again patterns (recursively).
+
+변수선언과 매개변수 정의에서는, 오직 변수에 대한 참조만 허용된다. 해체 할당에서 여러가지 옵션이 있지만 나중에 설명하겠다.
+객체 패턴. 예: { first: «pattern», last: «pattern» }
+객체 패턴의 parts는 프로퍼티이고 이 프로퍼티 값은 다시 패턴이다(재귀적으로).
+배열 배턴. 예: [ «pattern», «pattern» ]
+배열패턴의 parts는 요소이고 이 요소들은 다시 패턴이다(재귀적으로).
+
 That means that you can nest patterns, arbitrarily deeply:
 ```
 const obj = { a: [{ foo: 123, bar: 'abc' }, {}], b: true };
@@ -138,19 +136,20 @@ const { a: [{foo: f}] } = obj; // f = 123
 ```
 
 ##10.3.1 Pick what you need
-If you destructure an object, you mention only those properties that you are interested in:
+객체를 해체한다면 오직 프로퍼티만이 관심사이다 :
 ```
 const { x: x } = { x: 7, y: 3 }; // x = 7
 ```
-If you destructure an Array, you can choose to only extract a prefix:
+배열을 해체한다면 prefix추출만을 택할 수 있다.
 ```
 const [x,y] = ['a', 'b', 'c']; // x='a'; y='b';
 ```
-##10.4 How do patterns access the innards of values?
+##10.4 패턴이 값의 내부에 접근하는 방법?
 In an assignment pattern = someValue, how does the pattern access what’s inside someValue?
 
-##10.4.1 Object patterns coerce values to objects
-The object pattern coerces destructuring sources to objects before accessing properties. That means that it works with primitive values:
+
+##10.4.1 객체 패턴은 객체에 값을 강제한다.
+객체 패턴은 프로퍼티에 접근하기 전에 오브젝트에 소스 해체를 강제한다. 그 말인 즉슨 it works with primitive values:
 ```
 const {length : len} = 'abc'; // len = 3
 const {toString: s} = 123; // s = Number.prototype.toString
