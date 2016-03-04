@@ -69,18 +69,21 @@ ES6안에의 아무때나 호출 되는 3가지 종류:
 콜백으로써, 애로우 함수는 전통적인 함수에 비해 두 가지 이점을 갖는다.:
 * this는 어휘적그러므로 사용하기 안전하다.
 * 이 신택스는 더 간결하다. 많은 고차 함수나 메서드가 사용된  함수형 프로그래밍에서 특히 중요하다. (파라메터가 함수인 함수와 메서드)
-For callbacks that span multiple lines, I find traditional function expressions acceptable, too. But you have to be careful with this.
 
-12.3.1.1 Problem: this as an implicit parameter
-Alas, some JavaScript APIs use this as an implicit argument for their callbacks, which prevents you from using arrow functions. For example: The this in line B is an implicit argument of the function in line A.
+여러줄에 걸친 콜백함수때문에 나 역시 전통적인 함수 표현식을 수용하는 것을 발견할 수 있다. 그러나 너는 this를 조심해야 한다.
 
+#### 12.3.1.1 문제: 함축적인 파라미터로써 
+아아, 어떤 자바스크립트 API는 this를 콜백 함수의 함축적인 인자로 사용된다. 그것은 너가 애로우 함수를 사용하는것을 막는다. 예를 들면: 이 B라인의 this는 A라인 안의 함수의 함축적 인자 이다.
+
+```
 beforeEach(function () { // (A)
     this.addMatchers({ // (B)
         toBeInRange: function (start, end) {  
             ···
         }  
     });  
-});  
+});
+```
 This pattern is less explicit and prevents you from using arrow functions.
 
 12.3.1.2 Solution 1: change the API
