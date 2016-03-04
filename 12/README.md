@@ -1,5 +1,5 @@
 # 12. ECMAScript6 호출 할수 있는 개체들
-이 챕터는 너가가 ES6안에서 호출 할 수 있는 개체(function calls, method calls, 등)를 어떻게 적절하게 사용하는 방법에 충고를 준다.
+이 챕터는 너가가 ES6안에서 호출 할 수 있는 개체(function calls, method calls, 등)를 어떻게 적절하게 사용하는 방법에 대한 충고 해 준다.
 
 이 챕터의 섹션: 
 * An overview of callable entities in ES6
@@ -117,36 +117,49 @@ $button.on('click', event => {
     event.target.classList.toggle('clicked');
 });
 ```
-12.3.2 Prefer function declarations as stand-alone functions
-As stand-alone functions (versus callbacks), I prefer function declarations:
 
+### 12.3.2 독립적 함수로써, 함수 선언을 선호
+독립적인 함수(대 콜백)로써, 나는 함수 선언을 선호한다:
+```
 function foo(arg1, arg2) {
     ···
 }
-The benefits are:
+```
+장점:
+* 주관전으로 나는 그것이 보기 더 좋다. 너가 눈에 띄는 구조를 원할때 이 때, 함수 상세 키워드는 유리하다.
+* 그것은 제너레이터 함수 선언과 비슷하고, 코드를 일관성 있게 보여진다.
 
-Subjectively, I find they look nicer. In this case, the verbose keyword function is an advantage – you want the construct to stand out.
-They look like generator function declarations, leading to more visual consistency of the code.
+하나의 경고가 있다. 일반적으로 너는 독립적인 함수안에서 this는 필요 없다. 만일 너가 이것을 사용한다면, 너는 둘러쌓인 스코프의 this를 접근하길 원한다.(예: 독립적인 함수를 포함한 메소드). 아아, 함수 선언은 너를 
 There is one caveat: Normally, you don’t need this in stand-alone functions. If you use it, you want to access the this of the surrounding scope (e.g. a method which contains the stand-alone function). Alas, function declarations don’t let you do that – they have their own this, which shadows the this of the surrounding scope. Therefore, you may want to let a linter warn you about this in function declarations.
 
-Another option for stand-alone functions is assigning arrow functions to variables. Problems with this are avoided, because it is lexical.
+독립적 함수의 다른 옵션은 애로우 함수에 변수들은 할당 하는 것이다. 이것은 this에 대한 문제를 피한다. 왜냐하면 이것은 어휘적이기 때문이다.
 
+```
 const foo = (arg1, arg2) => {
     ···
 };
-12.3.3 Prefer method definitions for methods
+```
+
+### 12.3..2 메서드를 위한 메서드 정의 선호
+메서드 정의는 super를 사용하는 메서드를 만드는 유일한 방법이다. 그것은 객체 리터럴과 클래스 안에서 명백한 선택이다. 그러나 기존의 객체에 메소드를 어떻게 추가하지? 예를 들면
+
 Method definitions are the only way to create methods that use super. They are the obvious choice in object literals and classes (where they are the only way to define methods), but what about adding a method to an existing object? For example:
 
+```
 MyClass.prototype.foo = function (arg1, arg2) {
     ···
 };
+```
 The following is a quick way to do the same thing in ES6 (caveat: Object.assing() doesn’t move methods with super properly).
 
+```
 Object.assign(MyClass.prototype, {
     foo(arg1, arg2) {
         ···
     }
 });
+```
+
 For more information and caveats, consult the section on Object.assign().
 
 12.3.4 Methods versus callbacks
@@ -156,7 +169,7 @@ There is a subtle difference between an object with methods and an object with c
 The this of a method is the receiver of the method call (e.g. obj if the method call is obj.m(···)).
 
 For example, you can use the WHATWG streams API as follows:
-
+```
 const surroundingObject = {
     surroundingMethod() {
         const obj = {
@@ -177,6 +190,8 @@ const surroundingObject = {
         const stream = new ReadableStream(obj);
     },
 };
+```
+
 That is, obj is an object whose properties start, pull and cancel are methods. Accordingly, these methods can use this to access object-local state (line *) and to call each other (line **).
 
 12.3.4.2 An object whose properties are callbacks
