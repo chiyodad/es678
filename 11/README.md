@@ -113,7 +113,7 @@ In the first example (source: Rick Waldron’s TC39 meeting notes from 2012-07-2
 
 function setLevel(newLevel = 0) {
     light.intensity = newLevel;
-}
+} 
 function setOptions(options) {
     // Missing prop returns undefined => use default
     setLevel(options.dimmerLevel);
