@@ -319,6 +319,7 @@ ES5에서 생성자함수는 객체를 위한 팩토리 만드는 주요 방법(
 ### 12.4.1 컨닝지 : 호출 개체들
 #### 12.4.1.1 호출 가능한 개체의 동작과 구조
 값:
+
 | |Func decl/Func expr|Arrow|Class	Method|
 |---|---|---|---|
 |Function-callable|V|V|X|V|
