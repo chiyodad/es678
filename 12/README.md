@@ -52,9 +52,9 @@ ES6안에의 아무때나 호출 되는 3가지 종류:
 
 ### 12.2.2 super에 의한 호출은 특별한 지역으로 제한되어 있다.
 호출의 두가지 종류는 super키워드를 통해 만들어 진다; 그것들의 사용은 특정지역으로 제한된다.
-*Super-메소드 호출: super.method('abc')
+* Super-메소드 호출: super.method('abc')
 오직 객체 리터럴 이나 파생 클래스 정의 안에서의 메소드 정의에서만 가능하다.
-*Super-생성자 호출: super(8)
+* Super-생성자 호출: super(8)
 오직 파생 클래스 정의 안의 특별 메소드인 constructor()에서만 가능하다.
 
 ### 12.2.3 비 메소드 함수 대 메소드
@@ -336,7 +336,8 @@ ES5에서 생성자함수는 객체를 위한 팩토리 만드는 주요 방법(
 |Inner name (2)|X|V|V|X|
 
 바디:
-| |Func decl|Func expr|Arrow|Class (3)|	Method|
+
+| |Func decl|Func expr|Arrow|Class (3)|Method|
 |---|---|---|---|---|---|
 |this|V|V|lex|V|V|
 |new.target|V|V|lex|V|V|
@@ -363,6 +364,7 @@ ES5에서 생성자함수는 객체를 위한 팩토리 만드는 주요 방법(
 #### 12.4.1.2 this의 규칙
 
 | |FC strict|FC sloppy|MC|new|
+|---|---|---|---|---|
 |Traditional function|undefined|window|receiver|instance|
 |Generator function|undefined|window|receiver|TypeError|
 |Method|undefined|window|receiver|TypeError|
