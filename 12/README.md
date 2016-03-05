@@ -327,26 +327,28 @@ ES5에서 생성자함수는 객체를 위한 팩토리 만드는 주요 방법(
 |Prototype|F.p|F.p|SC|F.p|
 |Property prototype|V|X|V|X|
 
-Whole construct:
+완전한 생성자:
 
- 	Func decl	Func expr	Arrow	Class	Method
-Hoisted	✔	 	 	×	 
-Creates window prop. (1)	✔	 	 	×	 
-Inner name (2)	×	✔	 	✔	×
-Body:
+| |Func decl|Func expr|Arrow|Class|Method|
+|---|---|---|---|---|---|
+|Hoisted|V| |X| |
+|Creates window prop. (1)|V| |X| |
+|Inner name (2)|X|V|V|X|
 
- 	Func decl	Func expr	Arrow	Class (3)	Method
-this	✔	✔	lex	✔	✔
-new.target	✔	✔	lex	✔	✔
-super.prop	×	×	lex	✔	✔
-super()	×	×	×	✔	×
-Abbreviations in cells:
+바디:
+| |Func decl|Func expr|Arrow|Class (3)|	Method|
+|---|---|---|---|---|---|
+|this|V|V|lex|V|V|
+|new.target|V|V|lex|V|V|
+|super.prop|X|X|lex|V|V|
+|super()|X|X|X|V|X|
 
-✔ exists, allowed
-× does not exist, not allowed
-Empty cell: not applicable, not relevant
-lex: lexical, inherited from surrounding lexical scope
-F.p: Function.prototype
+셀 요약:
+* V 존재함, 허용
+* X 존재하지 않음 허용 X
+* 빈셀: 해당사항 없음, 관련 없음
+* lex: 어휘적, 둘러싸힌 어휘 스코프를 상속
+* F.p: Function.prototype
 SC: superclass for derived classes, Function.prototype for base classes. The details are explained in the chapter on classes.
 Notes:
 
