@@ -348,7 +348,7 @@ ES5에서 생성자함수는 객체를 위한 팩토리 만드는 주요 방법(
 * V 존재함, 허용
 * X 존재하지 않음 허용 X
 * 빈셀: 해당사항 없음, 관련 없음
-* lex: 어휘적, 둘러싸힌 어휘 스코프를 상속
+* lex: 어휘적, 둘러쌓인 어휘 스코프를 상속
 * F.p: Function.prototype
 * SC: 파생클래스를 위한 슈퍼 클래스, 기반클래스를 위한 Function.prototype. 이 상세는 15장에 설명되어 있다.
 
@@ -396,20 +396,24 @@ this에 대한 규칙
 * 메소드 호출: this는 메소드콜의 수신자이다. (또는 call/apply의 첫번째 인자)
 * 생성자 호출: this는 새로 생성된 인스턴스 이다.
 
-### 12.4.3 생성자 함수
-Generator functions are explained in the chapter on generators. Their syntax is similar to traditional functions, but they have an extra asterisk:
+### 12.4.3 제너레이터 함수
+제너레이터 함수는 제너레이터 장에서 설명되어 있다. 그들의 신택스는 전통적인 함수와 비슷하지만 그들은 추가적인 *를 갖는다.
 
-Generator function expression:
+* 제너레이터 함수 표현식:
+  ```
   const foo = function* (x) { ··· };
-Generator function declaration:
+  ```
+* 제너레이터 함수 선언식:
+  ```
   function* foo(x) { ··· }
-The rules for this are as follows. Note that it never refers to the generator object.
+  ```
+아래와 같이 this에 대한 규칙. 그것은 결코 제너레이터 객체를 참조하지 않는다는 것을 주목해라
+* 함수/메소드 호출: this는 전통적인 함수처럼 다뤄진다. 호출 결과는 제너레이터 객체 이다.
+* 생성자 호출: 당신은 제너레이션 함수로 생성자 호출을 할 수 없다. 당신이 그렇게 한다면 TypeError를 던진다.
 
-Function/method calls: this is handled like it is with traditional functions. The results of such calls are generator objects.
-Constructor calls: You can’t constructor-call generator functions. A TypeError is thrown if you do.
-12.4.4 Method definitions
-Method definitions can appear inside object literals:
-
+### 12.4.4 메소드 정의
+메소드 정의는 객체 리터럴 안에서 나타날 수 있다.
+```
 const obj = {
     add(x, y) {
         return x + y;
@@ -418,8 +422,9 @@ const obj = {
         return x - y;
     }, // comma is optional
 };
-And inside class definitions:
-
+```
+그리고 클래스 정의 안에서는:
+```
 class AddSub {
     add(x, y) {
         return x + y;
@@ -428,52 +433,59 @@ class AddSub {
         return x - y;
     } // no comma
 }
-As you can see, you must separate method definitions in an object literal with commas, but there are no separators between them in a class definition. The former is necessary to keep the syntax consistent, especially with regard to getters and setters.
+```
+당신이 본것 처럼 당신은 반드시 객체리터럴에서 쉼표로 메소드 정의를 구분해야 한다. 그러나 클래스 정의에서는 메소드사이에 구분자가 없다. 이 양식은 특히 getter와 setter에 대해서 신택스를 유지하기 위해 필수다.
 
-Method definitions are the only place where you can use super to refer to super-properties. Only method definitions that use super produce functions that have the property [[HomeObject]], which is required for that feature (details are explained in the chapter on classes).
+메소드 정의는 당신이 슈퍼-프로퍼티를 참조인 super를 사용 할 수 있는 유일한 곳이다. super를 사용하는 유일한 메소드 정의는 [[HomeObject]]프로퍼티를 갖는 함수를 생성한다. 이 기능을 위해 이것은 요구되어 진다. (자세한 내용은 클래스 장에서 설명한다.)
 
-Rules:
+규칙:
+* 함수 호출: 만약 당신이 메서드호출을 추출하고 함수처럼 호출한다면, 그것은 마치 전통적인 함수처럼 동작한다.
+* 메소드 호출: 전통적인 함수처럼 동작하나 추가적으로 super를 허용한다.
+* 생성자 호출: TypeError를 발생시킨다.
+클래스 선언 내부에서, constructor이름의 메소드는 특별하다. 그 설명은 나중에 하겠다.
 
-Function calls: If you extract a method and call it as a function, it behaves like a traditional function.
-Method calls: work as with traditional functions, but additionally allow you to use super.
-Constructor calls: produce a TypeError.
-Inside class definitions, methods whose name is constructor are special, as explained later.
-
-12.4.5 Generator method definitions
-Generator methods are explained in the chapter on generators. Their syntax is similar to method definitions, but they have an extra asterisk:
-
+### 제너레이터 메소드 정의
+제너레이터 메소드는 제너레이터 장에서 설명되어 있다. 그 신택스는 메소드 정의랑 유사하나 별표(*)를 가지고 있다.
+```
 const obj = {
     * generatorMethod(···) {
         ···
     },
 };
+```
+```
 class MyClass {
     * generatorMethod(···) {
         ···
     }
 }
-Rules:
+```
+규칙:
 
-Calling a generator method returns a generator object.
-You can use this and super as you would in normal method definitions.
-12.4.6 Arrow functions
-Arrow functions are explained in their own chapter:
-
+* 제너레이터 메소드 호출은 제너레이터 객체를 반환한다.
+* 당신은 마치 일반적인 메소드 정의 처럼 this와 super를 사용할 수 있습니다. 
+ 
+### 12.4.6 애로우 함수
+애로루 함수는 13장에서 설명하고 있다.
+```
 const squares = [1,2,3].map(x => x * x);
-The following variables are lexical inside an arrow function (picked up from the surrounding scope):
+```
+애로우 함수안에 다음 변수들은 어휘적이다(둘러싸인 스코프에서 얻음).
 
-arguments
-super
-this
-new.target
-Rules:
+* arguments
+* super
+* this
+* new.target
 
-Function calls: lexical this etc.
-Method calls: You can use arrow functions as methods, but their this continues to be lexical and does not refer to the receiver of a method call.
-Constructor calls: produce a TypeError.
-12.4.7 Classes
-Classes are explained in their own chapter.
+규칙:
+* 함수 호출: 어휘적 this 등.
+* 메소드 호출: 당신은 애로우 함수를 메소드 처럼 사용할 수 있으니, 그들의 this는 여전히 어휘적이고 메서드 호출의 수신자를 참조하지 않는다.
+* 생성자 호출: TypeError를 발생시킨다.
 
+### 12.4.7 클래스
+클래스는 클래스 장에서 설명한다.
+
+```
 // Base class: no `extends`
 class Point {
     constructor(x, y) {
@@ -495,14 +507,18 @@ class ColorPoint extends Point {
         return super.toString() + ' in ' + this.color;
     }
 }
-The Method constructor is special, because it “becomes” the class. That is, classes are very similar to constructor functions:
+```
 
+메소드 constructor는 특별하다 왜나하면 그것은 클래스가 되기 때문이다. 그것이 바로,  클래스는 생성자 함수와 아주 유사하다.
+```
 > Point.prototype.constructor === Point
 true
-Rules:
+```
 
-Function/method calls: Classes can’t be called as functions or methods (why is explained in the chapter on classes).
-Constructor calls: follow a protocol that supports subclassing. In a base class, an instance is created and this refers to it. A derived class receives its instance from its superclass, which is why it needs to call super before it can access this.
+규칙:
+* 함수/메소드 호출: 클래스는 함수나 메서드 처럼 호출 될 수 없다(그 이유는 클래스 장에 있음).
+* 생성자 호출: 하위 클래스 지원 규칙을 따라라. 기저 클래스안에서 인스턴스는 생성되고 this는 그것은 참조한다. 파생 클래스는 그것의 인스턴스를 슈퍼클래스로 부터 받는다. 그것이 그것이 this를 접근하기 전에 super를 호출이 필요한 이유이다.
+
 12.5 Dispatched and direct method calls in ES5 and ES6
 There are two ways to call methods in JavaScript:
 
