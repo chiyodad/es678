@@ -349,45 +349,52 @@ ES5에서 생성자함수는 객체를 위한 팩토리 만드는 주요 방법(
 * 빈셀: 해당사항 없음, 관련 없음
 * lex: 어휘적, 둘러싸힌 어휘 스코프를 상속
 * F.p: Function.prototype
-SC: superclass for derived classes, Function.prototype for base classes. The details are explained in the chapter on classes.
-Notes:
+* SC: 파생클래스를 위한 슈퍼 클래스, 기반클래스를 위한 Function.prototype. 이 상세는 15장에 설명되어 있다.
 
-(1) The rules for what declarations create properties for the global object are explained in the chapter on variables and scoping.
-(2) The inner names of named function expressions and classes are explained in the chapter on classes.
-(3) This column is about the body of the class constructor.
-What about generator functions and methods? Those work like their non-generator counterparts, with two exceptions:
+주석:
+* (1) 선언은 전역 객체를 위한 프로퍼티 를 만드는것에 대한 규칙은 변수와 스코프 장에 설명되어 있다.
+* (2) 기명식 함수 표현식과 기명 클래스의 내부 이름은 클래서 장에서 설명되어 있다.
+* (3) 이 컬럼은 클래스 생성자의 바디에 대한 것이다.
 
-Generator functions and methods have the prototype (GeneratorFunction).prototype ((GeneratorFunction) is an internal object, see diagram in Sect. “Inheritance within the iteration API (including generators)”).
-You can’t constructor-call generator functions.
-12.4.1.2 The rules for this
- 	FC strict	FC sloppy	MC	new
-Traditional function	undefined	window	receiver	instance
-Generator function	undefined	window	receiver	TypeError
-Method	undefined	window	receiver	TypeError
-Generator method	undefined	window	receiver	TypeError
-Arrow function	lexical	lexical	lexical	TypeError
-Class	TypeError	TypeError	TypeError	SC protocol
-Abbreviations in column titles:
+제너레이터 함수나 메서든 무엇인가? 이것들은 그들의 비 제너레이터 반대 처럼 동작한다. 두가지 예외에서:
+* 제너레이터 함수와 메서드는 (GeneratorFunction).prototype을 갖는다.((GeneratorFunction)은 내부 객제이다."Inheritance within the iteration API (including generators)"이 부분을 도표를 보면)
+* 당신은 제너레이터 함수를 생성자 호출 할 수 없다.
 
-FC: function call
-MC: method call
-Abbreviations in cells:
+#### 12.4.1.2 this의 규칙
 
-lexical: inherited from surrounding lexical scope
-SC protocol: subclassing protocol (new instance in base class, received from superclass in derived class)
-12.4.2 Traditional functions
-These are the functions that you know from ES5. There are two ways to create them:
+| |FC strict|FC sloppy|MC|new|
+|Traditional function|undefined|window|receiver|instance|
+|Generator function|undefined|window|receiver|TypeError|
+|Method|undefined|window|receiver|TypeError|
+|Generator method|undefined|window|receiver|TypeError|
+|Arrow function|lexical|lexical|lexical|TypeError|
+|Class|TypeError|TypeError|TypeError|SC protocol|
 
-Function expression:
+컬럼 제목 요약:
+* FC: 함수 호출
+* MC: 메소드 호출
+ 
+셀 요약:
+* lexical: 둘러싸인 언휘적 스코프를 상속
+* SC protocol: 서브 클래스 규약 (기저 클래스에서 신규 인스턴트, 파생 클래스안에서 슈퍼클래스로부터 받는다.)
+
+### 12.4.2 전통적 함수
+당신이 ES5부터 알고 있는 함수가 있다. 그들 생성에는 두 가지가 있다.
+* 함수 표현식:
+  ```
   const foo = function (x) { ··· };
-Function declaration:
+  ```
+* 함수 선언식:
+  ```
   function foo(x) { ··· }
-Rules for this:
+  ```
 
-Function calls: this is undefined in strict mode and the global object in sloppy mode.
-Method calls: this is the receiver of the method call (or the first argument of call/apply).
-Constructor calls: this is the newly created instance.
-12.4.3 Generator functions
+this에 대한 규칙
+* 함수 호출: 엄격 모드에서는 this는 undefined이고 슬로피 모드에서는 전역 객체 이다.
+* 메소드 호출: this는 메소드콜의 수신자이다. (또는 call/apply의 첫번째 인자)
+* 생성자 호출: this는 새로 생성된 인스턴스 이다.
+
+### 12.4.3 생성자 함수
 Generator functions are explained in the chapter on generators. Their syntax is similar to traditional functions, but they have an extra asterisk:
 
 Generator function expression:
