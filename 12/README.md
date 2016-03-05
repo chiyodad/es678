@@ -1,5 +1,5 @@
 # 12. ECMAScript6 호출 할수 있는 개체들
-이 챕터는 너가 ES6안에서 호출 할 수 있는 개체(function calls, method calls, 등)를 어떻게 적절하게 사용하는 방법에 대한 충고 해 준다.
+이 챕터는 너가 ES6안에서 호출 할 수 있는 개체(function calls, method calls, 등)를 어떻게 적절하게 사용하는 방법에 대해 충고 해 준다.
 
 이 챕터의 섹션: 
 * An overview of callable entities in ES6
