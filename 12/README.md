@@ -129,8 +129,7 @@ function foo(arg1, arg2) {
 * 주관전으로 나는 그것이 보기 더 좋다. 너가 눈에 띄는 구조를 원할때 이 때, 함수 상세 키워드는 유리하다.
 * 그것은 제너레이터 함수 선언과 비슷하고, 코드를 일관성 있게 보여진다.
 
-하나의 경고가 있다. 일반적으로 너는 독립적인 함수안에서 this는 필요 없다. 만일 너가 이것을 사용한다면, 너는 둘러쌓인 스코프의 this를 접근하길 원한다.(예: 독립적인 함수를 포함한 메소드). 아아, 함수 선언은 너를 
- Alas, function declarations don’t let you do that – they have their own this, which shadows the this of the surrounding scope. Therefore, you may want to let a linter warn you about this in function declarations.
+하나의 경고가 있다. 일반적으로 너는 독립적인 함수안에서 this는 필요 없다. 만일 너가 이것을 사용한다면, 너는 둘러쌓인 스코프의 this를 접근하길 원한다.(예: 독립적인 함수를 포함한 메소드). 아아, 함수 선언은 너에게 스코프에 둘러싸인 this를 감추고 그 자신의 this를 갖도록 한다. 그러므로 너는 린터가 너에게 함수 선언안에서 this를에 대한 경고를 하게 할 수 있다.
 
 독립적 함수의 다른 옵션은 애로우 함수에 변수들은 할당 하는 것이다. 이것은 this에 대한 문제를 피한다. 왜냐하면 이것은 어휘적이기 때문이다.
 
@@ -258,8 +257,7 @@ ES6 안에서 너는 간단하게 블럭과 let또는 const 선언을 사용할 
 console.log(tmp); // ReferenceError
 ```
 #### 12.3.5.2 IIFE를 모듈로 치환
-
-In ECMAScript 5 code that doesn’t use modules via libraries (such as RequireJS, browserify or webpack), the revealing module pattern is popular, and based on an IIFE. Its advantage is that it clearly separates between what is public and what is private:
+ES5 안에서 라이브러리(RequireJS, browserify, webpack)를 통해 모듈을 사용하지 않는 코드, revealing module pattern는 인기 있고 IIFE에 기반을 둔다. 이것의 장점은 무엇이 public인지, private인지 명확하게 구분한다.
 ```
 var my_module = (function () {
     // Module-private variable:
@@ -276,11 +274,11 @@ var my_module = (function () {
     };
 }());
 ```
-This module pattern produces a global variable and is used as follows:
+이 모듈 패턴은 전역변수 하나를 생성하고 아래처럼 사용한다.
 ```
 my_module.myFunc(33);
 ```
-In ECMAScript 6, modules are built in, which is why the barrier to adopting them is low:
+ES6에서 모듈들은 내장되었고 그것이 그것을 사용하는 장벽이 낮은 이유이다.
 ```
 // my_module.js
 
@@ -292,15 +290,15 @@ export function myFunc(x) {
     ···
 }
 ```
-This module does not produce a global variable and is used as follows:
+이 모듈은 전역 변수를 생성하지 않고 그것은 아래와 같이 사용된다.
 ```
 import { myFunc } from 'my_module.js';
 
 myFunc(33);
 ```
-12.3.5.3 Immediately-invoked arrow functions
+#### 12.3.5.3 애로우 함수 즉시 실행
 There is one use case where you still need an immediately-invoked function in ES6: Sometimes you only can produce a result via a sequence of statements, not via a single expression. If you want to inline those statements, you have to immediately invoke a function. In ES6, you can use immediately-invoked arrow functions if you want to:
-
+```
 const SENTENCE = 'How are you?';
 const REVERSED_SENTENCE = (() => {
     // Iteration over the string gives us code points
@@ -309,6 +307,7 @@ const REVERSED_SENTENCE = (() => {
     arr.reverse();
     return arr.join('');
 })();
+```
 Note that you must parenthesize as shown (the parens are around the arrow function, not around the complete function call). Details are explained in the chapter on arrow functions.
 
 12.3.6 Use classes as constructors
