@@ -297,7 +297,7 @@ import { myFunc } from 'my_module.js';
 myFunc(33);
 ```
 #### 12.3.5.3 애로우 함수 즉시 실행
-There is one use case where you still need an immediately-invoked function in ES6: Sometimes you only can produce a result via a sequence of statements, not via a single expression. If you want to inline those statements, you have to immediately invoke a function. In ES6, you can use immediately-invoked arrow functions if you want to:
+당신이 여전히 ES6에서 즉시 실행 함수가 필요할 때 한 가지  사용 사례가 있다: 때때로 당신은 하나의 표현식이 아닌 문장의 순서를 통한 결과를 생성 할 수 있다. 만일 당신이 그 문장을 인라인을 원한다면, 당신은 함수를 즉시 실행해야 한다. ES6에서 당신은 당신이 원할 때 즉시 호출된 애로우 함수를 사용할 수 있다.
 ```
 const SENTENCE = 'How are you?';
 const REVERSED_SENTENCE = (() => {
@@ -308,7 +308,7 @@ const REVERSED_SENTENCE = (() => {
     return arr.join('');
 })();
 ```
-Note that you must parenthesize as shown (the parens are around the arrow function, not around the complete function call). Details are explained in the chapter on arrow functions.
+당신은 반드시 보이는것(이 괄호는 애로우 함수를 감싼지만, 완전한 함수 호출을 감싸지 않는다.) 처럼 괄호로 묶어야 하는것을 주목하라. 애로우 함수에 대해서 이 장에서 자세하게 설명한다.
 
 12.3.6 Use classes as constructors
 In ES5, constructor functions where the mainstream way of creating factories for objects (but there were also many other techniques, some arguably more elegant). In ES6, classes are the mainstream way of implementing constructor functions. Several frameworks support them as alternatives to their custom inheritance APIs.
