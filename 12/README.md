@@ -308,23 +308,24 @@ const REVERSED_SENTENCE = (() => {
     return arr.join('');
 })();
 ```
-당신은 반드시 보이는것(이 괄호는 애로우 함수를 감싼지만, 완전한 함수 호출을 감싸지 않는다.) 처럼 괄호로 묶어야 하는것을 주목하라. 애로우 함수에 대해서 이 장에서 자세하게 설명한다.
+당신은 반드시 보이는것(이 괄호는 애로우 함수를 감싼지만, 완전한 함수 호출을 감싸지 않는다.) 처럼 괄호로 묶어야 하는것을 주목하라. 애로우 함수에 대해서 13장에서 자세하게 설명한다.
 
-12.3.6 Use classes as constructors
-In ES5, constructor functions where the mainstream way of creating factories for objects (but there were also many other techniques, some arguably more elegant). In ES6, classes are the mainstream way of implementing constructor functions. Several frameworks support them as alternatives to their custom inheritance APIs.
+### 12.3.6 생성자로써 클래스 사용
+ES5에서 생성자함수는 객체를 위한 팩토리 만드는 주요 방법(그러나 많은 다른 테크닉, 틀림없이 더 우아한 방법이 있다.). ES6에서 클래스는 생성자 함수를 만드는 주요 방법이다. 몇몇의 프레임웍은 그것들은 그들의 커스톰 상속 API를 위한 대안처럼 제공한다.
 
-12.4 ES6 callable entities in detail
-This section starts with a cheat sheet, before describing each ES6 callable entity in detail.
+## 12.4 ES6 호출가능한 개체 상세
+각 ES6 호출가능한 개체에 대한 상세를 설명하기 전에 이 섹션은 컨닝지로 시작한다.
 
-12.4.1 Cheat sheet: callable entities
-12.4.1.1 The behavior and structure of callable entities
-Value:
+### 12.4.1 컨닝지 : 호출 개체들
+#### 12.4.1.1 호출 가능한 개체의 동작과 구조
+값:
+| |Func decl/Func expr|Arrow|Class	Method|
+|---|---|---|---|
+|Function-callable|V|V|X|V|
+|Constructor-callable|V|X|V|X|
+|Prototype|F.p|F.p|SC|F.p|
+|Property prototype|V|X|V|X|
 
- 	Func decl/Func expr	Arrow	Class	Method
-Function-callable	✔	✔	×	✔
-Constructor-callable	✔	×	✔	×
-Prototype	F.p	F.p	SC	F.p
-Property prototype	✔	×	✔	×
 Whole construct:
 
  	Func decl	Func expr	Arrow	Class	Method
