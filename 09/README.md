@@ -58,8 +58,12 @@ for (const x of ['a', 'b']) {
 | import | Complete | Module-global | No |
 
 > [Temporal dead zone (TDZ)]
+>
 > 일시적 사각 지대. 해당 영역에 선언은 되지만 참조 불가의 undefined 상태로 선언되는 것을 의미한다.
 > let, const 가 이에 해당되고 함수의 기본 파라미터도 TDZ 에 해당하기에 조심해야 한다
 
 ##  9.2 let 과 const 를 통한 블럭 스코핑
+
+let 과 const 는 블럭 스코프 변수를 생성한다 - 그것들은 단지 자신을 둘러싸고 있는 블럭 내부에서만 존재한다. 다음 코드는 const 로 선언된 변수 tmp 가 단지 if 문의 다음 블럭 안에서만 존재하는걸 보여준다
+
 
