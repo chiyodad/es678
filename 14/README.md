@@ -1,66 +1,79 @@
-14. New OOP features besides classes
+14. 클래스를 포함한 새로운 OOP기능
 
-Classes (which are explained in the next chapter) are the major new OOP feature in ECMAScript 6. However, it also includes new features for object literals and new utility methods in Object. This chapter describes them.
+클래스는 es6에 도입된 주요한 새 OOP특징이다. 하지만 오브젝트리터럴과 Objectㅇ 메소드에도 새로운 기능이 포함되어있다.
+이 쳅터에서는 이들을 다룬다.
 
-14.1 Overview
-14.1.1 New object literal features
-Method definitions:
+14.1 개요
 
+14.1.1 새 오브젝트리터럴
+
+메소드선언:
+```javascript
 const obj = {
     myMethod(x, y) {
         ···
     }
 };
-Property value shorthands:
+```
+속성값의 간단한 표현:
 
+```javascript
 const first = 'Jane';
 const last = 'Doe';
 
 const obj = { first, last };
 // Same as:
 const obj = { first: first, last: last };
-Computed property keys:
-
+```
+계산된 속성키:
+```javascript
 const propKey = 'foo';
 const obj = {
     [propKey]: true,
     ['b'+'ar']: 123
 };
-This new syntax can also be used for method definitions:
-
+```
+계산된 속성키는 메소드선언에도 사용됨:
+```javascript
 const obj = {
     ['h'+'ello']() {
         return 'hi';
     }
 };
 console.log(obj.hello()); // hi
-The main use case for computed property keys is to make it easy to use symbols as property keys.
+```
+계산된 속성키의 주된 활용처는 속성키로 심볼사용을 쉽게 만들어주는 것이다.
 
-14.1.2 New methods in Object
-The most important new method of Object is assign(). Traditionally, this functionality was called extend() in the JavaScript world. In contrast to how this classic operation works, Object.assign() only considers own (non-inherited) properties.
-
+14.1.2 Object의 새로운 메소드
+Object의 새 메소드중 가장 중요한 것ㅇㄴ assign()이다. 전통적으로 이 기능은 자바스크립트세계에서 extend()라 불렸다.
+고전적인 동작과는 대조적으로 Object.assign()은 오직 자신의(상속되지않은)속성만 고려한다.
+```javascript
 const obj = { foo: 123 };
 Object.assign(obj, { bar: true });
 console.log(JSON.stringify(obj));
     // {"foo":123,"bar":true}
-14.2 New features of object literals
-14.2.1 Method definitions
-In ECMAScript 5, methods are properties whose values are functions:
-
+```
+14.2 오브젝트리터럴의 새로운 기능
+14.2.1 메소드 정의
+es5에서 메소드는 함수값을 갖는 속성이다:
+```javascript
 var obj = {
     myMethod: function (x, y) {
         ···
     }
 };
-In ECMAScript 6, methods are still function-valued properties, but there is now a more compact way of defining them:
+```
+es6에서는 메소드가 여전히 함수를 값으로 갖고 있는 속성이긴 하지만 훨씬 간단한 방법으로 정의할 수 있다:
 
+```javascript
 const obj = {
     myMethod(x, y) {
         ···
     }
 };
-Getters and setters continue to work as they did in ECMAScript 5 (note how syntactically similar they are to method definitions):
-
+```
+es5에서 사용되던 Getter와 Setter도 잘 작동한다.
+```javascript
 const obj = {
     get foo() {
         console.log('GET foo');
@@ -71,28 +84,32 @@ const obj = {
         // return value is ignored
     }
 };
-Let’s use obj:
-
+```
+obj를 써보자:
+```javascript
 > obj.foo
 GET foo
 123
 > obj.bar = true
 SET bar to true
 true
-There is also a way to concisely define properties whose values are generator functions:
-
+```
+제네레이터 함수를 값으로 하는 속성을 간단하게 정의하는 방법 또한 제공된다:
+```javascript
 const obj = {
     * myGeneratorMethod() {
         ···
     }
 };
-This code is equivalent to:
-
+```
+이 코드의 의미는 아래와 같다.
+```javascript
 const obj = {
     myGeneratorMethod: function* () {
         ···
     }
 };
+```
 14.2.2 Property value shorthands
 Property value shorthands let you abbreviate the definition of a property in an object literal: If the name of the variable that specifies the property value is also the property key then you can omit the key. This looks as follows.
 
