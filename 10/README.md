@@ -633,9 +633,10 @@ Each of the following sections describes one of these three cases.
   }
   {«properties»} ← obj
 (2e) {} ← obj
-  // No properties left, nothing to do
-##10.11.1.4 Array pattern
-Array pattern and iterable. The algorithm for Array destructuring starts with an Array pattern and an iterable:
+  // 좌변의 빈 프로퍼티, 아무것도 안함
+  
+##10.11.1.4 배열 패턴
+배열 패턴과 이터러블. 배열해체를 위한 알고리즘은 배열 패턴과 이터러블로 시작한다.
 
 (3a) [«elements»] ← non_iterable
 assert(!isIterable(non_iterable))
@@ -696,9 +697,9 @@ But why would you define the parameters as in the previous code snippet? Why not
 function move2({x, y} = { x: 0, y: 0 }) {
     return [x, y];
 }
-To see why move1() is correct, let’s use both functions for two examples. Before we do that, let’s see how the passing of parameters can be explained via matching.
+왜 move1()이 올바른지 알기위해 두 가지 예제를 위한 함수를 사용해보자. 그 전에 우선, 어떻게 파라미터 전달이 매칭에 의해 설명 될수 있는지를 먼저 보자. 
 
-##10.11.2.1 Background: 매칭을 이용한 매개변수 전달
+##10.11.2.1 Background: 매칭을 이용한 파라미터 전달
 For function calls, formal parameters (inside function definitions) are matched against actual parameters (inside function calls). As an example, take the following function definition and the following function call.
 
 function func(a=0, b=0) { ··· }
