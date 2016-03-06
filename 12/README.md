@@ -559,35 +559,37 @@ null
 > arr.toString()
 'a,b'
 ```
-12.5.2 Dispatched method calls
-If you look at the method call arr.toString() you can see that it actually performs two steps:
-
-Dispatch: In the prototype chain of arr, retrieve the value of the first property whose name is toString.
-Call: Call the value and set the implicit parameter this to the receiver arr of the method invocation.
-You can make the two steps explicit by using the call() method of functions:
-
+### 12.5.2 메서드 호출 전달
+당신이 메서드 호출 arr.toString()를 봤다면, 당시는 실제 2단계로 수행되는것을 볼 수 있다.
+1. 전달: arr의 프로토타입 체인에서 이름이 toString인 첫번째 프로퍼티의 값을 검색한다.
+2. 호출: 그 값을 호출 하고 함축적 파라미터인 this에 메서드 호출의 수신자 arr를 설정한다.
+당신은 함수의 call()메서드를 사용해서 두 단계를 명시적으로 만들수 있다.
+```
 > var func = arr.toString; // dispatch
 > func.call(arr) // direct call, providing a value for `this`
 'a,b'
-12.5.3 Direct method calls
-There are two ways to make direct method calls in JavaScript:
+```
+### 12.5.3 직접 멤소드 호출
+자바스크립트에서 직접적으로 메소드 호출을 만드는 방법은 두 가지 이다.
+* Function.prototype.call(thisValue, arg0?, arg1?, ···)
+* Function.prototype.apply(thisValue, argArray)
+두가지 call, apply메서드는 함수를 호출한다. 그것들은 당신이 this위해 값을 지정하는 일반적인 함수 호출과 다른다. call은 각각의 파라메터를 통해 메서드의 인자를 제공하고 apply를 배열을 통해 메서드의 인자를 제공한다.
 
-Function.prototype.call(thisValue, arg0?, arg1?, ···)
-Function.prototype.apply(thisValue, argArray)
-Both method call and method apply are invoked on functions. They are different from normal function calls in that you specify a value for this. call provides the arguments of the method call via individual parameters, apply provides them via an Array.
-
-With a dispatched method call, the receiver plays two roles: It is used to find the method and it is an implicit parameter. A problem with the first role is that a method must be in the prototype chain of an object if you want to invoke it. With a direct method call, the method can come from anywhere. That allows you to borrow a method from another object. For example, you can borrow Object.prototype.toString and thus apply the original, un-overridden implementation of toString to an Array arr:
-
+전달된 메서드 호출에서 수신자는 두가지 역할을 한다. 그것은 메서드를 찾기 위해 사용되고, 그것은 함축적인 파라미터이다. 첫번째 역할의 문제는 만약에 당신이 메서드을 호출하기 원한다면, 메소드는 반드시 프로토타입 체인의 객체가 있어야 한다.
+직접 메서드 호출에서 메서드는 어디서나 올 수 있다. 그것은 당신에서 다른 객체의 메서드를 빌리는 것을 허용한다. 예를 들면 당신은 Object.prototype.toString을 빌릴 수 있고, 따라서 배열 arr에 toString의 취소 오버라이드 구현을 적용한다.
+```
 > const arr = ['a','b','c'];
 > Object.prototype.toString.call(arr)
 '[object Array]'
-The Array version of toString() produces a different result:
-
+```
+toString()의 배열 버전은 다른 결과를 만든다.
+```
 > arr.toString() // dispatched
 'a,b,c'
 > Array.prototype.toString.call(arr); // direct
 'a,b,c'
-Methods that work with a variety of objects (not just with instances of “their” constructor) are called generic. Speaking JavaScript has a list of all methods that are generic. The list includes most Array methods and all methods of Object.prototype (which have to work with all objects and are thus implicitly generic).
+```
+다양한 종류의 객체(단지 "그들의" 생성자의 인스턴스는 아님)와 함께 일하는 메서드는 제너릭으로 불린다. Speaking JavaScript는 제너릭인 모든 메서드의 리스트를 갖는다. 그 리스트는 대부분의 배열 메소드와 Object.prototype(이것은 모든 객체에서 동작어야 하고 따라서 함축적인 제너릭이다.)의 모든 메소드를 포함한다. 
 
 12.5.4 Use cases for direct method calls
 This section covers use cases for direct method calls. Each time, I’ll first describe the use case in ES5 and then how it changes with ES6 (where you’ll rarely need direct method calls).
