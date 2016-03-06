@@ -569,7 +569,7 @@ null
 > func.call(arr) // direct call, providing a value for `this`
 'a,b'
 ```
-### 12.5.3 직접 멤소드 호출
+### 12.5.3 직접 메소드 호출
 자바스크립트에서 직접적으로 메소드 호출을 만드는 방법은 두 가지 이다.
 * Function.prototype.call(thisValue, arg0?, arg1?, ···)
 * Function.prototype.apply(thisValue, argArray)
