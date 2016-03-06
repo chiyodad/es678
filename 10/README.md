@@ -7,7 +7,7 @@ ECMAScript6 에서는 객체나 배열(possibly nested)의 값을 추출하기�
 
 ##10.1.1 객체 해체(Object destructuring)
 객체 해체하기:
-```
+```javascript
 const obj = { first: 'Jane', last: 'Doe' };
 const {first: f, last: l} = obj;
 // f = 'Jane'; l = 'Doe'
