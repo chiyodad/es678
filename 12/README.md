@@ -1,5 +1,5 @@
 # 12. ECMAScript6 호출 할수 있는 개체들
-이 챕터는 너가 ES6안에서 호출 할 수 있는 개체(function calls, method calls, 등)를 어떻게 적절하게 사용하는 방법에 대해 충고 해 준다.
+이 챕터는 당신이 ES6안에서 호출 할 수 있는 개체(function calls, method calls, 등)를 어떻게 적절하게 사용하는 방법에 대해 알려 준다.
 
 이 챕터의 섹션: 
 * An overview of callable entities in ES6
@@ -519,22 +519,28 @@ true
 * 함수/메소드 호출: 클래스는 함수나 메서드 처럼 호출 될 수 없다(그 이유는 클래스 장에 있음).
 * 생성자 호출: 하위 클래스 지원 규칙을 따라라. 기저 클래스안에서 인스턴스는 생성되고 this는 그것은 참조한다. 파생 클래스는 그것의 인스턴스를 슈퍼클래스로 부터 받는다. 그것이 그것이 this를 접근하기 전에 super를 호출이 필요한 이유이다.
 
-12.5 Dispatched and direct method calls in ES5 and ES6
-There are two ways to call methods in JavaScript:
+## ES5, ES6에서 전달과 직접 메소드 호출
+자바스크립트에서 메서드 호출을 두가지 이다.
 
-Via dispatch, e.g. obj.someMethod(arg0, arg1)
-Directly, e.g. someFunc.call(thisValue, arg0, arg1)
-This section explains how these two work and why you will rarely call methods directly in ECMAScript 6. Before we get started, I’ll refresh your knowledge w.r.t. to prototype chains.
+전달인 경우 예 
+```
+obj.somMethod(arg0, arg1)
+```
+직접 예
+```
+someFunc.call(thisValue, arg0, arg1)
+```
+이 섹션은 두가지 작동 방법과 당신이 ES6에서 직접 호출이 드문 이유에 대해서 설명한다. 당신이 시작하기 이전에 나는 당신의 프로토타입 체인에 대한 지식 w.r.t.를 새롭게 할 것 입니다.
 
-12.5.1 Background: prototype chains
-Remember that each object in JavaScript is actually a chain of one or more objects. The first object inherits properties from the later objects. For example, the prototype chain of an Array ['a', 'b'] looks as follows:
+### 12.5.1 배경: 프로토타입 체인
+자바스크립트 안에서 각 객체는 실제로 하나나 그 이상의 객체 체인이라는  것을 기억해라. 첫 객체 마지막 객체들로 부터 상속 받는다. 예를 들면 배열['a','b']의 프로토타입체인은 아래와 같다.
+1. 인스턴스, 엘리먼트 'a'와 'b'를 갖는다.
+2. Array.prototype, 이 프로퍼티들은 Array 생성자로 부터 제공되어 진다.
+3. Object.prototype, 이 프로퍼티들은 Object생성자로 부터 제공되어 진다.
+4. null (체인의 마지막 부분, 실제 이것들의 멤버는 아니다.)
 
-The instance, holding the elements 'a' and 'b'
-Array.prototype, the properties provided by the Array constructor
-Object.prototype, the properties provided by the Object constructor
-null (the end of the chain, so not really a member of it)
-You can examine the chain via Object.getPrototypeOf():
-
+당신은 Object.getPrototypeOf()를 통해 체인을 검사할 수 있다.
+```
 > var arr = ['a', 'b'];
 > var p = Object.getPrototypeOf;
 
@@ -544,13 +550,15 @@ true
 true
 > p(p(p(arr)))
 null
-Properties in “earlier” objects override properties in “later” objects. For example, Array.prototype provides an Array-specific version of the toString() method, overriding Object.prototype.toString().
-
+```
+"이전의" 객체에 있는 프로퍼티들은 "나중의"객체 프로퍼티를 오버라이드 한다. 예를 들면 Array.prototype은 Object.prototype.toString()을 오버라이드 하여, toString() 메서드의 배열 특화 버전을 제공한다.
+```
 > var arr = ['a', 'b'];
 > Object.getOwnPropertyNames(Array.prototype)
 [ 'toString', 'join', 'pop', ··· ]
 > arr.toString()
 'a,b'
+```
 12.5.2 Dispatched method calls
 If you look at the method call arr.toString() you can see that it actually performs two steps:
 
