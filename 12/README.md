@@ -591,96 +591,110 @@ toString()의 배열 버전은 다른 결과를 만든다.
 ```
 다양한 종류의 객체(단지 "그들의" 생성자의 인스턴스는 아님)와 함께 일하는 메서드는 제너릭으로 불린다. Speaking JavaScript는 제너릭인 모든 메서드의 리스트를 갖는다. 그 리스트는 대부분의 배열 메소드와 Object.prototype(이것은 모든 객체에서 동작어야 하고 따라서 함축적인 제너릭이다.)의 모든 메소드를 포함한다. 
 
-12.5.4 Use cases for direct method calls
-This section covers use cases for direct method calls. Each time, I’ll first describe the use case in ES5 and then how it changes with ES6 (where you’ll rarely need direct method calls).
+### 12.5.4 직접 메소드 호출 사용 사례
+이 섹션은 직접 메소드 호출의 사용사례를 다룬다. 때마다. 나는 ES5에서의 사용사례와 다음으로 ES6에서 어떻게 바뀔지 설명하겠다.(ES6에선 당신은 조금만 직접호출이 필요할 것이다.)
 
-12.5.4.1 ES5: Provide parameters to a method via an Array
-Some functions accept multiple values, but only one value per parameter. What if you want to pass the values via an Array?
+#### 12.5.4.1 ES5: 배열을 통한 메서드에게 파라미터 제공
+어떤 함수는 다양한 값을 받아들이지만 파라미터당 하나의 값이다. 당신이 배열을 통해 값을 주길 원한다면?
 
-For example, push() lets you destructively append several values to an Array:
-
+예를 들면, push()는 당신에게 배열에 파괴적으로 몇몇 값을 추가시켜준다.
+```
 > var arr = ['a', 'b'];
 > arr.push('c', 'd')
 4
 > arr
 [ 'a', 'b', 'c', 'd' ]
-But you can’t destructively append a whole Array. You can work around that limitation by using apply():
-
+```
+그러나 당신은 전체의 배열에 파괴적으로 추가 할 수 없다. 당신은 apply()를 사용해 제한적으로 할 수 있다.
+```
 > var arr = ['a', 'b'];
 > Array.prototype.push.apply(arr, ['c', 'd'])
 4
 > arr
 [ 'a', 'b', 'c', 'd' ]
-Similarly, Math.max() and Math.min() only work for single values:
-
+```
+유사하게, Math.max()와 Math.min()는 오직 단일 값으로 동작한다.
+```
 > Math.max(-1, 7, 2)
 7
-With apply(), you can use them for Arrays:
-
+```
+apply()를 통해, 당신은 배열을 통해 그들을 사용할 수 있다.
+```
 > Math.max.apply(null, [-1, 7, 2])
 7
-12.5.4.2 ES6: The spread operator (...) mostly replaces apply()
-Making a direct method call via apply() only because you want to turn an Array into arguments is clumsy, which is why ECMAScript 6 has the spread operator (...) for this. It provides this functionality even in dispatched method calls.
+```
+#### 12.5.4.2 ES6: 펼침 연산자(...)는 대개 apply()를 바꾼다.
+단지 너가 배열을 인자값으로 바꾸길 원해서 apply()통한 직접 메서드 호출을 만드는 것은 꼴사납기 때문에 ES6은 이것을 위해 펼침 연산자 (...) 가 있다. 이것은 심지어 전달 메소트 호출에서도 이 기능을 제공합니다.
 
+```
 > Math.max(...[-1, 7, 2])
 7
-Another example:
-
+```
+다른 예:
+```
 > const arr = ['a', 'b'];
 > arr.push(...['c', 'd'])
 4
 > arr
 [ 'a', 'b', 'c', 'd' ]
-As a bonus, spread also works with the new operator:
-
+```
+추가적으로, 펼침은 또한 새로운 메소드에서도 동작한다.
+```
 > new Date(...[2011, 11, 24])
 Sat Dec 24 2011 00:00:00 GMT+0100 (CET)
-Note that apply() can’t be used with new – the above feat can only be achieved via a complicated work-around in ECMAScript 5.
+```
+apply()는 new와 사용될 수 없다는점을 주목해라. 뛰어난 업적은 단지 ES5안에서 복잡한 해결 방법을 통해 달성된다.
 
-12.5.4.3 ES5: Convert an Array-like object to an Array
+#### 12.5.4.3 ES5: 유사 배열 객체를 배열로 변환
 Some objects in JavaScript are Array-like, they are almost Arrays, but don’t have any of the Array methods. Let’s look at two examples.
 
 First, the special variable arguments of functions is Array-like. It has a length and indexed access to elements.
-
+```
 > var args = function () { return arguments }('a', 'b');
 > args.length
 2
 > args[0]
 'a'
+```
 But arguments isn’t an instance of Array and does not have the method forEach().
-
+```
 > args instanceof Array
 false
 > args.forEach
 undefined
+```
 Second, the DOM method document.querySelectorAll() returns an instance of NodeList.
-
+```
 > document.querySelectorAll('a[href]') instanceof NodeList
 true
 > document.querySelectorAll('a[href]').forEach // no Array methods!
 undefined
+```
 Thus, for many complex operations, you need to convert Array-like objects to Arrays first. That is achieved via Array.prototype.slice(). This method copies the elements of its receiver into a new Array:
-
+```
 > var arr = ['a', 'b'];
 > arr.slice()
 [ 'a', 'b' ]
 > arr.slice() === arr
 false
+```
 If you call slice() directly, you can convert a NodeList to an Array:
-
+```
 var domLinks = document.querySelectorAll('a[href]');
 var links = Array.prototype.slice.call(domLinks);
 links.forEach(function (link) {
     console.log(link);
 });
+```
 And you can convert arguments to an Array:
-
+```
 function format(pattern) {
     // params start at arguments[1], skipping `pattern`
     var params = Array.prototype.slice.call(arguments, 1);
     return params;
 }
 console.log(format('a', 'b', 'c')); // ['b', 'c']
+```
 12.5.4.4 ES6: Array-like objects are less burdensome
 On one hand, ECMAScript 6 has Array.from(), a simpler way of converting Array-like objects to Arrays:
 
