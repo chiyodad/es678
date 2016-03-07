@@ -59,7 +59,7 @@ for (const x of ['a', 'b']) {
 
 > [Temporal dead zone (TDZ)]
 >
-> 일시적 사각 지대. 해당 영역에 선언은 되지만 참조 불가의 undefined 상태로 선언되는 것을 의미한다.
+> 임시 사각 지대. 해당 영역에 선언은 되지만 참조 불가의 undefined 상태로 선언되는 것을 의미한다.
 > let, const 가 이에 해당되고 함수의 기본 파라미터도 TDZ 에 해당하기에 조심해야 한다
 
 ##  9.2 let 과 const 를 통한 블럭 스코핑
@@ -171,7 +171,7 @@ obj.foo.qux
 
 ### 9.3.2 루프 바디 안에서의 const
 
-일단 const 변수가 생성된 후엔 변경할 수 없다. 하지만 그게 당신이 새로운 스코프에 새 변수로 리프레쉬할수 없다는 걸 의미하진 않는다.
+일단 const 변수가 생성된 후엔 변경할 수 없다. 하지만 그게 당신이 새로운 스코프에 새 변수로 새로운 시작(start fresh)을 할 수 없다는 걸 의미하진 않는다.
 
 예를들면 루프를 통해서.
 
@@ -189,3 +189,26 @@ logArgs('Hello', 'everyone');
 // 1. everyone
 ```
 
+## 9.4 임시 사각 지대 (The temporal dead zone)
+
+let 혹은 const 변수선언은 소위 임시 사각 지대 (temporal dead zone - TDZ) 를 갖는다.
+
+스코프에 들어가면, 실행 선언문에 도달할 때까지 그것에 엑세스 될(얻거나, 혹은 할당하거나) 수 없다.
+
+var 선언 변수 (TDZ 를 가지고 있지 않은)와 let 선언 변수(TDZ를 가진) 의 라이프 사이클을 비교해보자
+
+### 9.4.1 var로 선언된 변수의 라이프사이클
+var 변수는 임시 사각 지대를 갖지 않는다. 그들의 라이프사이클은 다음 스텝을 포함한다.
+
+var 변수가 스코프(function 으로 감싸진) 에 들어가면, 변수를 위한 저장 공간이 만들어진다 (바인딩). 그 변수는 즉시 underfined 로 초기화된다. 
+
+실행이 선언문에 도달하면, 그 변수는 특정한 이니셜라이저 (할당) 결과로 값이 있을 경우 세팅된다. 만일 없다면 변수의 값은 여전히 undefined 상태로 남아있다.
+
+### 9.4.2 let 으로 선언된 변수의 라이프사이클
+let 을 통한 변수 선언은 임시 사각 지대 (temporal dead zone) 를 가지고, 그 라이프사이클은 이것과 같다.
+
+let 변수가 스코프(블럭으로 감싸진) 에 들어가면, 변수를 위한 저장 공간이 만들어진다 (바인딩). 그 변수는 초기화되지 않았다. 
+
+Getting or setting an uninitialized variable causes a ReferenceError.
+When the execution within the scope reaches the declaration, the variable is set to the value specified by the initializer (an assignment) – if there is one. If there isn’t then the value of the variable is set to undefined.
+const variables work similarly to let variables, but they must have an initializer (i.e., be set to a value immediately) and can’t be changed.
