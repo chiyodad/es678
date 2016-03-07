@@ -678,7 +678,7 @@ undefined
 > arr.slice() === arr
 false
 ```
-If you call slice() directly, you can convert a NodeList to an Array:
+만약 당신이 slice()를 직접 호출 한다면 당신은 NodeList를 배열로 바꿀 수 있다.
 ```
 var domLinks = document.querySelectorAll('a[href]');
 var links = Array.prototype.slice.call(domLinks);
@@ -686,7 +686,7 @@ links.forEach(function (link) {
     console.log(link);
 });
 ```
-And you can convert arguments to an Array:
+그리고 당신은 arguments를 배열로 바꿀 수 있다.
 ```
 function format(pattern) {
     // params start at arguments[1], skipping `pattern`
@@ -695,23 +695,26 @@ function format(pattern) {
 }
 console.log(format('a', 'b', 'c')); // ['b', 'c']
 ```
-12.5.4.4 ES6: Array-like objects are less burdensome
-On one hand, ECMAScript 6 has Array.from(), a simpler way of converting Array-like objects to Arrays:
-
+#### 12.5.4.4 ES6: 유사 배열은 더 적은 부담이다.
+한편으로, ES6은 Array.from()을 가지고 있고, 이것은 유사배열 객체를 배열로 만드는 간단한 방법이다.
+```
 const domLinks = document.querySelectorAll('a[href]');
 const links = Array.from(domLinks);
 links.forEach(function (link) {
     console.log(link);
 });
-On the other hand, you won’t need the Array-like arguments, because ECMAScript 6 has rest parameters (declared via a triple dot):
-
+```
+다른 한편, 당신은 유사배열 arguments를 필요하지 않다. 왜냐하면 ES6은 rest 파라미터를 가지고 있기 때문이다. (세개의 점으로 선언)
+```
 function format(pattern, ...params) {
     return params;
 }
-console.log(format('a', 'b', 'c')); // ['b', 'c']
-12.5.4.5 ES5: Using hasOwnProperty() safely
-obj.hasOwnProperty('prop') tells you whether obj has the own (non-inherited) property prop.
 
+console.log(format('a', 'b', 'c')); // ['b', 'c']
+```
+#### 12.5.4.5 ES5: hasOwnProperty()를 안적하게 사용
+obj.hasOwnProperty('prop')는 당신에게 obj가 자신의 프로퍼티(비 상속)에 prop가 있는지 여부를 말해준다.
+```
 > var obj = { prop: 123 };
 
 > obj.hasOwnProperty('prop')
@@ -721,18 +724,21 @@ true
 true
 > obj.hasOwnProperty('toString') // own
 false
-However, calling hasOwnProperty via dispatch can cease to work properly if Object.prototype.hasOwnProperty is overridden.
-
+```
+그러나 만약 Object.prototype.hasOwnProperty가 오버라이드 되었다면, hasOwnProperty를 전달을 통해 호출하는 것은 적절하게 작동하는것을 막을 수 있다.
+```
 > var obj1 = { hasOwnProperty: 123 };
 > obj1.hasOwnProperty('toString')
 TypeError: Property 'hasOwnProperty' is not a function
-hasOwnProperty may also be unavailable via dispatch if Object.prototype is not in the prototype chain of an object.
-
+```
+만일 Object.prototype이 객체의 프로토타입 체인에 없다면, 전달을 통한 hasOwnProperty은 또한 아마도 이용할 수 없다.
+```
 > var obj2 = Object.create(null);
 > obj2.hasOwnProperty('toString')
 TypeError: Object has no method 'hasOwnProperty'
-In both cases, the solution is to make a direct call to hasOwnProperty:
-
+```
+이 둘의 경우, 해결책은 hasOwnProperty를 직접 호출로 만드는 것이다.
+```
 > var obj1 = { hasOwnProperty: 123 };
 > Object.prototype.hasOwnProperty.call(obj1, 'hasOwnProperty')
 true
@@ -740,10 +746,11 @@ true
 > var obj2 = Object.create(null);
 > Object.prototype.hasOwnProperty.call(obj2, 'toString')
 false
-12.5.4.6 ES6: Less need for hasOwnProperty()
-hasOwnProperty() is mostly used to implement Maps via objects. Thankfully, ECMAScript 6 has a built-in Map data structure, which means that you’ll need hasOwnProperty() less.
+```
+#### 12.5.4.6 ES6: hasOwnProperty() 적은 필요
+hasOwnProperty()는 거희 객체를 통한 맵 구현을 위해 사용되었다. 감사하게도 ES6은 맵 자료구조가 지원된다. 그 말은 당신은 hasOwnProperty()를 적게 필요 한다는 것이다.
 
-12.5.4.7 ES5: Avoiding intermediate objects
+#### 12.5.4.7 ES5: 중간 객체를 피해라
 Applying an Array method such as join() to a string normally involves two steps:
 
 var str = 'abc';
