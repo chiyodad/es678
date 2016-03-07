@@ -201,13 +201,94 @@ var 선언 변수 (TDZ 를 가지고 있지 않은)와 let 선언 변수(TDZ를 
 var 변수는 임시 사각 지대를 갖지 않는다. 그들의 라이프사이클은 다음 스텝을 포함한다.
 
 1. var 변수가 스코프(function 으로 감싸진) 에 들어가면, 변수를 위한 저장 공간이 만들어진다 (바인딩). 그 변수는 즉시 *underfined* 로 초기화된다. 
-2. 실행이 선언문에 도달하면, 그 변수는 특정 이니셜라이저 (할당) 결과로 값이 있을 경우 세팅된다. 만일 없다면 변수의 값은 여전히 undefined 상태로 남아있다.
+2. 실행이 선언문에 도달하면, 그 변수는 특정 이니셜라이저 (할당) 결과로 값이 있을 경우 설정된다. 만일 없다면 변수의 값은 여전히 undefined 상태로 남아있다.
 
 ### 9.4.2 let 으로 선언된 변수의 라이프사이클
 let 을 통한 변수 선언은 임시 사각 지대 (temporal dead zone) 를 가지고, 그 라이프사이클은 이것과 같다.
 
 1. let 변수가 스코프(블럭으로 감싸진) 에 들어가면, 변수를 위한 저장 공간이 만들어진다 (바인딩). 그 변수는 *초기화되지 않았다*. 
 2. 초기화되지 않은 변수에 값을 얻기 혹은 설정하기는 ReferenceError 를 발생시킨다.
-3. 실행이 선언문에 도달하면, 그 변수는 특정 이니셜라이저 (할당) 결과로 값이 있을 경우 세팅된다. 만일 값이 없다면, 변수 값은 *undefined* 설정된다. 
+3. 실행이 선언문에 도달하면, 그 변수는 특정 이니셜라이저 (할당) 결과로 값이 있을 경우 설정된다. 만일 값이 없다면, 변수 값은 *undefined* 설정된다. 
 
 const 변수도 let 변수와 비슷한 동작을 한다. 그러나 반드시 이니셜라이저를 가져야 하고 (예를 들면 즉시 값 설정이 되어야 한다는 뜻이다) 변경할 수 없다.
+
+### 9.4.3 예제
+Within a TDZ, an exception is thrown if a variable is got or set:
+
+TDZ 내에서 변수를 얻거나 설정하면 예외가 던져진다.
+
+```javascript
+let tmp = true;
+if (true) { // enter new scope, TDZ starts
+    // Uninitialized binding for `tmp` is created
+    console.log(tmp); // ReferenceError
+
+    let tmp; // TDZ ends, `tmp` is initialized with `undefined`
+    console.log(tmp); // undefined
+
+    tmp = 123;
+    console.log(tmp); // 123
+}
+console.log(tmp); // true
+```
+이니셜라이저라면, TDZ는 할당이 된 뒤 종료한다.(???)
+(If there is an initializer then the TDZ ends after the assignment was made)
+
+```javascript
+let foo = console.log(foo); // ReferenceError
+```
+
+The following code demonstrates that the dead zone is really temporal (based on time) and not spatial (based on location):
+다음 코드는 사각 지대가 정말 일시적(시간 기준) 이고 공간 (지역 기준)이 아닌걸 보여준다.
+
+```javascript
+if (true) { // enter new scope, TDZ starts
+    const func = function () {
+        console.log(myVar); // OK!
+    };
+
+    // Here we are within the TDZ and
+    // accessing `myVar` would cause a `ReferenceError`
+
+    let myVar = 3; // TDZ ends
+    func(); // called outside TDZ
+}
+```
+
+### 9.4.4 typeof 는 TDZ 안에서 변수에 사용할 때 ReferenceError 를 던진다
+
+당신이 typeof 를 통해 임시 사각 지대안의 변수에 접근하면 에러를 얻는다.
+
+```javascript
+if (true) {
+    console.log(typeof foo); // ReferenceError (TDZ)
+    console.log(typeof aVariableThatDoesntExist); // 'undefined'
+    let foo;
+}
+```
+
+왜? 그 답은 다음과 같다: foo 는 선언되지 않았고, 초기화되지 않았다. 당신은 그 존재를 인식하지만 그러지 않는다. 따라서 경고됨이 바람직해 보인다.
+
+또한 이런 종류의 체크는 단지 조건부 전역 변수를 만들기에 유용할 뿐이다. 그건 숙련된 자바스크립트 프로그래머가 해야할 일(Something) 이고, var 를 통해서도 할 수 있다.
+
+typeof 를 사용하지 않고, 전역 변수의 존재를 체크하는 방법이 있다.
+
+```javascript
+// With `typeof`
+if (typeof someGlobal === 'undefined') {
+    var someGlobal = { ··· };
+}
+
+// Without `typeof`
+if (!('someGlobal' in window)) {
+    window.someGlobal = { ··· };
+}
+```
+
+전역 변수를 생성하는 전자의 방법은 단지 글로벌 스코프에서만 동작한다 (따라서, ES6의 모듈이 아닌 경우이다.)
+
+### 9.4.5 왜 임시 사각 지대가 있지?
+
+To catch programming errors: Being able to access a variable before its declaration is strange. If you do so, it is normally by accident and you should be warned about it.
+For const: Making const work properly is difficult. Quoting Allen Wirfs-Brock: “TDZs … provide a rational semantics for const. There was significant technical discussion of that topic and TDZs emerged as the best solution.” let also has a temporal dead zone so that switching between let and const doesn’t change behavior in unexpected ways.
+Future-proofing for guards: JavaScript may eventually have guards, a mechanism for enforcing at runtime that a variable has the correct value (think runtime type check). If the value of a variable is undefined before its declaration then that value may be in conflict with the guarantee given by its guard.
