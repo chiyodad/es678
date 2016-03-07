@@ -294,10 +294,7 @@ For const: Making const work properly is difficult. Quoting Allen Wirfs-Brock: �
 Future-proofing for guards: JavaScript may eventually have guards, a mechanism for enforcing at runtime that a variable has the correct value (think runtime type check). If the value of a variable is undefined before its declaration then that value may be in conflict with the guarantee given by its guard.
 
 1. 프로그래밍 오류를 잡으려면 : 선언 전에 변수에 접근이 가능하다는 건 이상하다. 만일 그렇게 되면 보통 이런 건에 대해 경고해야 한다.
-2. const : const 는 적당히 만들기는 어려운 일이다. Allen Wirfs-Brock 을 인용하면, 
-> "TDZs … 는 const 를 만들기 위한 합리적인 문법을 제공한다. 이 주제에 대해서 여러 중요한 기술적 의견들이 있었고 TDZ는 최적의 기술로 부상했다".
-let 또한 예상치못한 동작으로 let 과 const 을 변경하직 않도록 TDZ가 있다.(?)
-(let also has a temporal dead zone so that switching between let and const doesn’t change behavior in unexpected ways.)
+2. const : const 는 적당히 만들기는 어려운 일이다. Allen Wirfs-Brock 을 인용하면, *"TDZs … 는 const 를 만들기 위한 합리적인 문법을 제공한다. 이 주제에 대해서 여러 중요한 기술적 의견들이 있었고 TDZ는 최적의 기술로 부상했다"* let 또한 예상치못한 동작으로 let 과 const 을 변경하지 않도록 TDZ가 있다.(?)
 3. 감시를 통한 미래보강 : JavaScript 은 결국 변수가 올바른 값을 갖는지 런타임 시 수행하는 메카니즘의 (런타임 체크로 생각하라) 감시가 필요하다. 만일 그 변수의 값 선언 하기 전의 undefined 라면 그 값은 감시에 의해 보증되어 충돌할 것이다.
 
 
@@ -307,3 +304,5 @@ let 또한 예상치못한 동작으로 let 과 const 을 변경하직 않도록
 - [“Bug 3009 – typeof on TDZ variable”](https://bugs.ecmascript.org/show_bug.cgi?id=3009)
 
 ## 9.5 루프 헤드 안에서의 let 과 const
+다음 루프는 당신이 그들의 머리에 변수를 선언하는걸 허용한다.
+
