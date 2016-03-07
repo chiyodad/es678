@@ -306,3 +306,24 @@ Future-proofing for guards: JavaScript may eventually have guards, a mechanism f
 ## 9.5 루프 헤드 안에서의 let 과 const
 다음 루프는 당신이 그들의 머리에 변수를 선언하는걸 허용한다.
 
++ for
++ for-in
++ for-of
+
+선언할때, 당신은 var, let 혹은 const를 사용할 수 있다. 그들 각자는 다른 효과를 가지며 다음에 설명한다.
+
+### 9.5.1 for loop
+var-declaring a variable in the head of a for loop creates a single binding (storage space) for that variable:
+헤드 안에서의 var 선언 변수는 변수를 위해 하나의 바인딩(저장 공간)을 만든다.
+
+```javascript
+const arr = [];
+for (var i=0; i < 3; i++) {
+    arr.push(() => i);
+}
+arr.map(x => x()); // [3,3,3]
+```
+
+
+
+
