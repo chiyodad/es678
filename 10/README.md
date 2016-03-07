@@ -542,9 +542,9 @@ const [a,b] = 'foo';
     // a = 'f'; b = 'o'
 ```
 
-##10.10.4 Multiple return values
+##10.10.4 값을 여러번 반환하기
 
-To see the usefulness of multiple return values, let’s implement a function findElement(a, p) that searches for the first element in the Array a for which the function p returns true. The question is: what should that function return? Sometimes one is interested in the element itself, sometimes in its index, sometimes in both. The following implementation returns both.
+값을 여러번 반환하는 유용함을 알아보기 위해, findElement(a, p)를 구현해보자. 이 함수는 true를 리턴하는 함수 p의 배열에서 첫 번째 요소를 찾는다. 문제는 그 함수가 무엇을 반환해야 하는가 이다. 때때로  Sometimes one is interested in the element itself, sometimes in its index, sometimes in both. The following implementation returns both.
 ```javascript
 function findElement(array, predicate) {
     for (const [index, element] of array.entries()) { // (A)
@@ -556,18 +556,20 @@ function findElement(array, predicate) {
 }
 ```
 
-In line A, the Array method entries() returns an iterable over [index,element] pairs. We destructure one pair per iteration. In line B, we use property value shorthands to return the object { element: element, index: index }.
+line A에서, 배열 메소드 entries() 는 [index, element] 쌍으로 가진 이터러블을 반환한다. 한번의 이터레이션 마다 한 쌍을 해체한다. line B에서 객체  { element: element, index: index } 를 반환하기 위해 속성값 shorthands를 사용한다.
 
-findElement()를 사용해봅시다. In the following example, several ECMAScript 6 features allow us to write more concise code: The callback is an arrow function, the return value is destructured via an object pattern with property value shorthands.
+findElement()를 사용해봅시다. 다음 예제에서, 몇몇 ECMAScript 6 특징들은 더 간략한 코딩을 가능하게 해준다.: 콜백은 arrow function 으로, 반환값은 속성값의 shorthands 객체 패턴으로 해체된다
 ```javascript
 const arr = [7, 8, 6];
 const {element, index} = findElement(arr, x => x % 2 === 0);
     // element = 8, index = 1
 ```
-Due to index and element also referring to property keys, the order in which we mention them doesn’t matter:
-
+속성 키를 참조하는 인덱스와 요소 때문에 우리가 언급한 그 순서는 상관이 없다. 
+```javascript
 const {index, element} = findElement(···);
-We have successfully handled the case of needing both index and element. What if we are only interested in one of them? It turns out that, thanks to ECMAScript 6, our implementation can take care of that, too. And the syntactic overhead compared to functions with single return values is minimal.
+```
+인덱스와 요소 모두 요구되는 케이스를 성공적으로 다뤘다. 그 것들중에 하나에만 관심이 있었다면 어떨까? 이것은 ECMAScript6에 이르러 해결되었다. 우리의 구현은 이제 그게 가능하다. 그리고 문법 과부하는 하나의 반환값 으로 비교된다.
+
 ```javascript
 const a = [7, 8, 6];
 
@@ -578,39 +580,42 @@ const {index} = findElement(a, x => x % 2 === 0);
     // index = 1
 ```
 
-Each time, we only extract the value of the one property that we need.
+매번 우리가 필요한 속성값을 추출한다 
 
-##10.11 The destructuring algorithm
-This section looks at destructuring from a different angle: as a recursive pattern matching algorithm.
+##10.11 해체 알고리즘
+이번 섹션은 다른관점에서 해체를 바라볼 것이다.: 재귀적 패턴 매칭 알고리즘
 
-This different angle should especially help with understanding default values. If you feel you don’t fully understand them yet, read on.
+이 다른 관점은 특히 기본값을 이해하는데 도움을 준다. 만약 완벽히 이해되지 않는다면 계속 읽어봐라
 
-At the end, I’ll use the algorithm to explain the difference between the following two function declarations.
+마지막으로 다음 2개의 함수선언문의 차이점을 설명하기 위한 알고리즘을 사용 할 것이다.
 ```javascript
 function move({x=0, y=0} = {})         { ··· }
 function move({x, y} = { x: 0, y: 0 }) { ··· }
 ```
-##10.11.1 The algorithm
-A destructuring assignment looks like this:
+##10.11.1 알고리즘
+해체 할당은 다음과 같이 생겼다.
 
 «pattern» = «value»
-We want to use pattern to extract data from value. I’ll now describe an algorithm for doing so, which is known in functional programming as pattern matching (short: matching). The algorithm specifies the operator ← (“match against”) for destructuring assignment that matches a pattern against a value and assigns to variables while doing so:
+값으로 부터 데이터 추출을 위한 패턴을 사용을 원한다. 이제부터 그 방법에 대한 알고리즘을 설명 할 것이다. 이것은 패턴 매칭에 의한 함수형 프로그래밍으로 알려져 있다.(이하 매칭). 이 알고리즘은 값의 패턴매칭이 되는 해체 할당을 위해 ← 를 연산자로 규정하고 이러한 과정이 진행되며 변수에 할당한다.
 
 «pattern» ← «value»
-The algorithm is specified via recursive rules that take apart both operands of the ← operator. The declarative notation may take some getting used to, but it makes the specification of the algorithm more concise. Each rule has two parts:
 
-The head specifies which operands are handled by the rule.
-The body specifies what to do next.
-I only show the algorithm for destructuring assignment. Destructuring variable declarations and destructuring parameter definitions work similarly.
+이 알고리즘은 좌측을 가르키는 연산자를 받는 재귀적 법칙에 의해 명시된다. 이 선언적인 표기법은 종종 사용되지만 알고리즘의 스펙을 더 간결하게 만든다. 각각의 법칙은 두 부분으로 나뉜다.
 
-I don’t cover advanced features (computed property keys; property value shorthands; object properties and array elements as assignment targets), either. Only the basics.
+head는 룰에 의해 어떤 피연산자부가 다뤄질지 명시한다.
+body는 다음에 무엇을 할지 명시한다.
+
+오직 해체 할당을 위한 알고리즘만 보여준다. 변수 선언을 해체하는 것과와 파라미터선언을 해체하는 것은 비슷하게 작동한다.
+
+고급 특징들을 다루지는 않는다. (계산된 속성 키, 속성값, 할당자로써의 객체 속성 또는 배열요소). 기본만 다룬다.
+
 
 ##10.11.1.1 Patterns
 A pattern is either:
 
 A variable: x
-An object pattern: {«properties»}
-An Array pattern: [«elements»]
+객체 패턴: {«properties»}
+배열 패턴: [«elements»]
 Each of the following sections describes one of these three cases.
 
 ##10.11.1.2 변수
@@ -646,12 +651,13 @@ assert(isIterable(iterable))
   const iterator = iterable[Symbol.iterator]();
   «elements» ← iterator
 Helper function:
-
+```javascript
 function isIterable(value) {
     return (value !== null
         && typeof value === 'object'
         && typeof value[Symbol.iterator] === 'function');
 }
+```
 배열 요소와 이터레이터. The algorithm continues with the elements of the pattern (left-hand side of the arrow) and the iterator that was obtained from the iterable (right-hand side of the arrow).
 
 (3c) «pattern», «elements» ← iterator
@@ -669,21 +675,26 @@ function isIterable(value) {
   getNext(iterator); // skip
   «elements» ← iterator
 (3f) ...«pattern» ← iterator (always last part!)
+```javascript
   const tmp = [];
   for (const elem of iterator) {
       tmp.push(elem);
   }
+  ```
   «pattern» ← tmp
+  
 (3g) ← iterator
   // No elements left, nothing to do
 Helper function:
-
+```javascript
 function getNext(iterator) {
     const {done,value} = iterator.next();
     return (done ? undefined : value);
 }
+```
 ##10.11.2 알고리즘 적용
-The following function definition has named parameters, a technique that is sometimes called options object and explained in the chapter on parameter handling. The parameters use destructuring and default values in such a way that x and y can be omitted. But the object with the parameter can be omitted, too, as you can see in the last line of the code below. This feature is enabled via the = {} in the head of the function definition.
+다음의 함수선언문은 *이름있는 파라미터(named parameters)*를 가지고 있다. 이 기술은 파라미터 핸들링 챕터에서 때때로 options object 라고 불리거나 설명된다. 이 파라미터는 해체를 사용하고 x와 y가 생략될 수 있는 방법의 기본값을 사용한다. 그러나 아래 코드의 마지막 라인에서 보듯이 객체와 함께있는 파라미터도 생략 가능하다. 이 특징은 함수 선언문의 머리에서  {} 를 통해 사용된다.
+
 ```javascript
 function move1({x=0, y=0} = {}) {
     return [x, y];
@@ -699,7 +710,7 @@ function move2({x, y} = { x: 0, y: 0 }) {
     return [x, y];
 }
 ```
-왜 move1()이 올바른지 알기위해 두 가지 예제를 위한 함수를 사용해보자. 그 전에 우선, 어떻게 파라미터 전달이 매칭에 의해 설명 될수 있는지를 먼저 보자. 
+move1()이 왜 올바른지 알기위해 두 가지 예제를 위한 함수를 사용해보자. 그 전에 우선, 어떻게 파라미터 전달이 매칭에 의해 설명 될수 있는지를 먼저 보자. 
 
 ##10.11.2.1 Background: 매칭을 이용한 파라미터 전달
 For function calls, formal parameters (inside function definitions) are matched against actual parameters (inside function calls). As an example, take the following function definition and the following function call.
@@ -707,31 +718,33 @@ For function calls, formal parameters (inside function definitions) are matched 
 function func(a=0, b=0) { ··· }
 func(1, 2);
 ```
-The parameters a and b are set up similarly to the following destructuring.
+파라미터 a와 b는 다음의 해체와 유사한 과정으로 세팅된다.
 
 [a=0, b=0] ← [1, 2]
-10.11.2.2 Using move2()
-Let’s examine how destructuring works for move2().
+10.11.2.2 사용하기  move2()
+ move2() 해체가 어떻게 이뤄지는지 보자.
 
-Example 1. move2() leads to this destructuring:
+예제 1. move2()의 해체 과정:
 
 [{x, y} = { x: 0, y: 0 }] ← []
 The only Array element on the left-hand side does not have a match on the right-hand side, which is why {x,y} is matched against the default value and not against data from the right-hand side (rules 3b, 3d):
 
 {x, y} ← { x: 0, y: 0 }
+좌변은 
 The left-hand side contains property value shorthands, it is an abbreviation for:
 
 {x: x, y: y} ← { x: 0, y: 0 }
-This destructuring leads to the following two assignments (rule 2c, 1):
+이 해체는 아래 내용처럼 두 개의 할당과 같은 결과로 이끈다.(rule 2c, 1):
 
 x = 0;
 y = 0;
-However, this is the only case in which the default value is used.
 
-Example 2. Let’s examine the function call move2({z:3}) which leads to the following destructuring:
+그러나 이것은 기본값이 사용되는 유일한 경우이다.
+
+예제 2. 함수 호출 move2({z:3})를 보자. 이것은 다음의 해체 과정을 걸친다.:
 
 [{x, y} = { x: 0, y: 0 }] ← [{z:3}]
-There is an Array element at index 0 on the right-hand side. Therefore, the default value is ignored and the next step is (rule 3d):
+좌변의 0번 인덱스에 배열 요소가 있다. 그러므로 기본값은 무시되고 다음으로 넘어간다.
 
 {x, y} ← { z: 3 }
 That leads to both x and y being set to undefined, which is not what we want.
@@ -742,17 +755,19 @@ Let’s try move1().
 Example 1: move1()
 
 [{x=0, y=0} = {}] ← []
+우변의 0번 인덱스의 배열 요소는 없다. 기본값을 사용하지 않는다 
 We don’t have an Array element at index 0 on the right-hand side and use the default value (rule 3d):
 
 {x=0, y=0} ← {}
+
 The left-hand side contains property value shorthands, which means that this destructuring is equivalent to:
 
 {x: x=0, y: y=0} ← {}
-Neither property x nor property y have a match on the right-hand side. Therefore, the default values are used and the following destructurings are performed next (rule 2d):
+프로퍼티 x와 y 는 우변과 매칭되지 않는다. 그러므로 기본값이 사용되고 아래와 같은 다음 해체가 수행된다. (rule 2d):
 
 x ← 0
 y ← 0
-That leads to the following assignments (rule 1):
+다음의 할당 결과로 이끈다.(rule 1):
 
 x = 0
 y = 0
@@ -760,6 +775,7 @@ Example 2: move1({z:3})
 
 [{x=0, y=0} = {}] ← [{z:3}]
 
+배열 패턴의 첫 번째 요소는 우변부와 매칭되고, 이 매칭은 해체를 지속하는데 사용됩니다.
 The first element of the Array pattern has a match on the right-hand side and that match is used to continue destructuring (rule 3d):
 
 {x=0, y=0} ← {z:3}
@@ -770,5 +786,5 @@ y = 0
 
 
 ##10.11.3 결론 
+예제에서는 기본값이 패턴부(객체의 프로퍼티 또는 배열 요소)의 특징임을 증명합니다. 일치하는 부분이 없거나 undefined 라면 기본값이 사용 됩니다. 말인즉슨, 패턴은 기본값과 일치됩니다.
 
-The examples demonstrate that default values are a feature of pattern parts (object properties or Array elements). If a part has no match or is matched against undefined then the default value is used. That is, the pattern is matched against the default value, instead.
