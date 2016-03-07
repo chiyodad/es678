@@ -1014,13 +1014,14 @@ function functionFactory() {
 const foo = functionFactory(); // (B)
 console.log(foo.name.length); // 0 (anonymous)
 ```
+하나의 수, 이론적으로, 
 One could, in theory, check for each assignment whether the right-hand side evaluates to a function and whether that function doesn’t have a name, yet. But that would incur a significant performance penalty.
 
-12.6.2.2 Caveat: minification
-Function names are subject to minification, which means that they will usually change in minified code. Depending on what you want to do, you may have to manage function names via strings (which are not minified) or you may have to tell your minifier what names not to minify.
+#### 12.6.2.2 주의: 압축
+함수 이름은 압축된 이름 이다. 이 말은 그들은 대게 압축된 코드 안에서 변경된다. 당신이 원하는 무엇인가에 따라 당신은 문자열을 통해 함수 이름을 관리해야 하거나 당신은 당신의 압축에게 이름을 압축하지 말라고 이야기 해야 한다.
 
-12.6.3 Changing the names of functions
-These are the attributes of property name:
+### 12.6.3 함수의 이름 변경
+name 프로퍼티의 속성이다.
 ```
 > let func = function () {}
 > Object.getOwnPropertyDescriptor(func, 'name')
@@ -1028,36 +1029,38 @@ These are the attributes of property name:
   writable: false,
   enumerable: false,
   configurable: true }
-The property not being writable means that you can’t change its value via assignment:
-
+```
+이 속성에 쓰기 속성이 없다는건 당신인 할당을 통해 이것을 바꿀 수 없다.
+```
 > func.name = 'foo';
 > func.name
 'func'
 ```
-The property is, however, configurable, which means that you can change it by re-defining it:
+그러나 이 프로퍼티는 configurable이다. 이 말은 당신은 그것을 재정의를 통해 바꿀 수 있다.
 ```
 > Object.defineProperty(func, 'name', {value: 'foo', configurable: true});
 > func.name
 'foo'
 ```
-If the property name already exists then you can omit the descriptor property configurable, because missing descriptor properties mean that the corresponding attributes are not changed.
+만얀 name 프로퍼티가 이미 존재한다면, 당신은 디스크립터 프로퍼티인 configurable을 뺄 수 있다. 왜냐하면 빠진 디스트럽터 프로퍼티는 일치하는 속성은 변하지 않는것을 의미하기 때문이다.
 
-If the property name does not exist yet then the descriptor property configurable ensures that name remains configurable (the default attribute values are all false or undefined).
+만일 name 프로퍼티가 아직 존재하지 않는다면 디스크럽터 프로퍼티인 configurable은 name은 configurable이 유지하는것을 보장한다(디폴트 속성 값은 모두 false 또는 undefined이다).
 
-12.6.4 The function property name in the spec
-The spec operation SetFunctionName() sets up the property name. Search for its name in the spec to find out where that happens.
-The third parameter of that operations specifies a name prefix. It is used for:
-Getters and setters (prefixes 'get' and 'set')
-Function.prototype.bind() (prefix 'bound')
-Anonymous function expressions not having a property name can be seen by looking at their runtime semantics:
-The names of named function expressions are set up via SetFunctionName(). That operation is not invoked for anonymous function expressions.
-The names of function declarations are set up when entering a scope (they are hoisted!).
-When an arrow function is created, no name is set up, either (SetFunctionName() is not invoked).
-12.7 FAQ: callable entities
-12.7.1 Why are there “fat” arrow functions (=>) in ES6, but no “thin” arrow functions (->)?
+### 12.6.4 스팩에서 함수 name 프로퍼티
+* 스팩 연산자인 SetFunctionName()는 name프로퍼티를 설정한다. 어디서 발생됐는지 발견하기 위해서 스팩에서 그것의 이름을 찾는다 
+  * 연산자중 3번째 파라미터는 이름 접두사를 지정한다. 
+    * 이것은 겟터와 셋터(접두사 'get', 'set')인 경우 사용된다.
+    * Function.prototype.bind() (접두사 'bound')
+* name프로퍼티를 가지고 있지 않은 익명 함수 표현식은 그들의 런타입 시맨틱을 보는것을 통해 보여진다.
+  * 기명 함수의 이름은 setFunction()을 통해 설졍된다. 그 연산자는 익명함수 표현식인 경우 호출되지 않는다.
+  * 함수 선언의 이름은 스코프에 들어갈때 (호이스트) 설정된다.
+  * 애로우 함수는 생성될때 이름 없음으로 설정된다. (setFunctionName() 은 호출되지 않는다.)
+
+## 12.7 FAQ: 호출 가능 개체
+### 12.7.1 왜 ES6에서는 "날씬한" 애로우 함수가 아닌 "뚱뚱한" 애로우 함수 (=>)이냐?
 ECMAScript 6 has syntax for functions with a lexical this, so-called arrow functions. However, it does not have arrow syntax for functions with dynamic this. That omission was deliberate; method definitions cover most of the use cases for thin arrows. If you really need dynamic this, you can still use a traditional function expression.
 
-12.7.2 How do I determine whether a function was invoked via new?
+### 12.7.2 어떻게 내가 함수가 new를 통해 호출되었는지 아냐?
 ES6 has a new protocol for subclassing, which is explained in the chapter on classes. Part of that protocol is the meta-property new.target, which refers to the first element in a chain of constructor calls (similar to this in a chain for supermethod calls). It is undefined if there is no constructor call. We can use that to enforce that a function must be invoked via new or that it must not be invoked via it. This is an example for the latter:
 ```
 function realFunction() {
@@ -1066,8 +1069,9 @@ function realFunction() {
     }
     ···
 }
-In ES5, this was usually checked like this:
-
+```
+ES5에서 이것은 대개 흔한 방식이다.
+```
 function realFunction() {
     "use strict";
     if (this !== undefined) {
