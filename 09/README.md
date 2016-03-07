@@ -99,7 +99,7 @@ function func() {
 }
 ```
 
-9.3 const 는 불변 (immutable) 변수를 생성한다
+## 9.3 const 는 불변 (immutable) 변수를 생성한다
 let 으로 생성한 변수는 변한다 (mutable)
 
 ```javascript
@@ -116,3 +116,36 @@ foo = 'def'; // TypeError
 ```
 
 스펙에 따르면 const 변수의 변경은 항상 TypeError 를 던진다
+
+일반적으로 strict mode에서 불변 바인딩의 변경은 SetMutableBinding 에 따라서, 항상 예외가 일어나지만, const 변수 선언은 항상 엄격한 바인딩을 생성한다.
+
+step 35.b.i.1 장의 FunctionDeclarationInstantiation(func, argumentsList) 을 참고하라.
+
+### 9.3.1 뒤통수 조심.(Pitfall) : const 는 값의 불변을 만들지 않는다.
+const only means that a variable always has the same value, but it does not mean that the value itself is or becomes immutable. For example, obj is a constant, but the value it points to is mutable – we can add a property to it:
+
+const 는 단지 변수가 항상 같은 값을 가지는 것을 뜻하지만, 그것이 값 자체이거나 불변이 되는 것은 아니다.
+
+예를 들면, obj 는 상수이다. 하지만 그 값은 변경 가능한 포인트 - 우리는 그것에 속성을 추가할 수 있다.
+
+```javascript
+const obj = {};
+obj.prop = 123;
+console.log(obj.prop); // 123
+```
+
+하지만 우린 obj 에 다른 값을 할당할 수 없다. 
+
+```javascript
+obj = {}; // TypeError
+```
+
+만일 당신이 obj 값의 불면을 원한다면, 당신 자신이 알아서 해야 한다. 예를 들면 그걸 프리징한다든가.
+
+```javascript
+const obj = Object.freeze({});
+obj.prop = 123; // TypeError
+```
+
+#### 9.3.1.1 Pitfall: Object.freeze() is shallow
+Keep in mind that Object.freeze() is shallow, it only freezes the properties of its argument, not the objects stored in its properties. For example, the object obj is frozen:
