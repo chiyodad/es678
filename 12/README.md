@@ -1014,8 +1014,7 @@ function functionFactory() {
 const foo = functionFactory(); // (B)
 console.log(foo.name.length); // 0 (anonymous)
 ```
-하나의 수, 이론적으로, 
-One could, in theory, check for each assignment whether the right-hand side evaluates to a function and whether that function doesn’t have a name, yet. But that would incur a significant performance penalty.
+하나의 수, 이론적으로, 오른편에 함수를 평가하는지, 함수가 이름을 가지고 있지 않은지를 각 할당을 검사한다. 그러나 아마도 상당한 성능 패널티가 있다.
 
 #### 12.6.2.2 주의: 압축
 함수 이름은 압축된 이름 이다. 이 말은 그들은 대게 압축된 코드 안에서 변경된다. 당신이 원하는 무엇인가에 따라 당신은 문자열을 통해 함수 이름을 관리해야 하거나 당신은 당신의 압축에게 이름을 압축하지 말라고 이야기 해야 한다.
@@ -1058,10 +1057,10 @@ name 프로퍼티의 속성이다.
 
 ## 12.7 FAQ: 호출 가능 개체
 ### 12.7.1 왜 ES6에서는 "날씬한" 애로우 함수가 아닌 "뚱뚱한" 애로우 함수 (=>)이냐?
-ECMAScript 6 has syntax for functions with a lexical this, so-called arrow functions. However, it does not have arrow syntax for functions with dynamic this. That omission was deliberate; method definitions cover most of the use cases for thin arrows. If you really need dynamic this, you can still use a traditional function expression.
+ES6은 애로우 함수로 불리는 어휘적 this를 갖는 함수 신택스를 갖는다. 그러나 이것은 동적 this를 갖는 애로우 신택스는 갖지 않는다. 이 생략은 신중하다. 메서드 정의는 대부분의 날씬한 사용 사례를 다룬다. 만약 당신이 진정으로 동적 this가 필요하다면 당신은 여전히 전통적인 함수표현식을 사용 할 수 있다.
 
 ### 12.7.2 어떻게 내가 함수가 new를 통해 호출되었는지 아냐?
-ES6 has a new protocol for subclassing, which is explained in the chapter on classes. Part of that protocol is the meta-property new.target, which refers to the first element in a chain of constructor calls (similar to this in a chain for supermethod calls). It is undefined if there is no constructor call. We can use that to enforce that a function must be invoked via new or that it must not be invoked via it. This is an example for the latter:
+ES6은 서브클래싱에 대한 새로운 프로토콜을 갖는다. 이것은 15장에서 다룬다. 이 프로토콜의 일부는 meta-property new.target이다. 이것은 생성자 호출 체인의 처음을 가르킨다(슈퍼 메서드 호출에 대한 체인 this와 유사하다.).  만약 생성자 호출을 하지 않았다면,이것은 undefined 이다. 우리는 함수가 new를 통해 호출되는것나 호출 되지 않게 억지로 사용 할 수 있다. 이 예제는 후자다.
 ```
 function realFunction() {
     if (new.target !== undefined) {
