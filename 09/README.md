@@ -121,7 +121,7 @@ foo = 'def'; // TypeError
 
 step 35.b.i.1 장의 FunctionDeclarationInstantiation(func, argumentsList) 을 참고하라.
 
-### 9.3.1 뒤통수 조심.(Pitfall) : const 는 값의 불변을 만들지 않는다.
+### 9.3.1 함정!(Pitfall) : const 는 값의 불변을 만들지 않는다.
 const only means that a variable always has the same value, but it does not mean that the value itself is or becomes immutable. For example, obj is a constant, but the value it points to is mutable – we can add a property to it:
 
 const 는 단지 변수가 항상 같은 값을 가지는 것을 뜻하지만, 그것이 값 자체이거나 불변이 되는 것은 아니다.
@@ -147,5 +147,45 @@ const obj = Object.freeze({});
 obj.prop = 123; // TypeError
 ```
 
-#### 9.3.1.1 Pitfall: Object.freeze() is shallow
+#### 9.3.1.1 함정!: Object.freeze() 는 얕다.
 Keep in mind that Object.freeze() is shallow, it only freezes the properties of its argument, not the objects stored in its properties. For example, the object obj is frozen:
+Object.freeze() 는 얕다는걸 알아둬라. 그건 단지 그 인수의 프로퍼티들을 프리징할 뿐, 속성에 저장된 객체에는 아니다.
+
+예를 들면, 오브젝트 obj 는 얼었다 (frozen)
+
+```javascript
+const obj = Object.freeze({ foo: {} });
+obj.bar = 123
+// TypeError: Can't add property bar, object is not extensible
+obj.foo = {}
+// TypeError: Cannot assign to read only property 'foo' of #<Object>
+```
+
+하지만, object obj.foo 는 아니다.
+
+```javascript
+obj.foo.qux = 'abc';
+obj.foo.qux
+// 'abc'
+```
+
+### 9.3.2 루프 바디 안에서의 const
+
+일단 const 변수가 생성된 후엔 변경할 수 없다. 하지만 그게 당신이 새로운 스코프에 새 변수로 리프레쉬할수 없다는 걸 의미하진 않는다.
+
+예를들면 루프를 통해서.
+
+```javascript
+function logArgs(...args) {
+    for (const [index, elem] of args.entries()) {
+        const message = index + '. ' + elem;
+        console.log(message);
+    }
+}
+logArgs('Hello', 'everyone');
+
+// Output:
+// 0. Hello
+// 1. everyone
+```
+
