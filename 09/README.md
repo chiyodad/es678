@@ -201,14 +201,13 @@ var 선언 변수 (TDZ 를 가지고 있지 않은)와 let 선언 변수(TDZ를 
 var 변수는 임시 사각 지대를 갖지 않는다. 그들의 라이프사이클은 다음 스텝을 포함한다.
 
 1. var 변수가 스코프(function 으로 감싸진) 에 들어가면, 변수를 위한 저장 공간이 만들어진다 (바인딩). 그 변수는 즉시 *underfined* 로 초기화된다. 
-
-2. 실행이 선언문에 도달하면, 그 변수는 특정한 이니셜라이저 (할당) 결과로 값이 있을 경우 세팅된다. 만일 없다면 변수의 값은 여전히 undefined 상태로 남아있다.
+2. 실행이 선언문에 도달하면, 그 변수는 특정 이니셜라이저 (할당) 결과로 값이 있을 경우 세팅된다. 만일 없다면 변수의 값은 여전히 undefined 상태로 남아있다.
 
 ### 9.4.2 let 으로 선언된 변수의 라이프사이클
 let 을 통한 변수 선언은 임시 사각 지대 (temporal dead zone) 를 가지고, 그 라이프사이클은 이것과 같다.
 
-1. let 변수가 스코프(블럭으로 감싸진) 에 들어가면, 변수를 위한 저장 공간이 만들어진다 (바인딩). 그 변수는 초기화되지 않았다. 
+1. let 변수가 스코프(블럭으로 감싸진) 에 들어가면, 변수를 위한 저장 공간이 만들어진다 (바인딩). 그 변수는 *초기화되지 않았다*. 
+2. 초기화되지 않은 변수에 값을 얻기 혹은 설정하기는 ReferenceError 를 발생시킨다.
+3. 실행이 선언문에 도달하면, 그 변수는 특정 이니셜라이저 (할당) 결과로 값이 있을 경우 세팅된다. 만일 값이 없다면, 변수 값은 *undefined* 설정된다. 
 
-Getting or setting an uninitialized variable causes a ReferenceError.
-When the execution within the scope reaches the declaration, the variable is set to the value specified by the initializer (an assignment) – if there is one. If there isn’t then the value of the variable is set to undefined.
-const variables work similarly to let variables, but they must have an initializer (i.e., be set to a value immediately) and can’t be changed.
+const 변수도 let 변수와 비슷한 동작을 한다. 그러나 반드시 이니셜라이저를 가져야 하고 (예를 들면 즉시 값 설정이 되어야 한다는 뜻이다) 변경할 수 없다.
