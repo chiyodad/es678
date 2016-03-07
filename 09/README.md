@@ -66,4 +66,49 @@ for (const x of ['a', 'b']) {
 
 let 과 const 는 블럭 스코프 변수를 생성한다 - 그것들은 단지 자신을 둘러싸고 있는 블럭 내부에서만 존재한다. 다음 코드는 const 로 선언된 변수 tmp 가 단지 if 문의 다음 블럭 안에서만 존재하는걸 보여준다
 
+```javascript
+function func() {
+    if (true) {
+        const tmp = 123;
+    }
+    console.log(tmp); // ReferenceError: tmp is not defined
+}
+```
 
+대조적으로, var 선언 변수는 함수 스코프이다
+
+```javascript
+function func() {
+    if (true) {
+        var tmp = 123;
+    }
+    console.log(tmp); // 123
+}
+```
+
+블럭 스코핑은 당신이 변수를 함수 안에서 가릴 수 있다는 걸 뜻한다
+
+```javascript
+function func() {
+  const foo = 5;
+  if (···) {
+     const foo = 10; // shadows outer `foo`
+     console.log(foo); // 10
+  }
+  console.log(foo); // 5
+}
+```
+
+9.3 const 는 불변 (immutable) 변수를 생성한다
+let 으로 생성한 변수는 변한다 (mutable)
+
+```javascript
+let foo = 'abc';
+foo = 'def';
+console.log(foo); // def
+Constants, variables created by const, are immutable – you can’t assign them a different value:
+
+const foo = 'abc';
+foo = 'def'; // TypeError
+```
+Spec detail: changing a const variable always throws a TypeError
