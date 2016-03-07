@@ -805,22 +805,24 @@ Array.prototype.slice.call(arguments)
 ```
 이 패턴은 꽤 유명해졌다. 그것은 긴 비전처럼 명확하게 저자의 의도를 드러내지 않지만 그것은 훨신 덜 장확하다. 두 버전은 많은 차이가 없다.
 
-12.6 The name property of functions
-The name property of a function contains its name:
-
+## 12.6 함수의 name 프로퍼티
+함수의 name 프로퍼티는 그것의 이름을 포함한다.
+```
 > function foo() {}
 > foo.name
 'foo'
-This property is useful for debugging (its value shows up in stack traces) and some metaprogramming tasks (picking a function by name etc.).
+```
+이 프로퍼티는 디버깅과 (그것의 값은 스택 트레이스에서 보여진다.) 약간의 메타 프로그래밍 수행(이름등을 통해 함수를 선택) 할때 유용하다.
 
-Prior to ECMAScript 6, this property was already supported by most engines. With ES6, it becomes part of the language standard and is frequently filled in automatically.
+ES6이전에는, 이 프로퍼티는 이미 대부분의 엔진에서 지원한다. ES6에서 이것은 언어 표준의 한부분이 되었고 자동으로 자주 입력됩니다.
 
-12.6.1 Constructs that provide names for functions
-The following sections describe how name is set up automatically for various programming constructs.
+### 12.6.1 함수에게 name을 제공하는 생성자
+다음 섹션에서 어떻게 다양한 프로그래밍 생성자를 통해 이름이 자동으로 설정되는지에 대해서 설명한다.
 
-12.6.1.1 Variable declarations and assignments
-Functions pick up names if they are created via variable declarations:
+#### 12.6.1.1 변수 선언과 할당
+만일 함수가 변수 선언에 의해 생성된다면 함수들은 그 이름을 선택한다.
 
+```
 let func1 = function () {};
 console.log(func1.name); // func1
 
@@ -829,8 +831,9 @@ console.log(func2.name); // func2
 
 var func3 = function () {};
 console.log(func3.name); // func3
-But even with a normal assignment, name is set up properly:
-
+```
+그러나 심지어 일반적인 할당에도 name은 정확하게 설정된다.
+```
 let func4;
 func4 = function () {};
 console.log(func4.name); // func4
@@ -838,15 +841,18 @@ console.log(func4.name); // func4
 var func5;
 func5 = function () {};
 console.log(func5.name); // func5
-With regard to names, arrow functions are like anonymous function expressions:
-
+```
+이름에 대해서는 애로우 함수들은 익명 함수 표현식과 유사하다.
+```
 const func = () => {};
 console.log(func.name); // func
-From now on, whenever you see an anonymous function expression, you can assume that an arrow function works the same way.
+```
+지금부터, 언제나 당신이 익명함수 표현식을 볼때, 당신은 애로우 함수도 같은 방법으로 동작하는것을 가정할 수 있다.
 
-12.6.1.2 Default values
-If a function is a default value, it gets its name from its variable or parameter:
+#### 12.6.1.2 디폴트 값
+만약 함수가 디폴트 값이면 그것은 그것의 이름을 그것의 변수나 파라미터로 가져온다.
 
+```
 let [func1 = function () {}] = [];
 console.log(func1.name); // func1
 
@@ -857,29 +863,38 @@ function g(func3 = function () {}) {
     return func3.name;
 }
 console.log(g()); // func3
-12.6.1.3 Named function definitions
-Function declarations and function expression are function definitions. This scenario has been supported for a long time: a function definition with a name passes it on to the name property.
+```
+#### 12.6.1.3 기명 함수 정의
+함수 선언과 함수 표현식은 함수 정의 이다. 이 시나리오는 오랜기간 제공되고 있다. 이름과 함께 함수 정의 그것을 name 프로퍼티로 전달한다.
 
-For example, a function declaration:
+예를 들어, 함수 선언:
 
+```
 function foo() {}
 console.log(foo.name); // foo
-The name of a named function expression also sets up the name property.
+```
+기명 함수 표현식의 이름은 name 프로퍼티로 설정된다.
 
+```
 const bar = function baz() {};
 console.log(bar.name); // baz
-Because it comes first, the function expression’s name baz takes precedence over other names (e.g. the name bar provided via the variable declaration):
+```
+왜냐하면 이것은 처음 부분에서 왔기 때문에 이 함수 표현식의 이름 baz 다른 이름들을 앞선다. (예 이름 bar는 변수 선언을 통해 제공 된다.)
 
-However, as in ES5, the name of a function expression is only a variable inside the function expression:
+그러나 ES5에서는 함수 표현식 이름은 오직 함수 표현식 안에 변수이다.
 
+```
 const bar = function baz() {
     console.log(baz.name); // baz
 };
 bar();
 console.log(baz); // ReferenceError
-12.6.1.4 Methods in object literals
-If a function is the value of a property, it gets its name from that property. It doesn’t matter if that happens via a method definition (line A), a traditional property definition (line B), a property definition with a computed property key (line C) or a property value shorthand (line D).
+```
 
+#### 12.6.1.4 객체 리터럴안에 메소드
+만약 함수가 프로퍼티의 값이라면, 그것은 그것의 이름을 프로퍼티를 통해 얻는다. 메소드 정의(줄 A), 전통적인 프로퍼티 정의 (줄 B), 연산된 프로퍼티 키를 통한 프로퍼티 정의(줄 C) 또는 속기에 의한 프로퍼티 값(줄 D) 통해 발생되었다면, 
+그것은 문제가 아닌다.
+```
 function func() {}
 let obj = {
     m1() {}, // (A)
@@ -891,8 +906,10 @@ console.log(obj.m1.name); // m1
 console.log(obj.m2.name); // m2
 console.log(obj.m3.name); // m3
 console.log(obj.func.name); // func
-The names of getters are prefixed with 'get', the names of setters are prefixed with 'set':
+```
+겟터들의 이름은 접두사 'get'을 가지고 있고 셋터들은 접두사로 'set'을 가진다.
 
+```
 let obj = {
     get foo() {},
     set bar(value) {},
@@ -902,9 +919,11 @@ console.log(getter.name); // 'get foo'
 
 let setter = Object.getOwnPropertyDescriptor(obj, 'bar').set;
 console.log(setter.name); // 'set bar'
-12.6.1.5 Methods in class definitions
-The naming of methods in class definitions is similar to object literals:
+```
+### 12.6.1.5 클래스 정의 안에서 메소드
+클래스 정의 안에서 메소드의 이름 짓기는 객체리터럴과 유사하다.
 
+```
 class C {
     m1() {}
     ['m' + '2']() {} // computed property key
@@ -917,8 +936,10 @@ console.log(new C().m1.name); // m1
 console.log(C.prototype.m2.name); // m2
 
 console.log(C.classMethod.name); // classMethod
-Getters and setters again have the name prefixes 'get' and 'set', respectively:
+```
+겟터와 셋터 또한 이름에 접두사로 각각 'get', 'set'을 같는다.
 
+```
 class C {
     get foo() {}
     set bar(value) {}
@@ -928,11 +949,14 @@ console.log(getter.name); // 'get foo'
 
 let setter = Object.getOwnPropertyDescriptor(C.prototype, 'bar').set;
 console.log(setter.name); // 'set bar'
-12.6.1.6 Methods whose keys are symbols
-In ES6, the key of a method can be a symbol. The name property of such a method is still a string:
+```
 
-If the symbol has a description, the method’s name is the description in square brackets.
-Otherwise, the method’s name is the empty string ('').
+#### 12.6.1.6 키를 심볼로 갖는 메소드
+ES6에서 메소드의 키가 심볼일 수 있다. 이 이 같은 메소드의 name 프로퍼티는 여전히 문자열이다.
+
+* 만약 심볼이 디스크립션을 갖는다면, 그 메서드의 이름은 대괄호 안 디스크립션 이다.
+* 반면에 이 메소드의 이름은 빈 문자열이다('').
+```
 const key1 = Symbol('description');
 const key2 = Symbol();
 
@@ -942,17 +966,21 @@ let obj = {
 };
 console.log(obj[key1].name); // '[description]'
 console.log(obj[key2].name); // ''
-12.6.1.7 Class definitions
-Remember that class definitions create functions. Those functions also have their property name set up correctly:
+```
 
+#### 12.6.1.7 클래스 정의
+클래스 정의는 함수를 생성하는 것을 기억해라 이 함수들은 또한 name 프로퍼티의 정확한 설정를 갖는다.
+
+```
 class Foo {}
 console.log(Foo.name); // Foo
 
 const Bar = class {};
 console.log(Bar.name); // Bar
-12.6.1.8 Default exports
-All of the following statements set name to 'default':
-
+```
+#### 12.6.1.8 디폴트 exports
+다음에 나온 모든 문장은 이름을 'default'로 설정한다.
+```
 export default function () {}
 export default (function () {});
 
@@ -960,24 +988,32 @@ export default class {}
 export default (class {});
 
 export default () => {};
-12.6.1.9 Other programming constructs
-Generator functions and generator methods get their names the same way that normal functions and methods do.
-new Function() produces functions whose name is 'anonymous'. A webkit bug describes why that is necessary on the web.
-func.bind(···) produces a function whose name is 'bound '+func.name:
+```
+
+#### 12.6.1.9 다른 프로그래밍 생성자
+* 제너레이터 함수와 제너레이터 메소드를 그들의 이름을 일반적인 함수와 메서드와 같은 방법으로 얻는다.
+* new Function() 함수를 발생된 함수의 이름은 'anonymous'이다. 웹킷 버그는 왜 웹에서 필요한지에 대해서 설명한다.
+* func.bind(...)으로 발생된 함수의 이름은 'bound'+func.name이다.
+  ```
   function foo(x) {
       return x
   }
+  
   const bound = foo.bind(undefined, 123);
   console.log(bound.name); // 'bound foo'
-12.6.2 Caveats
-12.6.2.1 Caveat: the name of a function is always assigned at creation
-Function names are always assigned during creation and never changed later on. That is, JavaScript engines detect the previously mentioned patterns and create functions that start their lives with the correct names. The following code demonstrates that the name of the function created by functionFactory() is assigned in line A and not changed by the declaration in line B.
+  ```
 
+### 12.6.2 주의 사항
+#### 12.6.2.1 주의 사항: 함수의 이름은 항상 생성때 할당된다.
+함수 이름은 항상 생성하는 동안에 할당되고 그 후에 절때 변하지 않는다. 자바스크립트 엔진은 앞서 언급한 패턴에서 발견하고 처음부터 그것과 정확한 그것의 이름과 생성된다. 아래 코드는 functionFactory()에 의해서 생성된 함수의 이름이 줄A에서 할당되고 줄B에서 정의에 의해 변하지 않는다는 것을 증명한다.
+
+```
 function functionFactory() {
     return function () {}; // (A)
 }
 const foo = functionFactory(); // (B)
 console.log(foo.name.length); // 0 (anonymous)
+```
 One could, in theory, check for each assignment whether the right-hand side evaluates to a function and whether that function doesn’t have a name, yet. But that would incur a significant performance penalty.
 
 12.6.2.2 Caveat: minification
@@ -985,7 +1021,7 @@ Function names are subject to minification, which means that they will usually c
 
 12.6.3 Changing the names of functions
 These are the attributes of property name:
-
+```
 > let func = function () {}
 > Object.getOwnPropertyDescriptor(func, 'name')
 { value: 'func',
@@ -997,11 +1033,13 @@ The property not being writable means that you can’t change its value via assi
 > func.name = 'foo';
 > func.name
 'func'
+```
 The property is, however, configurable, which means that you can change it by re-defining it:
-
+```
 > Object.defineProperty(func, 'name', {value: 'foo', configurable: true});
 > func.name
 'foo'
+```
 If the property name already exists then you can omit the descriptor property configurable, because missing descriptor properties mean that the corresponding attributes are not changed.
 
 If the property name does not exist yet then the descriptor property configurable ensures that name remains configurable (the default attribute values are all false or undefined).
@@ -1021,7 +1059,7 @@ ECMAScript 6 has syntax for functions with a lexical this, so-called arrow funct
 
 12.7.2 How do I determine whether a function was invoked via new?
 ES6 has a new protocol for subclassing, which is explained in the chapter on classes. Part of that protocol is the meta-property new.target, which refers to the first element in a chain of constructor calls (similar to this in a chain for supermethod calls). It is undefined if there is no constructor call. We can use that to enforce that a function must be invoked via new or that it must not be invoked via it. This is an example for the latter:
-
+```
 function realFunction() {
     if (new.target !== undefined) {
         throw new Error('Can’t be invoked via `new`');
@@ -1037,3 +1075,4 @@ function realFunction() {
     }
     ···
 }
+```
