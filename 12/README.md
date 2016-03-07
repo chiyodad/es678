@@ -646,9 +646,9 @@ Sat Dec 24 2011 00:00:00 GMT+0100 (CET)
 apply()는 new와 사용될 수 없다는점을 주목해라. 뛰어난 업적은 단지 ES5안에서 복잡한 해결 방법을 통해 달성된다.
 
 #### 12.5.4.3 ES5: 유사 배열 객체를 배열로 변환
-Some objects in JavaScript are Array-like, they are almost Arrays, but don’t have any of the Array methods. Let’s look at two examples.
+자바스크립트 안에서 어떤 객체는 유사 배열이다. 그것들은 거희 배열이지만, 배열 메소드에 어느것도 가지고 있지 않다. 두 예제를 보자.
 
-First, the special variable arguments of functions is Array-like. It has a length and indexed access to elements.
+첫째, 함수의 특수 변수 arguments는 유사 배열이다. 이것은 length와 원소를 접근하는 인덱스를 갖는다.
 ```
 > var args = function () { return arguments }('a', 'b');
 > args.length
@@ -656,21 +656,21 @@ First, the special variable arguments of functions is Array-like. It has a lengt
 > args[0]
 'a'
 ```
-But arguments isn’t an instance of Array and does not have the method forEach().
+그러나 arguments는 배열의 인스턴스가 아니고 forEach()메소드가 없다.
 ```
 > args instanceof Array
 false
 > args.forEach
 undefined
 ```
-Second, the DOM method document.querySelectorAll() returns an instance of NodeList.
+둘째로 DOM메소드인 document.querySelectorAll()은 NodeList의 인스턴스를 반환한다.
 ```
 > document.querySelectorAll('a[href]') instanceof NodeList
 true
 > document.querySelectorAll('a[href]').forEach // no Array methods!
 undefined
 ```
-Thus, for many complex operations, you need to convert Array-like objects to Arrays first. That is achieved via Array.prototype.slice(). This method copies the elements of its receiver into a new Array:
+따라서, 많은 복잡한 연산자 때문에 우선 당신은 유사 배열 객체를 배열로 변경할 필요가 있다. Array.prototype.slice()를 통해 이루어 진다. 이 메소드는 그것의 수신자의 원소를 새로운 배열에 복사한다.
 ```
 > var arr = ['a', 'b'];
 > arr.slice()
