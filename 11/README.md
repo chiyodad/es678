@@ -4,7 +4,7 @@
 11. Parameter handling
 
 Parameter handling has been significantly upgraded in ECMAScript 6. It now supports parameter default values, rest parameters (varargs) and destructuring.
-ECMAScript 6에서 parameter handling은 크게 향상되었다. 이제 parameter 기본값, rest parameter, 그리고 destructing을 지원한다.
+ECMAScript 6에서 parameter handling은 크게 향상되었다. 이제 parameter 기본값, rest parameter(varargs : 가변인자?), 그리고 destructing을 지원한다.
 
 For this chapter, it is useful to be familiar with destructuring (which is explained in the previous chapter).
 
@@ -206,14 +206,11 @@ function foo(a = x) {
     console.log(a); // outer
 }
 If there were no outer x in the previous example, the default value x would produce a ReferenceError (if triggered).
-위 예시에서 만약에 외부의 x가 없었다면 default value x는 ReferenceError를 발생시킬 것이다.
+위 예시에서 만약에 외부의 x가 없었다면 default 값 x는 ReferenceError를 발생시킬 것이다.
 
 
 This restriction is probably most surprising if default values are closures:
-
-이런 제약은 만약 default value들이 
-
-
+만약 default 값들이 닫혀있다면 이런 제약은 아마 아주 놀랍게도 :
 
 
 function bar(callback = () => QUX) {
@@ -223,6 +220,10 @@ function bar(callback = () => QUX) {
 bar(); // ReferenceError
 To see why that is the case, consider the following implementation of bar() which is roughly equivalent to the previous one:
 
+??
+그런 이유를 확인하려면, 이 전의 것과 거의 유사한 다음의 bar() 구현을 고려하여 : 
+
+
 function bar(...args) { // (A)
     const [callback = () => QUX] = args; // (B)
     { // (C)
@@ -230,7 +231,12 @@ function bar(...args) { // (A)
         callback();
     }
 }
-Within the scope started by the opening curly brace at the end of line A, you can only refer to variables that are declared either in that scope or in a scope surrounding it. Therefore, variables declared in the scope starting in line C are out of reach for the statement in line B.
+Within the scope started by the opening curly brace at the end of line A, you can only refer to variables that are declared either in that scope or in a scope surrounding it. 
+Therefore, variables declared in the scope starting in line C are out of reach for the statement in line B.
+
+line A의 끝쪽에 중괄호로 시작된 scope 내에서, scope내부나, } 로 둘러쌓인 
+따라서 lineC에서 시작되는 scope에 정의된 변수들은 lineB의 정의식에서는 접근할 수 없다.
+
 
 11.4 Rest parameters
 Putting the rest operator (...) in front of the last formal parameter means that it will receive all remaining actual parameters in an Array.
@@ -240,14 +246,23 @@ function f(x, ...y) {
 }
 f('a', 'b', 'c'); // x = 'a'; y = ['b', 'c']
 If there are no remaining parameters, the rest parameter will be set to the empty Array:
+만약 남아있는 parameter가 없으면, rest parameter는 빈 배열이 될 것이다.
 
 f(); // x = undefined; y = []
 The spread operator (...) looks exactly like the rest operator, but it is used inside function calls and Array literals (not inside destructuring patterns).
+spread operator (...)는 rest operator와 매우 유사하지만, 이는 내부 함수 호출과 배열 literal에서만 쓰인다.(destructuring pattern의 내부는 아님)
+
 
 11.4.1 No more arguments!
+더이상의 argument는 음슴!
+
 Rest parameters can completely replace JavaScript’s infamous special variable arguments. They have the advantage of always being Arrays:
+Rest parameter는 완벽하게 javascript의 악명높은 가변인자(varargs)??를 대체할 수 있다. 언제나 배열로 존재한다는? 장점을 가지고 있다.
+
+
 
 // ECMAScript 5: arguments
+ECMAScript 5의 argument
 function logAllArguments() {
     for (var i=0; i < arguments.length; i++) {
         console.log(arguments[i]);
@@ -255,13 +270,20 @@ function logAllArguments() {
 }
 
 // ECMAScript 6: rest parameter
+ECMAScript6의 rest parameter
 function logAllArguments(...args) {
     for (const arg of args) {
         console.log(arg);
     }
 }
+
 11.4.1.1 Combining destructuring and access to the destructured value
+destructing과의 결합과 destructed value로의 접근
+
+
 One interesting feature of arguments is that you can have normal parameters and an Array of all parameters at the same time:
+arguments의 한 가지 재미있는 면은 동시에 일반적인 parameter와 모든 parameter의 배열을 동시에 가질 수 있다는 점이다.
+
 
 function foo(x=0, y=0) {
     console.log('Arity: '+arguments.length);
@@ -269,12 +291,16 @@ function foo(x=0, y=0) {
 }
 You can avoid arguments in such cases if you combine a rest parameter with Array destructuring. The resulting code is longer, but more explicit:
 
+만약 당신이 rest parameter와 Array destructing을 결합하는 경우 argument를 방지할 수 있다??.  code는 길어지지만 보다 명확하다.
+
+
 function foo(...args) {
     let [x=0, y=0] = args;
     console.log('Arity: '+args.length);
     ···
 }
 The same technique works for named parameters (options objects):
+같은 기술이 named parameter에서 동작함:
 
 function bar(options = {}) {
     let { namedParam1, namedParam2 } = options;
@@ -283,22 +309,50 @@ function bar(options = {}) {
         ···
     }
 }
+
+
 11.4.1.2 arguments is iterable
+argument가 iterable함.
+
 arguments is iterable1 in ECMAScript 6, which means that you can use for-of and the spread operator:
+ECMAScript 6에서는 argument는 iterable하다. 이는 당신이 for-of와 spread operator를 이용할 수 있음을 의미한다.
 
 > (function () { return typeof arguments[Symbol.iterator] }())
 'function'
 > (function () { return Array.isArray([...arguments]) }())
 true
 11.5 Simulating named parameters
+named parameter simulate
+
 When calling a function (or method) in a programming language, you must map the actual parameters (specified by the caller) to the formal parameters (of a function definition). There are two common ways to do so:
+function(혹은 method)를 개발언어에서 호출할 때, 실제 parameter-실제 인자(호출시에 정의되는거) 를 formal parameter-형식인자(function이 정의의)와 mapping해주어야 한다.(짝지어줘..)
+두 가지 일반적인 방법이 있는데:
 
 Positional parameters are mapped by position. The first actual parameter is mapped to the first formal parameter, the second actual to the second formal, and so on.
-Named parameters use names (labels) to perform the mapping. Names are associated with formal parameters in a function definition and label actual parameters in a function call. It does not matter in which order named parameters appear, as long as they are correctly labeled.
-Named parameters have two main benefits: they provide descriptions for arguments in function calls and they work well for optional parameters. I’ll first explain the benefits and then show you how to simulate named parameters in JavaScript via object literals.
+위치변수? 는 위치로 지정된다. 첫 번째 실제 인자는 첫번째 형식parameter와 짝지어지고, 두번째는 두번째 .. 계속 그렇게 됨.
+
+Named parameters use names (labels) to perform the mapping. Names are associated with formal parameters in a function definition and label actual parameters in a function call.
+명명된 parameter는 mapping을 위해 이름(label)을 이용한다. name은 선언된 함수의 formal parameter, 호출된 함수의 실제 인자 label과 연관된다.
+
+It does not matter in which order named parameters appear, as long as they are correctly labeled.
+이는 스펠링이 맞던지 명명된 파라미터가 나타난? 순서랑은 관계가 없다.
+
+
+Named parameters have two main benefits: they provide descriptions for arguments in function calls and they work well for optional parameters. 
+named parameter는 두 가지 이점이 있는데: function 호출된 argument의 description을 제공하고 optional parameter를 위해 아주 잘 동작한다. ?????????????????
+
+???
+
+I’ll first explain the benefits and then show you how to simulate named parameters in JavaScript via object literals.
+이득을 보여주고 나서 javascript에서 named parameter어떻게 쓰는지 object literal로 시범을 보여줄게.
+
 
 11.5.1 Named Parameters as Descriptions
-As soon as a function has more than one parameter, you might get confused about what each parameter is used for. For example, let’s say you have a function, selectEntries(), that returns entries from a database. Given the function call:
+As soon as a function has more than one parameter, you might get confused about what each parameter is used for. 
+functions이 하나 이상의 parameter를 가짐에 따라, 각 파라미터가 어디에 이용되는지 혼란스러울 수 있다.
+
+For example, let’s say you have a function, selectEntries(), that returns entries from a database. Given the function call:
+예를 들어 너가 database로부터 entry를 반환하는 selectEntries()라는 functions을 가지고 있다고 치면, function 호출:
 
 selectEntries(3, 20, 2);
 what do these three numbers mean? Python supports named parameters, and they make it easy to figure out what is going on:
