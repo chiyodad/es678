@@ -292,3 +292,12 @@ if (!('someGlobal' in window)) {
 To catch programming errors: Being able to access a variable before its declaration is strange. If you do so, it is normally by accident and you should be warned about it.
 For const: Making const work properly is difficult. Quoting Allen Wirfs-Brock: “TDZs … provide a rational semantics for const. There was significant technical discussion of that topic and TDZs emerged as the best solution.” let also has a temporal dead zone so that switching between let and const doesn’t change behavior in unexpected ways.
 Future-proofing for guards: JavaScript may eventually have guards, a mechanism for enforcing at runtime that a variable has the correct value (think runtime type check). If the value of a variable is undefined before its declaration then that value may be in conflict with the guarantee given by its guard.
+
+1. 프로그래밍 오류를 잡으려면 : 선언 전에 변수에 접근이 가능하다는 건 이상하다. 만일 그렇게 되면 보통 이런 건에 대해 경고해야 한다.
+2. 2. const 를 들면, const 는 적당히 만들기는 어려운 일이다. Allen Wirfs-Brock 을 인용하면, 
+> "TDZs … 는 const 를 만들기 위한 합리적인 문법을 제공한다. 이 주제에 대해서 여러 중요한 기술적 의견들이 있었고 TDZ는 최적의 기술로 부상했다".
+let 또한 예상치못한 동작으로 let 과 const 을 변경하직 않도록 TDZ가 있다.(?)
+(let also has a temporal dead zone so that switching between let and const doesn’t change behavior in unexpected ways.)
+3. 미래 교정 방지
+
+
