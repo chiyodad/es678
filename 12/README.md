@@ -712,7 +712,7 @@ function format(pattern, ...params) {
 
 console.log(format('a', 'b', 'c')); // ['b', 'c']
 ```
-#### 12.5.4.5 ES5: hasOwnProperty()를 안적하게 사용
+#### 12.5.4.5 ES5: hasOwnProperty()를 안전하게 사용
 obj.hasOwnProperty('prop')는 당신에게 obj가 자신의 프로퍼티(비 상속)에 prop가 있는지 여부를 말해준다.
 ```
 > var obj = { prop: 123 };
@@ -750,46 +750,60 @@ false
 #### 12.5.4.6 ES6: hasOwnProperty() 적은 필요
 hasOwnProperty()는 거희 객체를 통한 맵 구현을 위해 사용되었다. 감사하게도 ES6은 맵 자료구조가 지원된다. 그 말은 당신은 hasOwnProperty()를 적게 필요 한다는 것이다.
 
-#### 12.5.4.7 ES5: 중간 객체를 피해라
-Applying an Array method such as join() to a string normally involves two steps:
-
+#### 12.5.4.7 ES5: 중간 객체를 피하기
+join()과 같은 배열 메소드를 적용하여 일반적으로 문자열을 만드는건 두가지 단계를 포함한다.
+```
 var str = 'abc';
 var arr = str.split(''); // step 1
 var joined = arr.join('-'); // step 2
 console.log(joined); // a-b-c
-Strings are Array-like and can become the this value of generic Array methods. Therefore, a direct call lets you avoid step 1:
-
+```
+문자열은 유사배열이고 제너릭 배열 매소드의 this값이 될 수 있다. 그러므로 직접 호출은 당신이 1단계를 피하게 해준다.
+```
 var str = 'abc';
 var joined = Array.prototype.join.call(str, '-');
-Similarly, you can apply map() to a string either after you split it or via a direct method call:
+```
+유사하게, 당신이 그것을 분리한 후나 직접 메소드 호출을 후에 당신은 map()을 문자열로 적용 할 수 있다.
 
+```
 > function toUpper(x) { return x.toUpperCase() }
 > 'abc'.split('').map(toUpper)
 [ 'A', 'B', 'C' ]
 
 > Array.prototype.map.call('abc', toUpper)
 [ 'A', 'B', 'C' ]
-Note that the direct calls may be more efficient, but they are also much less elegant. Be sure that they are really worth it!
+```
+직접 호출은 아마도 더 효과적 이지만, 그들은 덜 우와한것을 주목해라. 그들은 실제로 할 가치가 있는지 확인해라!
 
-12.5.4.8 ES6: Avoiding intermediate objects
-Array.from() can convert and map in a single step, if you provide it with a callback as the second argument.
 
+#### 12.5.4.8 ES6: 중간 객체 피하기
+첫 단계에서 Array.from()은 변경하고 맵핑할 수 있다.  만일 당신이 두번째 인자값으로 콜백을 그것에게 제공한다면
+
+```
 > Array.from('abc', ch => ch.toUpperCase())
 [ 'A', 'B', 'C' ]
-As a reminder, the two step solution is:
+```
+참고로, 이 두단계 솔루션입니다.:
 
+```
 > 'abc'.split('').map(function (x) { return x.toUpperCase() })
 [ 'A', 'B', 'C' ]
-12.5.5 Abbreviations for Object.prototype and Array.prototype
-You can access the methods of Object.prototype via an empty object literal (whose prototype is Object.prototype). For example, the following two direct method calls are equivalent:
+```
 
+### 12.5.5 Object.prototype과 Array.prototype의 요약
+당신은 빈객체 리터럴을 통해 Object.prototype(프로토타입이 Object.prototype인) 메소드에 접근할 수 있다. 예를 들면 다음 두 직접 호출 메소드는 동일하다.
+
+```
 Object.prototype.hasOwnProperty.call(obj, 'propKey')
 {}.hasOwnProperty.call(obj, 'propKey')
-The same trick works for Array.prototype:
+```
+이 같은 트릭은 Array.prototype에도 동작한다.
 
+```
 Array.prototype.slice.call(arguments)
 [].slice.call(arguments)
-This pattern has become quite popular. It does not reflect the intention of the author as clearly as the longer version, but it’s much less verbose. Speed-wise, there isn’t much of a difference between the two versions.
+```
+이 패턴은 꽤 유명해졌다. 그것은 긴 비전처럼 명확하게 저자의 의도를 드러내지 않지만 그것은 훨신 덜 장확하다. 두 버전은 많은 차이가 없다.
 
 12.6 The name property of functions
 The name property of a function contains its name:
