@@ -200,14 +200,14 @@ var 선언 변수 (TDZ 를 가지고 있지 않은)와 let 선언 변수(TDZ를 
 ### 9.4.1 var로 선언된 변수의 라이프사이클
 var 변수는 임시 사각 지대를 갖지 않는다. 그들의 라이프사이클은 다음 스텝을 포함한다.
 
-var 변수가 스코프(function 으로 감싸진) 에 들어가면, 변수를 위한 저장 공간이 만들어진다 (바인딩). 그 변수는 즉시 underfined 로 초기화된다. 
+1. var 변수가 스코프(function 으로 감싸진) 에 들어가면, 변수를 위한 저장 공간이 만들어진다 (바인딩). 그 변수는 즉시 underfined 로 초기화된다. 
 
-실행이 선언문에 도달하면, 그 변수는 특정한 이니셜라이저 (할당) 결과로 값이 있을 경우 세팅된다. 만일 없다면 변수의 값은 여전히 undefined 상태로 남아있다.
+2. 실행이 선언문에 도달하면, 그 변수는 특정한 이니셜라이저 (할당) 결과로 값이 있을 경우 세팅된다. 만일 없다면 변수의 값은 여전히 undefined 상태로 남아있다.
 
 ### 9.4.2 let 으로 선언된 변수의 라이프사이클
 let 을 통한 변수 선언은 임시 사각 지대 (temporal dead zone) 를 가지고, 그 라이프사이클은 이것과 같다.
 
-let 변수가 스코프(블럭으로 감싸진) 에 들어가면, 변수를 위한 저장 공간이 만들어진다 (바인딩). 그 변수는 초기화되지 않았다. 
+1. let 변수가 스코프(블럭으로 감싸진) 에 들어가면, 변수를 위한 저장 공간이 만들어진다 (바인딩). 그 변수는 초기화되지 않았다. 
 
 Getting or setting an uninitialized variable causes a ReferenceError.
 When the execution within the scope reaches the declaration, the variable is set to the value specified by the initializer (an assignment) – if there is one. If there isn’t then the value of the variable is set to undefined.
