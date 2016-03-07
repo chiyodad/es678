@@ -106,9 +106,13 @@ let 으로 생성한 변수는 변한다 (mutable)
 let foo = 'abc';
 foo = 'def';
 console.log(foo); // def
-Constants, variables created by const, are immutable – you can’t assign them a different value:
+```
 
+const 로 생성된 상수들, 변수들은 불변이다. - 당신은 그 변수들에 다른 값을 할당할 수 없다.
+
+```javascript
 const foo = 'abc';
 foo = 'def'; // TypeError
 ```
-Spec detail: changing a const variable always throws a TypeError
+
+스펙에 따르면 const 변수의 변경은 항상 TypeError 를 던진다
