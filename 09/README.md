@@ -362,7 +362,9 @@ const 또한 각 이터레이션마다 하나의 바인딩을 생성하지만, �
 
 for-in 루프는 for-of 루프와 비슷한 동작을 한다.
 
-:notebook: *for-of loop: 스펙안에서의 이터레이션의 바인딩
-for-of의 반복 바인딩은 [ForIn/OfBodyEvaluation](http://www.ecma-international.org/ecma-262/6.0/#sec-runtime-semantics-forin-div-ofbodyevaluation-lhs-stmt-iterator-lhskind-labelset) 으로 처리된다. 단계 5.B에서 새로운 환경(Environment)가 만들어지고 바인딩은 [BindingInstantiation](http://www.ecma-international.org/ecma-262/6.0/#sec-runtime-semantics-bindinginstantiation) 을 통해 그것에 추가된다  (let 을 위한 가변, const 를 위한 불변). 현재 반복 값은 nextValue 변수에 저장되고, 바인딩을 초기화하여 사용하는 두가지 방법 중 하나의 방법을 사용한다 :
-+싱글 변수의 선언(단계 5.hi) : [InitializeReferencedBinding](http://www.ecma-international.org/ecma-262/6.0/#sec-initializereferencedbinding) 을 통해 처리된다.
-+해체(단계 5.i.iii를) : [BindingInitialization (ForDeclaration)](http://www.ecma-international.org/ecma-262/6.0/#sec-for-in-and-for-of-statements-runtime-semantics-bindinginitialization) 을 통해 처리되거나, 다른 경우 [BindingInitialization (BindingPattern)](http://www.ecma-international.org/ecma-262/6.0/#sec-destructuring-binding-patterns-runtime-semantics-bindinginitialization) 로 처리된다.*
+:notebook: *for-of loop: 스펙안에서의 이터레이션의 바인딩*
+
+for-of의 반복 바인딩은 [ForIn/OfBodyEvaluation](http://www.ecma-international.org/ecma-262/6.0/#sec-runtime-semantics-forin-div-ofbodyevaluation-lhs-stmt-iterator-lhskind-labelset) 으로 처리된다. 단계 5.B에서 새로운 환경(Environment)가 만들어지고 바인딩은 [BindingInstantiation](http://www.ecma-international.org/ecma-262/6.0/#sec-runtime-semantics-bindinginstantiation) 을 통해 그것에 추가된다  (let 을 위한 가변, const 를 위한 불변). 현재 반복 값은 nextValue 변수에 저장되고, 바인딩을 초기화하여 사용하는 두가지 방법 중 하나의 방법을 사용한다:
+
++ 싱글 변수의 선언(단계 5.hi) : [InitializeReferencedBinding](http://www.ecma-international.org/ecma-262/6.0/#sec-initializereferencedbinding) 을 통해 처리된다.
++ 해체(단계 5.i.iii를) : [BindingInitialization (ForDeclaration)](http://www.ecma-international.org/ecma-262/6.0/#sec-for-in-and-for-of-statements-runtime-semantics-bindinginitialization) 을 통해 처리되거나, 다른 경우 [BindingInitialization (BindingPattern)](http://www.ecma-international.org/ecma-262/6.0/#sec-destructuring-binding-patterns-runtime-semantics-bindinginitialization) 로 처리된다.
