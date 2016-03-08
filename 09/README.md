@@ -404,6 +404,59 @@ for-of의 반복 바인딩은 [ForIn/OfBodyEvaluation](http://www.ecma-internati
 </html>
 ```
 
-무엇이 표시될지는 target 변수(B 라인) 에 의존한다. let 대신 var 를 사용하는 경우(A 라인), 루프 전체의 target 은 'vielleicht' 만을 가지는 단일 결합이 존재하게 된다. 따라서 어찌되었든 당신이 몇번 링크를 클릭해도는 항상 'vielleicht' 번역만 얻을 것이다.
+무엇이 표시될지는 target 변수(B 라인) 에 의존한다.
+let 대신 var 를 사용하는 경우(A 라인), 루프 전체의 target 은 'vielleicht' 만을 가지는 단일 결합이 존재하게 된다.
+따라서 어찌되었든 당신이 몇번 링크를 클릭해도는 항상 'vielleicht' 번역만 얻을 것이다.
 
 고맙게도, let 과 함께라면 우리는 루프 반복마다 하나의 결합을 얻고, 제대로 번역이 된다.
+
+## 9.6 파라미터
+### 9.6.1 파라미터 대 로컬 변수
+만일 당신이 파라미터와 같은 이름의 변수를 let 으로 선언하면 정적 오류(load-time) 에러를 얻는다.
+
+```javascript
+function func(arg) {
+    let arg; // static error: duplicate declaration of `arg`
+}
+```
+
+같은 일을 블럭 안에서 하면 파라미터를 가린다(shadow).
+
+```javascript
+function func(arg) {
+    {
+        let arg; // shadows parameter `arg`
+    }
+}
+```
+
+이와는 대조적으로, 매개 변수와 같은 이름의 var 변수를 다시 선언해도 괜찮고, 같은 경우로 같은 스코프 안에서 같은 변수를 선언해도 괜찮다.
+
+```javascript
+function func(arg) {
+    var arg; // does nothing
+}
+
+function func(arg) {
+    {
+        // We are still in same `var` scope as `arg`
+        var arg; // does nothing
+    }
+}
+```
+
+### 9.6.2 파라미터 기본값과 임시 사각 지대
+If parameters have default values, they are treated like a sequence of let statements and are subject to temporal dead zones:
+
+// OK: `y` accesses `x` after it has been declared
+function foo(x=1, y=x) {
+    return [x, y];
+}
+foo(); // [1,1]
+
+// Exception: `x` tries to access `y` within TDZ
+function bar(x=y, y=2) {
+    return [x, y];
+}
+bar(); // ReferenceError
+
