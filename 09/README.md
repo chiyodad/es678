@@ -334,10 +334,31 @@ const 는 var 처럼 동작하지만, 상수 선언 변수(const-declared) 의 �
 
 반복마다 새 바인딩을 얻는다면 처음엔 이상하게 보이지만, 당신이 루프 변수를 참조하는 함수를 (이벤트 처리 등의 콜백) 만들때 매우 유용하다.
 
-*:notebook: for loop: 스펙별 각 이터레이션 바인딩*
+*:notebook: for loop: 스펙별 각 이터레이션 바인딩
+[루프의 평가](http://www.ecma-international.org/ecma-262/6.0/#sec-for-statement-runtime-semantics-labelledevaluation)는 두번째의 var 와 세번째 경우의 let/const 처럼 처리된다. let 선언 변수만 리스트의 각 순환(perIterationLets - step 9) 에 추가되는데,  [ForBodyEvaluation](http://www.ecma-international.org/ecma-262/6.0/#sec-forbodyevaluation) 의 두번째부터 마지막 인자를 전달하는 perIterationBindings 이다*
 
-[루프의 평가](http://www.ecma-international.org/ecma-262/6.0/#sec-for-statement-runtime-semantics-labelledevaluation)는 두번째의 var 와 세번째 경우의 let/const 처럼 처리된다. let 선언 변수만 리스트의 각 순환(perIterationLets - step 9) 에 추가되는데,  [ForBodyEvaluation](http://www.ecma-international.org/ecma-262/6.0/#sec-forbodyevaluation) 의 두번째부터 마지막 인자를 전달하는 perIterationBindings 이다(?)
+### 9.5.2 for-of loop 와 for-in loop
+for-of 루프에서는 var 는 싱글 바인딩을 생성한다.
 
+```javascript
+const arr = [];
+for (var i of [0, 1, 2]) {
+    arr.push(() => i);
+}
+arr.map(x => x()); // [2,2,2]
+```
 
+let 은 각 이터레이션마다 하나의 바인딩을 생성한다.
 
+```javascript
+const arr = [];
+for (let i of [0, 1, 2]) {
+    arr.push(() => i);
+}
+arr.map(x => x()); // [0,1,2]
+```
+
+const 또한 각 이터레이션마다 하나의 바인딩을 생성하지만, 불변으로 생성된 바인딩이다.
+
+for-in 루프는 for-of 루프와 비슷한 동작을 한다.
 
