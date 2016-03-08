@@ -10,13 +10,16 @@ For this chapter, it is useful to be familiar with destructuring (which is expla
 이 챕터에서는, 앞 장에서 나온 destructuring과 친숙하다면 굉장히 유용할 것이다.
 
 11.1 Overview
+
 전체적으로 보기
+
 Default parameter values:
 기본 파라미터 값:
 
-function findClosestShape(x=0, y=0) {
-    // ...
-}
+> function findClosestShape(x=0, y=0) {
+>     // ...
+> }
+
 Rest parameters:
 Rest 파라미터 :
 
