@@ -531,4 +531,34 @@ Classes not being hoisted may be surprising, because, under the hood, they creat
 ```
 
 ## 9.9 코딩 스타일 : const 대 let 대 var
-I recommend to always use either let or const:
+난 항상 let 혹은 const 어느 한쪽을 사용하는 걸 추천한다.
+
+1. Prefer const. You can use it whenever a variable never changes its value. In other words: the variable should never be the left-hand
+side of an assignment or the operand of ++ or --. Changing an object that a const variable refers to is allowed:
+
+```javascript
+const foo = {};
+```
+
+You can even use const in a for-of loop, because one (immutable) binding is created per loop iteration:
+
+```javascript
+for (const x of ['a', 'b']) {
+    console.log(x);
+}
+// Output:
+// a
+// b
+```
+
+Inside the body of the for-of loop, x can’t changed.
+
+2. Otherwise, use let – when the initial value of a variable changes later on.
+
+```javascript
+let counter = 0; // initial value
+counter++; // change
+
+let obj = {}; // initial value
+obj = { foo: 123 }; // change
+```
