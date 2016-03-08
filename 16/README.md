@@ -77,9 +77,8 @@ const inst = new MyClass();
 
 ###  16.2 Modules in JavaScript
 
-Even though JavaScript never had built-in modules, the community has converged on a simple style of modules, which is supported by libraries in ES5 and earlier. This style has also been adopted by ES6:
-
-비록 JavaScript 에는 내장된 모듈이 없었지만, 커뮤니티는 ES5(and earlier) 라이브러리에 의해 지원된 모듈의 간소한 스타일을 수렴하였다. 이 스타일은 또한 ES6 에서 채용되었다.
+비록 JavaScript 에는 내장된 모듈이 없었지만, 커뮤니티는 ES5(and earlier) 라이브러리에 의해 지원된 모듈의 간소한 스타일을
+수렴하였다. 이 스타일은 ES6 에서도 채용되었다.
 
 
 ###  16.2.1 ECMAScript 5 module systems
