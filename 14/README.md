@@ -110,36 +110,40 @@ const obj = {
     }
 };
 ```
-14.2.2 속성값 Property value shorthands
-Property value shorthands let you abbreviate the definition of a property in an object literal: If the name of the variable that specifies the property value is also the property key then you can omit the key. This looks as follows.
+14.2.2 속성값 단축표현
+속성값 단축표현으로 오브젝트 리터럴에서 속성정의를 간단히 할 수 있다: 속성의 값과 키이름이 변수와 둘다 일치하는 경우 키를 생략할 수 있다. 아래와 같이 사용된다.
 ```javascript
 const x = 4;
 const y = 1;
 const obj = { x, y };
-The last line is equivalent to:
+```
+마지막줄은 아래와 같다:
 ```javascript
 const obj = { x: x, y: y };
-Property value shorthands work well together with destructuring:
+```
+속성값 단축표현은 해체와 함께 잘 작동한다:
 ```javascript
 const obj = { x: 4, y: 1 };
 const {x,y} = obj;
 console.log(x); // 4
 console.log(y); // 1
-One use case for property value shorthands are multiple return values (which are explained in the chapter on destructuring).
+```
+속성값 단축표현의 또다른 사용처는 여러개의 값을 반환하는 경우다(해체절에서 설명한다)
 
-14.2.3 Computed property keys
-Remember that there are two ways of specifying a key when you set a property.
+14.2.3 계산된 속성 키
+속성을 지정할때 두가지 방법이 있다.
 
-Via a fixed name: obj.foo = true;
-Via an expression: obj['b'+'ar'] = 123;
-In object literals, you only have option #1 in ECMAScript 5. ECMAScript 6 additionally provides option #2:
+고정이름으로: ```obj.foo = true;```
+표현식으로: ```obj['b'+'ar'] = 123;```
+ES5의 오브젝트 리터럴은 오직 고정이름만 가능하다. ES6에서는 표현식으로도 키이름을 정의할 수 있다:
 ```javascript
 const propKey = 'foo';
 const obj = {
     [propKey]: true,
     ['b'+'ar']: 123
 };
-This new syntax can also be used for method definitions:
+```
+이 새로운 문법은 메소드 정의에도 사용된다:
 ```javascript
 const obj = {
     ['h'+'ello']() {
@@ -147,7 +151,8 @@ const obj = {
     }
 };
 console.log(obj.hello()); // hi
-The main use case for computed property keys are symbols: you can define a public symbol and use it as a special property key that is always unique. One prominent example is the symbol stored in Symbol.iterator. If an object has a method with that key, it becomes iterable: The method must return an iterator, which is used by constructs such as the for-of loop to iterate over the object. The following code demonstrates how that works.
+```
+계산된 속성키의 주 사용처는 심볼이다:공개심볼을 정의하고 항상 유일한 특정 키를 정의하는데 사용할 수 있다. 특히 Symbol.iterator에 저장된 심볼은 참고해볼만한 예다. 어떤 오브젝트가 이 키로 메서드를 갖고 있다면 이터러블(iterable)이 된다:이 메소드는 반드시 이터레이터(iterator)를 반환해야하는데, 이터레이터는 객체를 순회하기 위한 for-of루프 같은 구조에서 사용된다. 아래 코드에 예시가 있다.
 ```javascript
 const obj = {
     * [Symbol.iterator]() { // (A)
@@ -161,23 +166,26 @@ for (const x of obj) {
 // Output:
 // hello
 // world
-Line A starts a generator method definition with a computed key (the symbol stored in Symbol.iterator).
+```
+A줄은 저장된 심볼인 Symbol.iterator을 계산된 키로 정의된 제네레이터메소드의 시작부다.
 
-14.3 New methods of Object
+14.3 Object의 새로운 메소드
 14.3.1 Object.assign(target, source_1, source_2, ···)
-This method merges the sources into the target: It modifies target, first copies all enumerable own (non-inherited) properties of source_1 into it, then all own properties of source_2, etc. At the end, it returns the target.
+이 메소드는 소스를 타겟에게 머지한다: 우선 source_1의 모든 열거가능한 본인 소유의 속성을 target에 복사한 뒤, source_2를 복사하는 식으로 모든 인자에 주어진 source를 target에 머지한다. 마지막에는 target을 반환한다.
 ```javascript
 const obj = { foo: 123 };
 Object.assign(obj, { bar: true });
 console.log(JSON.stringify(obj));
     // {"foo":123,"bar":true}
-Let’s look more closely at how Object.assign() works:
+```
+Object.assign()가 어떻게 작동하는지 보다 구체적으로 살펴보자:
 
-Both kinds of property keys: Object.assign() is aware of both strings and symbols as property keys.
-Only enumerable own properties: Object.assign() ignores inherited properties and properties that are not enumerable.
-Reading a value from a source: normal “get” operation (const value = source[propKey]). That means that if the source has a getter whose key is propKey then it will be invoked. All properties created by Object.assign() are data properties, it won’t transfer getters to the target.
-Writing a value to the target: normal “set” operation (target[propKey] = value). That means that if the target has a setter whose key is propKey then it will be invoked with value.
-This is how you’d copy all properties (not just enumerable ones), while correctly transferring getters and setters, without invoking setters on the target:
+두가지 속성키종류: Object.assign()는 문자열과 심볼 두가지다 속성키로 안다.
+자신의 열거가능한 속성만: Object.assign()는 상속받은 속성이나 열거불가 속성을 무시한다.
+source로부터 읽을 수 있는 값: 보통 “get” 연산 (const value = source[propKey]). 즉 source의 키가 getter라면 실행된 값이 복사될 것이다. Object.assign()으로 생성된 모든 속성은 값속성이다. target에 getter는 전달되지 않는다.
+타켓에 쓸 값: 보통l “set” 연산 (target[propKey] = value). 즉 target키가 setter라면 실행된 값이 복사될 것이다.
+
+따라서 target의 getter나 setter의 계산된 결과가 아니라 바르게 getter와 setter을 전달하면서, (열거가능한 것 뿐 아니라) 모든 속성을 복사하는 코드는 아래와 같다:
 ```javascript
 function copyAllProperties(target, ...sources) {
     for (const source of sources) {
@@ -188,10 +196,11 @@ function copyAllProperties(target, ...sources) {
     }
     return target;
 }
-14.3.1.1 Caveat: Object.assign() doesn’t work well for moving methods
-On one hand, you can’t move a method that uses super: Such a method has an internal property [[HomeObject]] that ties it to the object it was created in. If you move it via Object.assign(), it will continue to refer to the super-properties of the original object. Details are explained in a section in the chapter on classes.
+```
+14.3.1.1 경고: Object.assign()은 이동메소드에 대해서는 잘 작동하지 않는다.
+한편, super를 사용해 메소드를 이동할 수 없다: 내부속성인 [[HomeObject]]같은 메소드는 생성된 오브젝트에 묶여있다. Object.assign()으로 이를 옮겨도 여전히 원본 객체의 super속성을 참조할 것이다. 자세한 내용은 classes챕터에서 설명한다.
 
-On the other hand, enumerability is wrong if you move methods created by an object literal into the prototype of a class. The former methods are all enumerable (otherwise Object.assign() wouldn’t see them, anyway), but the prototype only has non-enumerable methods by default.
+또다른 한편으로 열거가능성은 이동메소드를 클래스의 프로토타입에서 객체 리터럴로 생성했다면 틀리다. 보통 메소드는 모두 열거가능이지만(반대로 어쨌든 Object.assign()는 그들을 볼 수 없다), 프로토타입은 기본적으로는 오직 열거불가 메소드만 갖을 수 있다.
 
 14.3.1.2 Use cases for Object.assign()
 Let’s look at a few use cases.
