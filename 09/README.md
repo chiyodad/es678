@@ -115,7 +115,7 @@ const foo = 'abc';
 foo = 'def'; // TypeError
 ```
 
-스펙에 따르면 const 변수의 변경은 항상 TypeError 를 던진다
+:notebook:스펙에 따르면 const 변수의 변경은 항상 TypeError 를 던진다
 
 일반적으로 strict mode에서 불변 바인딩의 변경은 SetMutableBinding 에 따라서, 항상 예외의 원인이지만, const 변수 선언은 항상 엄격한 바인딩을 생성한다.
 
@@ -228,7 +228,7 @@ if (true) { // enter new scope, TDZ starts
 }
 console.log(tmp); // true
 ```
-이니셜라이저가 있다면, TDZ는 할당이 된 뒤 종료한다.
+초기화가있는 경우 할당(이니셜라이즈)이 이루어진 다음에 TDZ는 종료된다.
 
 ```javascript
 let foo = console.log(foo); // ReferenceError
@@ -315,6 +315,29 @@ for (var i=0; i < 3; i++) {
 arr.map(x => x()); // [3,3,3]
 ```
 
+Every i in the bodies of the three arrow functions refers to the same binding, which is why they all return the same value.
+모든 세개의 *arrow function* 바디 안의 *i* 는 같은 바인딩이며, 모두 같은 값을 반환하는 이유가 된다.
+
+If you let-declare a variable, a new binding is created for each loop iteration:
+만일 let으로 변수를 선언하면, 새로운 바인딩이 루프 이터레이션마다 생성된다.
+
+```javascript
+const arr = [];
+for (let i=0; i < 3; i++) {
+    arr.push(() => i);
+}
+arr.map(x => x()); // [0,1,2]
+```
+
+이번엔 각각의 *i*는 하나의 특정 반복의 바인딩을 참조하여 해당 시점에서의 현재의 값을 유지한다. 따라서 각 화살표 함수가 다른 값을 반환한다.
+
+const 는 var 처럼 동작하지만, 상수 선언 변수(const-declared) 의 초기값을 바꿀 수 없다.
+
+반복마다 새 바인딩을 얻는다면 처음엔 이상하게 보이지만, 당신이 루프 변수를 참조하는 함수를 (이벤트 처리 등의 콜백) 만들때 매우 유용하다.
+
+:notebook:for loop: 스펙별 각 이터레이션 바인딩
+
+The evaluation of the for loop handles var as the second case and let/const as the third case. Only let-declared variables are added to the list perIterationLets (step 9), which is passed to ForBodyEvaluation() as the second-to-last parameter, perIterationBindings.
 
 
 
