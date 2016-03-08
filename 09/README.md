@@ -1,7 +1,6 @@
 #  9. Variables and scoping
-변수와 스코핑
 
-이번 장은 변수와 스코핑이 ECMAScript 6 에서 어떻게 핸들링 되는지 고찰해본다
+이번 장은 변수와 스코핑이 ECMAScript 6 에서 어떻게 핸들링 되는지 살펴본다.
 
 ##  9.1 개요
 ES6에서는 두가지의 새로운 변수 선언을 제공한다. let 과 const 이다. var 를 사용하는 ES5의 변수 선언법을 거의 대체한다.
@@ -115,7 +114,7 @@ const foo = 'abc';
 foo = 'def'; // TypeError
 ```
 
-:notebook:스펙에 따르면 const 변수의 변경은 항상 TypeError 를 던진다
+*:notebook: 스펙에 따르면 const 변수의 변경은 항상 TypeError 를 던진다*
 
 일반적으로 strict mode에서 불변 바인딩의 변경은 SetMutableBinding 에 따라서, 항상 예외의 원인이지만, const 변수 선언은 항상 엄격한 바인딩을 생성한다.
 
@@ -335,9 +334,10 @@ const 는 var 처럼 동작하지만, 상수 선언 변수(const-declared) 의 �
 
 반복마다 새 바인딩을 얻는다면 처음엔 이상하게 보이지만, 당신이 루프 변수를 참조하는 함수를 (이벤트 처리 등의 콜백) 만들때 매우 유용하다.
 
-:notebook:for loop: 스펙별 각 이터레이션 바인딩
+*:notebook: for loop: 스펙별 각 이터레이션 바인딩*
 
-The evaluation of the for loop handles var as the second case and let/const as the third case. Only let-declared variables are added to the list perIterationLets (step 9), which is passed to ForBodyEvaluation() as the second-to-last parameter, perIterationBindings.
+[루프의 평가](http://www.ecma-international.org/ecma-262/6.0/#sec-for-statement-runtime-semantics-labelledevaluation)는 두번째의 var 와 세번째 경우의 let/const 처럼 처리된다. let 선언 변수만 리스트의 각 순환(perIterationLets - step 9) 에 추가되는데,  [ForBodyEvaluation](http://www.ecma-international.org/ecma-262/6.0/#sec-forbodyevaluation) 의 두번째부터 마지막 인자를 전달하는 perIterationBindings 이다(?)
+
 
 
 
