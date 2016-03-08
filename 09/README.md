@@ -1,6 +1,6 @@
 #  9. Variables and scoping
 
-이번 장은 변수와 스코핑이 ECMAScript 6 에서 어떻게 핸들링 되는지 살펴본다.
+이번 장은 변수와 스코핑이 ECMAScript 6 에서 어떻게 처리되는지 살펴본다.
 
 ##  9.1 개요
 ES6에서는 두가지의 새로운 변수 선언을 제공한다. let 과 const 이다. var 를 사용하는 ES5의 변수 선언법을 거의 대체한다.
@@ -446,8 +446,9 @@ function func(arg) {
 ```
 
 ### 9.6.2 파라미터 기본값과 임시 사각 지대
-If parameters have default values, they are treated like a sequence of let statements and are subject to temporal dead zones:
+파라미터 기본값을 가질 경우, 그것들은 let 문과 임시 사각 지대의 대상의 시퀀스처럼 취급된다.
 
+```javascript
 // OK: `y` accesses `x` after it has been declared
 function foo(x=1, y=x) {
     return [x, y];
@@ -459,4 +460,44 @@ function bar(x=y, y=2) {
     return [x, y];
 }
 bar(); // ReferenceError
+```
 
+### 9.6.3 파라미터 기본값은 함수 바디의 스코프를 보지 않는다.
+The scope of parameter default values is separate from the scope of the body (the former surrounds the latter). That means that methods or functions defined “inside” parameter default values don’t see the local variables of the body:
+
+파라미터 기본값 스코프는 함수 바디의 스코프(전자가 후자를 둘러싼)와는 다른 것이다. 즉, 메소드 혹은 함수에 정의 된 내부 파라미터 기본값은 함수 바디의 로컬 변수가 보이지 않는다는걸 의미한다.
+
+```javascript
+const foo = 'outer';
+function bar(func = x => foo) {
+    const foo = 'inner';
+    console.log(func()); // outer
+}
+bar();
+```
+
+## 9.7 전역 객체
+JavaScript’s global object (window in web browsers, global in Node.js) is more a bug than a feature, especially with regard to performance. That’s why it makes sense that ES6 introduces a distinction:
+
+JavaScript의 전역 객체 (웹브라우저에 window, Node.js의 global)는 특히, 성능면에서 특징보다 버그라고 할 수 있다. 그건 ES6 소개에도 구별되는 특징으로 대변된다.
+
++ 전역 개체의 모든 속성은 전역 변수이다. 글로벌 범위에서 다음의 선언은 각각 이런 특성을 생성한다.
+ + var 선언
+ + function 선언
++ 그러나 전역 개체에 속성으로는 없지만 전역 변수는 지금도 있다. 글로벌 범위에서 다음의 선언은 그러한 변수를 만든다.
+ + let 선언
+ + const 선언
+ + class 선언
+
+
+ 
+
+ 
+
+All properties of the global object are global variables. In global scope, the following declarations create such properties:
+var declarations
+Function declarations
+But there are now also global variables that are not properties of the global object. In global scope, the following declarations create such variables:
+let declarations
+const declarations
+Class declarations
