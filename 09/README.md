@@ -477,7 +477,6 @@ bar();
 ```
 
 ## 9.7 전역 객체
-JavaScript’s global object (window in web browsers, global in Node.js) is more a bug than a feature, especially with regard to performance. That’s why it makes sense that ES6 introduces a distinction:
 
 JavaScript의 전역 객체 (웹브라우저에 window, Node.js의 global)는 특히, 성능면에서 특징보다 버그라고 할 수 있다. 그건 ES6 소개에도 구별되는 특징으로 대변된다.
 
@@ -489,15 +488,47 @@ JavaScript의 전역 객체 (웹브라우저에 window, Node.js의 global)는 �
  + const 선언
  + class 선언
 
+## 9.8 함수 선언과 클래스 선언
 
- 
+함수 선언은....
++ 블럭 스코프이다. let 처럼.
++ 마찬가지로 전역 객체에 (전역에있는 동안) 속성으로 만들어진다. var 처럼.
++ 호이스팅된다.
 
- 
+The following code demonstrates the hoisting of function declarations:
+다음 코드는 함수 선언의 호이스팅을 보여준다
 
-All properties of the global object are global variables. In global scope, the following declarations create such properties:
-var declarations
-Function declarations
-But there are now also global variables that are not properties of the global object. In global scope, the following declarations create such variables:
-let declarations
-const declarations
-Class declarations
+```javascript
+{ // Enter a new scope
+
+    console.log(foo()); // OK, due to hoisting
+    function foo() {
+        return 'hello';
+    }
+}
+```
+클래스 선언은...
+
++ 블럭 스코프이다.
++ 전역 객체의 속성을 만들지 않는다
++ 호이스팅되지 않는다
+
+Classes not being hoisted may be surprising, because, under the hood, they create functions. The rationale for this behavior is that the values of their extends clauses are defined via expressions and those expressions have to be executed at the appropriate times.
+(번역불가...)
+
+```javascript
+{ // Enter a new scope
+
+    const identity = x => x;
+
+    // Here we are in the temporal dead zone of `MyClass`
+    const inst = new MyClass(); // ReferenceError
+
+    // Note the expression in the `extends` clause
+    class MyClass extends identity(Object) {
+    }
+}
+```
+
+## 9.9 코딩 스타일 : const 대 let 대 var
+I recommend to always use either let or const:
