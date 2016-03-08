@@ -65,7 +65,8 @@ const inst = new MyClass();
 
 ###  16.1.3 Browsers: scripts versus modules
 
-|  *  | Scripts | Modules |
+|   | Scripts | Modules |
+| -------- | ----- | ------- |
 | HTML element | script | script type="module" |
 | Top-level variables are | global | local to module |
 | Value of this at top level | window | undefined |
@@ -73,6 +74,15 @@ const inst = new MyClass();
 | Import declaratively (import statement) | no | yes |
 | Import programmatically (Promise-based API) | yes | yes-global |
 | File extension | .js | .js |
+
+| | Hoisting | Scope | Creates global properties |
+| -------- | ----- | ------- | ------ | ---------- |
+| var | Declaration | Function | Yes |
+| let | Temporal dead zone | Block | No |
+| const | Temporal dead zone | Block | No |
+| function | Complete | Block | Yes |
+| class | No | Block | No |
+| import | Complete | Module-global | No |
 
 
 ###  16.1.1 Multiple named exports
