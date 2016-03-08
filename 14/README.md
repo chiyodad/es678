@@ -110,17 +110,17 @@ const obj = {
     }
 };
 ```
-14.2.2 Property value shorthands
+14.2.2 속성값 Property value shorthands
 Property value shorthands let you abbreviate the definition of a property in an object literal: If the name of the variable that specifies the property value is also the property key then you can omit the key. This looks as follows.
-
+```javascript
 const x = 4;
 const y = 1;
 const obj = { x, y };
 The last line is equivalent to:
-
+```javascript
 const obj = { x: x, y: y };
 Property value shorthands work well together with destructuring:
-
+```javascript
 const obj = { x: 4, y: 1 };
 const {x,y} = obj;
 console.log(x); // 4
@@ -133,14 +133,14 @@ Remember that there are two ways of specifying a key when you set a property.
 Via a fixed name: obj.foo = true;
 Via an expression: obj['b'+'ar'] = 123;
 In object literals, you only have option #1 in ECMAScript 5. ECMAScript 6 additionally provides option #2:
-
+```javascript
 const propKey = 'foo';
 const obj = {
     [propKey]: true,
     ['b'+'ar']: 123
 };
 This new syntax can also be used for method definitions:
-
+```javascript
 const obj = {
     ['h'+'ello']() {
         return 'hi';
@@ -148,7 +148,7 @@ const obj = {
 };
 console.log(obj.hello()); // hi
 The main use case for computed property keys are symbols: you can define a public symbol and use it as a special property key that is always unique. One prominent example is the symbol stored in Symbol.iterator. If an object has a method with that key, it becomes iterable: The method must return an iterator, which is used by constructs such as the for-of loop to iterate over the object. The following code demonstrates how that works.
-
+```javascript
 const obj = {
     * [Symbol.iterator]() { // (A)
         yield 'hello';
@@ -166,7 +166,7 @@ Line A starts a generator method definition with a computed key (the symbol stor
 14.3 New methods of Object
 14.3.1 Object.assign(target, source_1, source_2, ···)
 This method merges the sources into the target: It modifies target, first copies all enumerable own (non-inherited) properties of source_1 into it, then all own properties of source_2, etc. At the end, it returns the target.
-
+```javascript
 const obj = { foo: 123 };
 Object.assign(obj, { bar: true });
 console.log(JSON.stringify(obj));
@@ -178,7 +178,7 @@ Only enumerable own properties: Object.assign() ignores inherited properties and
 Reading a value from a source: normal “get” operation (const value = source[propKey]). That means that if the source has a getter whose key is propKey then it will be invoked. All properties created by Object.assign() are data properties, it won’t transfer getters to the target.
 Writing a value to the target: normal “set” operation (target[propKey] = value). That means that if the target has a setter whose key is propKey then it will be invoked with value.
 This is how you’d copy all properties (not just enumerable ones), while correctly transferring getters and setters, without invoking setters on the target:
-
+```javascript
 function copyAllProperties(target, ...sources) {
     for (const source of sources) {
         for (const key of Reflect.ownKeys(source)) {
@@ -198,7 +198,7 @@ Let’s look at a few use cases.
 
 14.3.1.2.1 Adding properties to this
 You can use Object.assign() to add properties to this in a constructor:
-
+```javascript
 class Point {
     constructor(x, y) {
         Object.assign(this, {x, y});
@@ -206,7 +206,7 @@ class Point {
 }
 14.3.1.2.2 Providing default values for object properties
 Object.assign() is also useful for filling in defaults for missing properties. In the following example, we have an object DEFAULTS with default values for properties and an object options with data.
-
+```javascript
 const DEFAULTS = {
     logLevel: 0,
     outputFormat: 'html'
@@ -219,7 +219,7 @@ In line A, we created a fresh object, copied the defaults into it and then copie
 
 14.3.1.2.3 Adding methods to objects
 Another use case is adding methods to objects:
-
+```javascript
 Object.assign(SomeClass.prototype, {
     someMethod(arg1, arg2) {
         ···
@@ -229,7 +229,7 @@ Object.assign(SomeClass.prototype, {
     }
 });
 You could also manually assign functions, but then you don’t have the nice method definition syntax and need to mention SomeClass.prototype each time:
-
+```javascript
 SomeClass.prototype.someMethod = function (arg1, arg2) {
     ···
 };
@@ -238,14 +238,14 @@ SomeClass.prototype.anotherMethod = function () {
 };
 14.3.1.2.4 Cloning objects
 One last use case for Object.assign() is a quick way of cloning objects:
-
+```javascript
 function clone(orig) {
     return Object.assign({}, orig);
 }
 This way of cloning is also somewhat dirty, because it doesn’t preserve the property attributes of orig. If that is what you need, you have to use property descriptors.
 
 If you want the clone to have the same prototype as the original, you can use Object.getPrototypeOf() and Object.create():
-
+```javascript
 function clone(orig) {
     const origProto = Object.getPrototypeOf(orig);
     return Object.assign(Object.create(origProto), orig);
@@ -257,7 +257,7 @@ Object.getOwnPropertySymbols(obj) retrieves all own (non-inherited) symbol-value
 The strict equals operator (===) treats two values differently than one might expect.
 
 First, NaN is not equal to itself.
-
+```javascript
 > NaN === NaN
 false
 That is unfortunate, because it often prevents us from detecting NaN:
@@ -265,13 +265,13 @@ That is unfortunate, because it often prevents us from detecting NaN:
 > [0,NaN,2].indexOf(NaN)
 -1
 Second, JavaScript has two zeros, but strict equals treats them as if they were the same value:
-
+```javascript
 > -0 === +0
 true
 Doing this is normally a good thing.
 
 Object.is() provides a way of comparing values that is a bit more precise than ===. It works as follows:
-
+```javascript
 > Object.is(NaN, NaN)
 true
 > Object.is(-0, +0)
@@ -280,14 +280,14 @@ Everything else is compared as with ===.
 
 14.3.3.1 Using Object.is() to find Array elements
 If we combine Object.is() with the new ES6 Array method findIndex(), we can find NaN in Arrays:
-
+```javascript
 function myIndexOf(arr, elem) {
     return arr.findIndex(x => Object.is(x, elem));
 }
 
 myIndexOf([0,NaN,2], NaN); // 1
 In contrast, indexOf() does not handle NaN well:
-
+```javascript
 > [0,NaN,2].indexOf(NaN)
 -1
 14.3.4 Object.setPrototypeOf(obj, proto)
@@ -295,7 +295,7 @@ This method sets the prototype of obj to proto. The non-standard way of doing so
 
 14.4 Iterating over property keys in ES6
 In ECMAScript 6, the key of a property can be either a string or a symbol. There are now five tool methods that retrieve the property keys of an object obj:
-
+```javascript
 Object.keys(obj) : Array<string>
 retrieves all string keys of all enumerable own (non-inherited) properties.
 Object.getOwnPropertyNames(obj) : Array<string>
@@ -331,7 +331,7 @@ Integer indices have a 53-bit range, because thats the largest range of integers
 
 14.4.1.2 Example
 The following code demonstrates the order in which the own keys of an object are iterated over:
-
+```javascript
 const obj = {
     [Symbol('first')]: true,
     '02': true,
@@ -376,7 +376,7 @@ None of these cases prevent Object.defineProperty() from creating an own propert
 
 14.5.1 Overriding inherited read-only properties
 If an object obj inherits a property prop that is read-only then you can’t assign to that property:
-
+```javascript
 const proto = Object.defineProperty({}, 'prop', {
     writable: false,
     configurable: true,
@@ -386,7 +386,7 @@ const obj = Object.create(proto);
 obj.prop = 456;
     // TypeError: Cannot assign to read-only property
 This is similar to how an inherited property works that has a getter, but no setter. It is in line with viewing assignment as changing the value of an inherited property. It does so non-destructively: the original is not modified, but overridden by a newly created own property. Therefore, an inherited read-only property and an inherited setter-less property both prevent changes via assignment. You can, however, force the creation of an own property by defining a property:
-
+```javascript
 const proto = Object.defineProperty({}, 'prop', {
     writable: false,
     configurable: true,
@@ -403,10 +403,10 @@ For this section, it helps if you know what prototype chains are. Consult Sect. 
 14.6.1 __proto__ prior to ECMAScript 6
 14.6.1.1 Prototypes
 Each object in JavaScript starts a chain of one or more objects, a so-called prototype chain. Each object points to its successor, its prototype via the internal property [[Prototype]] (which is null if there is no successor). That property is called internal, because it only exists in the language specification and cannot be directly accessed from JavaScript. In ECMAScript 5, the standard way of getting the prototype p of an object obj is:
-
+```javascript
 var p = Object.getPrototypeOf(obj);
 There is no standard way to change the prototype of an existing object, but you can create a new object obj that has the given prototype p:
-
+```javascript
 var obj = Object.create(p);
 14.6.1.2 __proto__
 A long time ago, Firefox got the non-standard property __proto__. Other browsers eventually copied that feature, due to its popularity.
@@ -414,6 +414,7 @@ A long time ago, Firefox got the non-standard property __proto__. Other browsers
 Prior to ECMAScript 6, __proto__ worked in obscure ways:
 
 You could use it to get or set the prototype of any object:
+```javascript
   var obj = {};
   var p = {};
 
@@ -421,12 +422,13 @@ You could use it to get or set the prototype of any object:
   obj.__proto__ = p;
   console.log(obj.__proto__ === p); // true
 However, it was never an actual property:
+```javascript
   > var obj = {};
   > '__proto__' in obj
   false
 14.6.1.3 Subclassing Array via __proto__
 The main reason why __proto__ became popular was because it enabled the only way to create a subclass MyArray of Array in ES5: Array instances were exotic objects that couldn’t be created by ordinary constructors. Therefore, the following trick was used:
-
+```javascript
 function MyArray() {
     var instance = new Array(); // exotic object
     instance.__proto__ = MyArray.prototype;
@@ -456,7 +458,7 @@ A getter and a setter implemented via Object.prototype.__proto__.
 In an object literal, you can consider the property key '__proto__' a special operator for specifying the prototype of the created objects.
 14.6.2.1 Object.prototype.__proto__
 ECMAScript 6 enables getting and setting the property __proto__ via a getter and a setter stored in Object.prototype. If you were to implement them manually, this is roughly what it would look like:
-
+```javascript
 Object.defineProperty(Object.prototype, '__proto__', {
     get() {
         const _thisObj = Object(this);
@@ -482,12 +484,12 @@ function isObject(value) {
     return Object(value) === value;
 }
 The getter and the setter for __proto__ in the ES6 spec:
-
+```javascript
 get Object.prototype.__proto__
 set Object.prototype.__proto__
 14.6.2.2 The property key __proto__ as an operator in an object literal
 If __proto__ appears as an unquoted or quoted property key in an object literal, the prototype of the object created by that literal is set to the property value:
-
+```javascript
 > Object.getPrototypeOf({ __proto__: null })
 null
 > Object.getPrototypeOf({ '__proto__': null })
@@ -500,12 +502,12 @@ true
 > Object.keys(obj)
 [ '__proto__' ]
 The special property key '__proto__' in the ES6 spec:
-
+```javascript
 __proto__ Property Names in Object Initializers
 14.6.3 Avoiding the magic of __proto__
 14.6.3.1 Defining (not assigning) __proto__
 In ECMAScript 6, if you define the own property __proto__, no special functionality is triggered and the getter/setter Object.prototype.__proto__ is overridden:
-
+```javascript
 const obj = {};
 Object.defineProperty(obj, '__proto__', { value: 123 })
 
@@ -513,7 +515,7 @@ Object.keys(obj); // [ '__proto__' ]
 console.log(obj.__proto__); // 123
 14.6.3.2 Objects that don’t have Object.prototype as a prototype
 The __proto__ getter/setter is provided via Object.prototype. Therefore, an object without Object.prototype in its prototype chain doesn’t have the getter/setter, either. In the following code, dict is an example of such an object – it does not have a prototype. As a result, __proto__ now works like any other property:
-
+```javascript
 > const dict = Object.create(null);
 > '__proto__' in dict
 false
@@ -524,7 +526,7 @@ false
 If you want to use an object as a dictionary then it is best if it doesn’t have a prototype. That’s why prototype-less objects are also called dict objects. In ES6, you don’t even have to escape the property key '__proto__' for dict objects, because it doesn’t trigger any special functionality.
 
 __proto__ as an operator in an object literal lets you create dict objects more concisely:
-
+```javascript
 const dictObj = {
     __proto__: null,
     yes: true,
@@ -534,25 +536,25 @@ Note that in ES6, you should normally prefer the built-in data structure Map to 
 
 14.6.3.4 __proto__ and JSON
 Prior to ES6, the following could happen in a JavaScript engine:
-
+```javascript
 > JSON.parse('{"__proto__": []}') instanceof Array
 true
 With __proto__ being a getter/setter in ES6, JSON.parse() works fine, because it defines properties, it doesn’t assign them (if implemented properly, an older version of V8 did assign).
 
 JSON.stringify() isn’t affected by __proto__, either, because it only considers own properties. Objects that have an own property whose name is __proto__ work fine:
-
+```javascript
 > JSON.stringify({['__proto__']: true})
 '{"__proto__":true}'
 14.6.4 Detecting support for ES6-style __proto__
 Support for ES6-style __proto__ varies from engine to engine. Consult kangax’ ECMAScript 6 compatibility table for information on the status quo:
-
+```javascript
 Object.prototype.__proto__
 __proto__ in object literals
 The following two sections describe how you can programmatically detect whether an engine supports either of the two kinds of __proto__.
 
 14.6.4.1 Feature: __proto__ as getter/setter
 A simple check for the getter/setter:
-
+```javascript
 var supported = {}.hasOwnProperty.call(Object.prototype, '__proto__');
 A more sophisticated check:
 
@@ -605,7 +607,7 @@ Accessors (getters/setters) have the attributes:
 get: holds the getter (a function).
 set: holds the setter (a function).
 You can retrieve the attributes of a property via Object.getOwnPropertyDescriptor(), which returns the attributes as a JavaScript object:
-
+```javascript
 > const obj = { foo: 123 };
 > Object.getOwnPropertyDescriptor(obj, 'foo')
 { value: 123,
@@ -636,13 +638,16 @@ The for-in loop iterates over all enumerable properties of an object, own and in
 Non-enumerable properties occur in the following locations in the language:
 
 All prototype properties of built-in classes are non-enumerable:
+```javascript
   > const desc = Object.getOwnPropertyDescriptor.bind(Object);
   > desc(Object.prototype, 'toString').enumerable
   false
 All prototype properties of classes are non-enumerable:
+```javascript
   > desc(class {foo() {}}.prototype, 'foo').enumerable
   false
 In Arrays, length is not enumerable, which means that for-in only iterates over indices. (However, that can easily change if you add a property via assignment, which is makes it enumerable.)
+```javascript
   > desc([], 'length').enumerable
   false
   > desc(['a'], '0').enumerable
@@ -654,6 +659,7 @@ The main reason for making all of these properties non-enumerable is to hide the
 When it comes to copying properties, there are two important historical precedents that take enumerability into consideration:
 
 Prototype’s Object.extend(destination, source)
+```javascript
   const obj1 = Object.create({ foo: 123 });
   Object.extend({}, obj1); // { foo: 123 }
 
@@ -663,6 +669,7 @@ Prototype’s Object.extend(destination, source)
   });
   Object.extend({}, obj2) // {}
 jQuery’s $.extend(target, source1, source2, ···) copies all enumerable own and inherited properties of source1 etc. into own properties of target.
+```javascript
   const obj1 = Object.create({ foo: 123 });
   $.extend({}, obj1); // { foo: 123 }
 
@@ -699,7 +706,7 @@ You can’t use enumerability to distinguish between public and private methods,
 JSON.stringify() does not include properties in its output that are non-enumerable. You can therefore use enumerability to determine which own properties should be exported to JSON. This use case is similar to marking properties as private, the previous use case. But it is also different, because this is more about exporting and slightly different considerations apply. For example: Can an object be completely reconstructed from JSON?
 
 An alternative for specifying how an object should be converted to JSON is to use toJSON():
-
+```javascript
 const obj = {
     foo: 123,
     toJSON() {
@@ -734,7 +741,7 @@ Lastly, when using an interactive command line, I occasionally miss an operation
 
 14.8 Customizing basic language operations via well-known symbols
 This section explains how you can customize basic language operations by using the following well-known symbols as property keys:
-
+```javascript
 Symbol.hasInstance (method)
 Lets an object C customize the behavior of x instanceof C.
 Symbol.toPrimitive (method)
@@ -745,7 +752,7 @@ Symbol.unscopables (Object)
 Lets an object hide some properties from the with statement.
 14.8.1 Property key Symbol.hasInstance (method)
 An object C can customize the behavior of the instanceof operator via a method with the key Symbol.hasInstance that has the following signature:
-
+```javascript
 [Symbol.hasInstance](potentialInstance : any)
 x instanceof C works as follows in ES6:
 
@@ -766,7 +773,7 @@ Given that this property is read-only, you can’t use assignment to override it
 
 14.8.1.2 Example: checking whether a value is an object
 As an example, let’s implement an object ReferenceType whose “instances” are all objects, not just objects that are instances of Object (and therefore have Object.prototype in their prototype chains).
-
+```javascript
 const ReferenceType = {
     [Symbol.hasInstance](value) {
         return (value !== null
@@ -819,7 +826,7 @@ Symbol.prototype[Symbol.toPrimitive](hint) prevents toString() from being called
 Date.prototype[Symbol.toPrimitive](hint) This method implements behavior that deviates from the default algorithm. Quoting the specification: “Date objects are unique among built-in ECMAScript object in that they treat 'default' as being equivalent to 'string'. All other built-in ECMAScript objects treat 'default' as being equivalent to 'number'.”
 14.8.2.1 Example
 The following code demonstrates how coercion affects the object obj.
-
+```javascript
 const obj = {
     [Symbol.toPrimitive](hint) {
         switch (hint) {
@@ -842,7 +849,7 @@ console.log(String(obj)); // 'str'
 In ES5 and earlier, each object had the internal own property [[Class]] whose value hinted at its type. You could not access it directly, but its value was part of the string returned by Object.prototype.toString(), which is why that method was used for type checks, as an alternative to typeof.
 
 In ES6, there is no internal property [[Class]], anymore, and using Object.prototype.toString() for type checks is discouraged. In order to ensure the backwards-compatibility of that method, the public property with the key Symbol.toStringTag was introduced. You could say that it replaces [[Class]].
-
+```javascript
 Object.prototype.toString() now works as follows:
 
 Convert this to an object obj.
@@ -867,7 +874,7 @@ A regular expression object	'RegExp'
 Most of the checks in the left column are performed by looking at internal properties. For example, if an object has the internal property [[Call]], it is callable.
 
 The following interaction demonstrates the default toString tags.
-
+```javascript
 > Object.prototype.toString.call(null)
 '[object Null]'
 > Object.prototype.toString.call([])
@@ -878,17 +885,17 @@ The following interaction demonstrates the default toString tags.
 '[object Object]'
 14.8.3.2 Overriding the default toString tag
 If an object has an (own or inherited) property whose key is Symbol.toStringTag then its value overrides the default toString tag. For example:
-
+```javascript
 > ({}.toString())
 '[object Object]'
 > ({[Symbol.toStringTag]: 'Foo'}.toString())
 '[object Foo]'
 Instances of user-defined classes get the default toString tag (of objects):
-
+```javascript
 class Foo { }
 console.log(new Foo().toString()); // [object Object]
 One option for overriding the default is via a getter:
-
+```javascript
 class Bar {
     get [Symbol.toStringTag]() {
       return 'Bar';
@@ -919,7 +926,7 @@ Symbol.prototype[Symbol.toStringTag] → 'Symbol'
 Generator.prototype[Symbol.toStringTag] → 'Generator'
 GeneratorFunction.prototype[Symbol.toStringTag] → 'GeneratorFunction'
 All of the built-in properties whose keys are Symbol.toStringTag have the following property descriptor:
-
+```javascript
 {
     writable: false,
     enumerable: false,
@@ -933,7 +940,7 @@ Symbol.unscopables lets an object hide some properties from the with statement.
 The reason for doing so is that it allows TC39 to add new methods to Array.prototype without breaking old code. Note that current code rarely uses with, which is forbidden in strict mode and therefore ES6 modules (which are implicitly in strict mode).
 
 Why would adding methods to Array.prototype break code that uses with (such as the widely deployed Ext JS 4.2.1)? Take a look at the following code. The existence of a property Array.prototype.values breaks foo(), if you call it with an Array:
-
+```javascript
 function foo(values) {
     with (values) {
         console.log(values.length); // abc (*)
