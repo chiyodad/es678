@@ -117,9 +117,9 @@ foo = 'def'; // TypeError
 
 스펙에 따르면 const 변수의 변경은 항상 TypeError 를 던진다
 
-일반적으로 strict mode에서 불변 바인딩의 변경은 SetMutableBinding 에 따라서, 항상 예외가 일어나지만, const 변수 선언은 항상 엄격한 바인딩을 생성한다.
+일반적으로 strict mode에서 불변 바인딩의 변경은 SetMutableBinding 에 따라서, 항상 예외의 원인이지만, const 변수 선언은 항상 엄격한 바인딩을 생성한다.
 
-step 35.b.i.1 장의 FunctionDeclarationInstantiation(func, argumentsList) 을 참고하라.
+step 35.b.i.1 장의 [FunctionDeclarationInstantiation(func, argumentsList)](http://www.ecma-international.org/ecma-262/6.0/#sec-functiondeclarationinstantiation) 을 참고하라.
 
 ### 9.3.1 함정!(Pitfall) : const 는 값의 불변을 만들지 않는다.
 const only means that a variable always has the same value, but it does not mean that the value itself is or becomes immutable. For example, obj is a constant, but the value it points to is mutable – we can add a property to it:
