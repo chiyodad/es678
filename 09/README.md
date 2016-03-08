@@ -122,7 +122,6 @@ foo = 'def'; // TypeError
 step 35.b.i.1 장의 [FunctionDeclarationInstantiation(func, argumentsList)](http://www.ecma-international.org/ecma-262/6.0/#sec-functiondeclarationinstantiation) 을 참고하라.
 
 ### 9.3.1 함정!(Pitfall) : const 는 값의 불변을 만들지 않는다.
-const only means that a variable always has the same value, but it does not mean that the value itself is or becomes immutable. For example, obj is a constant, but the value it points to is mutable – we can add a property to it:
 
 const 는 단지 변수가 항상 같은 값을 가지는 것을 뜻하지만, 그것이 값 자체이거나 불변이 되는 것은 아니다.
 
@@ -148,7 +147,6 @@ obj.prop = 123; // TypeError
 ```
 
 #### 9.3.1.1 함정!: Object.freeze() 는 얕다.
-Keep in mind that Object.freeze() is shallow, it only freezes the properties of its argument, not the objects stored in its properties. For example, the object obj is frozen:
 Object.freeze() 는 얕다는걸 알아둬라. 그건 단지 그 인수의 프로퍼티들을 프리징할 뿐, 속성에 저장된 객체에는 아니다.
 
 예를 들면, 오브젝트 obj 는 얼었다 (frozen)
@@ -213,7 +211,6 @@ let 을 통한 변수 선언은 임시 사각 지대 (temporal dead zone) 를 �
 const 변수도 let 변수와 비슷한 동작을 한다. 그러나 반드시 이니셜라이저를 가져야 하고 (예를 들면 즉시 값 설정이 되어야 한다는 뜻이다) 변경할 수 없다.
 
 ### 9.4.3 예제
-Within a TDZ, an exception is thrown if a variable is got or set:
 
 TDZ 내에서 변수를 얻거나 설정하면 예외가 던져진다.
 
@@ -231,15 +228,13 @@ if (true) { // enter new scope, TDZ starts
 }
 console.log(tmp); // true
 ```
-이니셜라이저라면, TDZ는 할당이 된 뒤 종료한다.(???)
-(If there is an initializer then the TDZ ends after the assignment was made)
+이니셜라이저가 있다면, TDZ는 할당이 된 뒤 종료한다.
 
 ```javascript
 let foo = console.log(foo); // ReferenceError
 ```
 
-The following code demonstrates that the dead zone is really temporal (based on time) and not spatial (based on location):
-다음 코드는 사각 지대가 정말 일시적(시간 기준) 이고 공간 (지역 기준)이 아닌걸 보여준다.
+다음 코드는 사각 지대가 정말 일시적(시간 기준)이고 공간(지역 기준)이 아닌걸 보여준다.
 
 ```javascript
 if (true) { // enter new scope, TDZ starts
@@ -289,10 +284,6 @@ if (!('someGlobal' in window)) {
 
 ### 9.4.5 왜 임시 사각 지대가 있지?
 
-To catch programming errors: Being able to access a variable before its declaration is strange. If you do so, it is normally by accident and you should be warned about it.
-For const: Making const work properly is difficult. Quoting Allen Wirfs-Brock: “TDZs … provide a rational semantics for const. There was significant technical discussion of that topic and TDZs emerged as the best solution.” let also has a temporal dead zone so that switching between let and const doesn’t change behavior in unexpected ways.
-Future-proofing for guards: JavaScript may eventually have guards, a mechanism for enforcing at runtime that a variable has the correct value (think runtime type check). If the value of a variable is undefined before its declaration then that value may be in conflict with the guarantee given by its guard.
-
 1. 프로그래밍 오류를 잡으려면 : 선언 전에 변수에 접근이 가능하다는 건 이상하다. 만일 그렇게 되면 보통 이런 건에 대해 경고해야 한다.
 2. const : const 는 적당히 만들기는 어려운 일이다. Allen Wirfs-Brock 을 인용하면, *"TDZs … 는 const 를 만들기 위한 합리적인 문법을 제공한다. 이 주제에 대해서 여러 중요한 기술적 의견들이 있었고 TDZ는 최적의 기술로 부상했다"* let 또한 예상치못한 동작으로 let 과 const 을 변경하지 않도록 TDZ가 있다.(?)
 3. 감시를 통한 미래보강 : JavaScript 은 결국 변수가 올바른 값을 갖는지 런타임 시 수행하는 메카니즘의 (런타임 체크로 생각하라) 감시가 필요하다. 만일 그 변수의 값 선언 하기 전의 undefined 라면 그 값은 감시에 의해 보증되어 충돌할 것이다.
@@ -313,7 +304,7 @@ Future-proofing for guards: JavaScript may eventually have guards, a mechanism f
 선언할때, 당신은 var, let 혹은 const를 사용할 수 있다. 그들 각자는 다른 효과를 가지며 다음에 설명한다.
 
 ### 9.5.1 for loop
-var-declaring a variable in the head of a for loop creates a single binding (storage space) for that variable:
+
 헤드 안에서의 var 선언 변수는 변수를 위해 하나의 바인딩(저장 공간)을 만든다.
 
 ```javascript
