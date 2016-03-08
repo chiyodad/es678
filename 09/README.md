@@ -404,3 +404,6 @@ for-of의 반복 바인딩은 [ForIn/OfBodyEvaluation](http://www.ecma-internati
 </html>
 ```
 
+무엇이 표시될지는 target 변수(B 라인) 에 의존한다. let 대신 var 를 사용하는 경우(A 라인), 루프 전체의 target 은 'vielleicht' 만을 가지는 단일 결합이 존재하게 된다. 따라서 어찌되었든 당신이 몇번 링크를 클릭해도는 항상 'vielleicht' 번역만 얻을 것이다.
+
+고맙게도, let 과 함께라면 우리는 루프 반복마다 하나의 결합을 얻고, 제대로 번역이 된다.
