@@ -66,7 +66,7 @@ const inst = new MyClass();
 ###  16.1.3 Browsers: scripts versus modules
 
 |  *  | Scripts | Modules |
-| HTML element | \<script\> | \<script type="module"\> |
+| HTML element | script | script type="module" |
 | Top-level variables are | global | local to module |
 | Value of this at top level | window | undefined |
 | Executed | synchronously | asynchronously |
