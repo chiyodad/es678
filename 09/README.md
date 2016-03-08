@@ -533,14 +533,13 @@ Classes not being hoisted may be surprising, because, under the hood, they creat
 ## 9.9 코딩 스타일 : const 대 let 대 var
 난 항상 let 혹은 const 어느 한쪽을 사용하는 걸 추천한다.
 
-1. Prefer const. You can use it whenever a variable never changes its value. In other words: the variable should never be the left-hand
-side of an assignment or the operand of ++ or --. Changing an object that a const variable refers to is allowed:
+1) const 를 선호한다. 변수 값을 변경할 수 없지만 언제든지 사용할 수 있다. 즉, 변수가 대입의 왼쪽 또는 피연산자이거나 ++ 나 -- 가 되서는 안된다. const 변수 객체의 변경은 허용된다.
 
 ```javascript
 const foo = {};
 ```
 
-You can even use const in a for-of loop, because one (immutable) binding is created per loop iteration:
+당신은 또한 for-of 루프에 사용할 수 있는데, 하나의 불변 바인딩이 루프 때마다 생성되기 때문이다.
 
 ```javascript
 for (const x of ['a', 'b']) {
@@ -551,9 +550,9 @@ for (const x of ['a', 'b']) {
 // b
 ```
 
-Inside the body of the for-of loop, x can’t changed.
+for-of 루프의 바디 안에서 x를 수정할 수 없다.
 
-2. Otherwise, use let – when the initial value of a variable changes later on.
+2) 아니면 ler을 사용한다 - 초기값 이후에 변수의 값을 수정할 경우에.
 
 ```javascript
 let counter = 0; // initial value
@@ -562,3 +561,17 @@ counter++; // change
 let obj = {}; // initial value
 obj = { foo: 123 }; // change
 ```
+
+3) var 는 피한다.
+
+만일 이 규칙을 따르면 var 는 리팩토링이 필요하다는 신호로서 레가시 코드로 나타날 뿐이다.
+
+var 는 let 과 const 가 하지못하는 한가지 일을 한다 : 변수들은 전역 객체의 속성으로 선언된다. 하지만 그것은 일반적으로 좋은 일이 아니다. window 혹은 global 에 할당하는 것으로 동일한 효과를 낼 수 있다.
+
+### 9.9.1 대안.
+전에 언급한 스타일 규칙에 대한 대안은 완전한 불변값에 대해 const 를 사용하는 것이다. (원시값과 frozen 오브젝트). 그 다음, 두가지 대안이 있다.
+
+const를 선호한다 (추천) : const 는 불변 바인딩을 표시한다.
+let 을 선호한다 (대안) : const 는 불변값을 표시한다.
+
+#2 는 완벽하게 수용된다. 난 단지 1 선호로 기운다.
