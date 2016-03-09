@@ -202,19 +202,20 @@ function copyAllProperties(target, ...sources) {
 
 또다른 한편으로 열거가능성은 이동메소드를 클래스의 프로토타입에서 객체 리터럴로 생성했다면 틀리다. 보통 메소드는 모두 열거가능이지만(반대로 어쨌든 Object.assign()는 그들을 볼 수 없다), 프로토타입은 기본적으로는 오직 열거불가 메소드만 갖을 수 있다.
 
-14.3.1.2 Use cases for Object.assign()
-Let’s look at a few use cases.
+14.3.1.2 Object.assign()의 사용예
+몇 가지 사용예를 살펴보자.
 
-14.3.1.2.1 Adding properties to this
-You can use Object.assign() to add properties to this in a constructor:
+14.3.1.2.1 this에 속성을 추가하기
+Object.assign() 생성자에서 this에 속성을 추가하기 위해 사용될 수 있다.
 ```javascript
 class Point {
     constructor(x, y) {
         Object.assign(this, {x, y});
     }
 }
-14.3.1.2.2 Providing default values for object properties
-Object.assign() is also useful for filling in defaults for missing properties. In the following example, we have an object DEFAULTS with default values for properties and an object options with data.
+```
+14.3.1.2.2 오브젝트 속성에 기본값을 제공하기
+Object.assign()는 잃어버린 속성에 대한 기본값을 채울때도 쓸모가 있다. 다음의 예에서 인자로 받은 options객체 앞서 DEFAULT오브젝트가 속성에 대한 기본값을 제공한다.
 ```javascript
 const DEFAULTS = {
     logLevel: 0,
@@ -224,10 +225,11 @@ function processContent(options) {
     options = Object.assign({}, DEFAULTS, options); // (A)
     ···
 }
-In line A, we created a fresh object, copied the defaults into it and then copied options into it, overriding the defaults. Object.assign() returns the result of these operations, which we assign to options.
+```
+A줄에서, 새 객체를 만들고 기본값을 복사한뒤 기본값을 덮어쓰며 options를 복사했다. Object.assign()은 이렇게 처리된 결과를 반환한다.
 
-14.3.1.2.3 Adding methods to objects
-Another use case is adding methods to objects:
+14.3.1.2.3 오브젝트에 메소드를 추가할때
+오브젝트에 메소드를 추가할때도 사용할 수 있다:
 ```javascript
 Object.assign(SomeClass.prototype, {
     someMethod(arg1, arg2) {
@@ -237,7 +239,8 @@ Object.assign(SomeClass.prototype, {
         ···
     }
 });
-You could also manually assign functions, but then you don’t have the nice method definition syntax and need to mention SomeClass.prototype each time:
+```
+직접 함수를 추가할 수 있지만 매번 SomeClass.prototype를 기술해야하고 이를 대체할 마땅한 문법이 없다:
 ```javascript
 SomeClass.prototype.someMethod = function (arg1, arg2) {
     ···
@@ -245,22 +248,25 @@ SomeClass.prototype.someMethod = function (arg1, arg2) {
 SomeClass.prototype.anotherMethod = function () {
     ···
 };
-14.3.1.2.4 Cloning objects
-One last use case for Object.assign() is a quick way of cloning objects:
+```
+14.3.1.2.4 오브젝트 클론하기
+마지막으로 살펴볼 Object.assign()의 사용처는 오브젝트의 클론을 만드는 빠른 방법이다:
 ```javascript
 function clone(orig) {
     return Object.assign({}, orig);
 }
-This way of cloning is also somewhat dirty, because it doesn’t preserve the property attributes of orig. If that is what you need, you have to use property descriptors.
+```
+이 방법으로 만들어진 클론은 또한 좀 지저분한데 원본의 속성에 대한 기술을 가져오지 않기 때문이다. 이 부분을 원한다면 속성기술자를 사용해야만한다.
 
-If you want the clone to have the same prototype as the original, you can use Object.getPrototypeOf() and Object.create():
+원본과 동일한 프로토타입의 클론을 만들고 싶다면 Object.getPrototypeOf()와 Object.create()를 사용해야한다:
 ```javascript
 function clone(orig) {
     const origProto = Object.getPrototypeOf(orig);
     return Object.assign(Object.create(origProto), orig);
 }
+```
 14.3.2 Object.getOwnPropertySymbols(obj)
-Object.getOwnPropertySymbols(obj) retrieves all own (non-inherited) symbol-valued property keys of obj. It complements Object.getOwnPropertyNames(), which retrieves all string-valued own property keys. Consult a later section for more details on iterating over property keys.
+Object.getOwnPropertySymbols(obj)은 obj의 상속받지 않은 모든 자신소유의 속성인 심볼을 찾는다.  이는 자신의 모든 문자열키를 찾는  Object.getOwnPropertyNames()를 보완한다. 속성키를 순환할 때 더 자세한 내용은 이후 섹션에서 다룬다.
 
 14.3.3 Object.is(value1, value2)
 The strict equals operator (===) treats two values differently than one might expect.
