@@ -58,22 +58,24 @@ selectEntries();
 Spread operator (...)
 
 In function and constructor calls, the spread operator turns iterable values into arguments:
+
 함수나 생성자에서 호출시, 스프래드 연산자는 iterable 값들을 인자로 전환시킨다:
 
-
+```javascript
 > Math.max(-1, 5, 11, 3)
 11
 > Math.max(...[-1, 5, 11, 3])
 11
 > Math.max(-1, ...[-1, 5, 11], 3)
 11
+```
 In Array literals, the spread operator turns iterable values into Array elements:
 
 배열 리터럴에서 spread operator는 iterable 변수들을 배열 element로 변환한다.
-
+```javascript
 > [1, ...[2,3], 4]
 [1, 2, 3, 4]
-
+```
 11.2 Parameter handling as destructuring
 
 The ES6 way of handling parameters is equivalent to destructuring the actual parameters via the formal parameters.
@@ -123,7 +125,8 @@ becomes:
 ```
 Let’s look at specific features next.
 
-다음에서는  을 보도록 하자
+이제 좀더 상세히 살펴보도록 하겠다.
+
 
 ##11.3 Parameter default values
 ECMAScript 6 lets you specify default values for parameters:
@@ -136,20 +139,21 @@ function f(x, y=0) {
 ```
 
 Omitting the second parameter triggers the default value:
+
 두번째 parameter를 생략함으로써 default value가 되도록 한다.
 ```javascript
 f(1)
-[1, 0]
+> [1, 0]
 f()
-[undefined, 0]
+> [undefined, 0]
 ```
 
 Watch out – undefined triggers the default value, too:
 undefined 역시 default value를 발생시키는 것을 볼 수 있다.
 
 ```javascript
-> f(undefined, undefined)
-[undefined, 0]
+f(undefined, undefined)
+> [undefined, 0]
 ```
 
 The default value is computed on demand, only when it is actually needed:
