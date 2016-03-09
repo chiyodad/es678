@@ -269,83 +269,100 @@ function clone(orig) {
 Object.getOwnPropertySymbols(obj)은 obj의 상속받지 않은 모든 자신소유의 속성인 심볼을 찾는다.  이는 자신의 모든 문자열키를 찾는  Object.getOwnPropertyNames()를 보완한다. 속성키를 순환할 때 더 자세한 내용은 이후 섹션에서 다룬다.
 
 14.3.3 Object.is(value1, value2)
-The strict equals operator (===) treats two values differently than one might expect.
+항등비교는 기대했던 것과는 다르게 두개의 값을 다룬다.
 
-First, NaN is not equal to itself.
+일단, NaN은 자신과도 같지 않다.
 ```javascript
 > NaN === NaN
 false
-That is unfortunate, because it often prevents us from detecting NaN:
-
+```
+이로 인해 NaN을 찾을 수 없게 된다:
+```javascript
 > [0,NaN,2].indexOf(NaN)
 -1
-Second, JavaScript has two zeros, but strict equals treats them as if they were the same value:
+```
+두번째로, JavaScript는 두개의 0값을 갖고 있다. 하지만 항등비교는 이를 같은 값으로 처리한다:
 ```javascript
 > -0 === +0
 true
-Doing this is normally a good thing.
+```
+이런 사항들은 일반적인 상황에서는 문제없다.
 
-Object.is() provides a way of comparing values that is a bit more precise than ===. It works as follows:
+Object.is()는 ===보다 좀더 정확한 비교를 제공한다. 아래와 같이 작동한다:
 ```javascript
 > Object.is(NaN, NaN)
 true
 > Object.is(-0, +0)
 false
-Everything else is compared as with ===.
+```
+그외는 ===와 동일하다.
 
-14.3.3.1 Using Object.is() to find Array elements
-If we combine Object.is() with the new ES6 Array method findIndex(), we can find NaN in Arrays:
+14.3.3.1 Object.is()를 배열의 요소를 찾는데 사용하기
+ES6의 배열 메소드인 findIndex()와 Object.is()를 조합하면 배열에서 NaN을 찾을 수 있다:
 ```javascript
 function myIndexOf(arr, elem) {
     return arr.findIndex(x => Object.is(x, elem));
 }
 
 myIndexOf([0,NaN,2], NaN); // 1
-In contrast, indexOf() does not handle NaN well:
+```
+반대로 indexOf()는 NaN을 잘 다루지 못한다:
 ```javascript
 > [0,NaN,2].indexOf(NaN)
 -1
+```
 14.3.4 Object.setPrototypeOf(obj, proto)
-This method sets the prototype of obj to proto. The non-standard way of doing so in ECMAScript 5, that is supported by many engines, is via assigning to the special property __proto__. The recommended way of setting the prototype remains the same as in ECMAScript 5: during the creation of an object, via Object.create(). That will always be faster than first creating an object and then setting its prototype. Obviously, it doesn’t work if you want to change the prototype of an existing object.
+이 메소드는 obj의 프로토타입을 proto로 지정한다. ES5에서 비공식적인 방법으로 많은 엔진에서 지원되었던 방법은 __proto__라는 특별한 속성에 할당하는 것이다. 프로토타입을 지정할때 추천되는 방법은 ES5와 동일하다: 오브젝트를 생성할 때 Object.create()를 이용하는 것이다. 이 쪽이 생성한 뒤 prototype을 지정하는 것보다 항상 더 빠르다. 당연하지만 기존 객체의 프로토타입을 변경하려하면 작동하지 않는다.
 
-14.4 Iterating over property keys in ES6
-In ECMAScript 6, the key of a property can be either a string or a symbol. There are now five tool methods that retrieve the property keys of an object obj:
+14.4 ES6에서 속성키의 순회
+ES6에서 속성키는 문자열이나 심볼 둘다 가능하다. 어떤 오브젝트 obj에 대해 속성키를 찾는 메소드는 다섯개나 있다:
 ```javascript
 Object.keys(obj) : Array<string>
-retrieves all string keys of all enumerable own (non-inherited) properties.
+```
+(상속되지않은)자신의 모든 열거가능한 문자열 키를 찾는다.
+```javascript
 Object.getOwnPropertyNames(obj) : Array<string>
-retrieves all string keys of all own properties.
+```
+자신의 모든 문자열 속성키를 찾는다.
+```javascript
 Object.getOwnPropertySymbols(obj) : Array<symbol>
-retrieves all symbol keys of all own properties.
+```
+자신의 모든 심볼 속성키를 찾는다.
+```javascript
 Reflect.ownKeys(obj) : Array<string|symbol>
-retrieves all keys of all own properties.
+```
+자신의 모든 속성키를 찾는다.
+```javascript
 Reflect.enumerate(obj) : Iterator
-retrieves all string keys of all enumerable properties.
-14.4.1 Iteration order of property keys
-The following operations in ECMAScript 6 traverse the own keys of properties:
+```
+열거가능한 모든 문자열키를 찾는다.
+14.4.1 속성키의 순회시의 정렬
+ES6의 다음 연산은 자신의 속성키에 대해 순회한다:
 
 Object.keys()
 Object.getOwnPropertyNames()
 Reflect.ownKeys()
-Own property keys are traversed in the following order:
 
-First, the string keys that are integer indices (what these are is explained in the next section), in ascending numeric order.
-Then, all other string keys, in the order in which they were added to the object.
-Lastly, all symbol keys, in the order in which they were added to the object.
-Many engines treat integer indices specially, even though they are still strings (at least as far as the ES6 spec is concerned). Therefore, it makes sense to treat them as a separate category of keys.
+자신의 속성키들은 다음의 순서로 순회한다:
 
-14.4.1.1 Integer indices
-Roughly, an integer index is a string that, if converted to a 53-bit non-negative integer and back is the same value. Therefore:
+우선, 정수인덱스(다음섹션에서 설명한다)가 작은수에서 큰수로 정렬된다.
+그 뒤에 나은 모든 문자열키는 오브젝트에 추가된 순서로 정렬된다.
+마지막으로 모든 심볼키가 오브젝트에 추가된 순서로 정렬된다.
+많은 엔진들은 정수형키가 여전히 문자열임(적어도 ES6의 현재 사양까지는)에도 특별하게 취급한다.
+그러므로 정수형키는 별도의 카테고리로 취급할 필요가 있다.
 
-'10' and '2' are integer indices.
-'02' is not an integer index. Coverting it to an integer and back results in the different string '2'.
-'3.141' is not an integer index, because 3.141 is not an integer.
-In ES6, instances of String and Typed Arrays have integer indices. The indices of normal Arrays are a subset of integer indices: they have a smaller range of 32 bits. For more information on Array indices, consult “Array Indices in Detail” in “Speaking JavaScript”.
+14.4.1.1 정수 인덱스
+대략, 정수인덱스는 문자열로 53-bit non-negative로 변환된 결과와 같은 값이다. 그러므로 다음과 같다:
 
-Integer indices have a 53-bit range, because thats the largest range of integers that JavaScript can handle. For details, see Sect. “Safe integers”.
+'10' 과 '2'는 정수인덱스다.
+'02' 는 정수인덱스가 아니다. 이를 정수로 변환해보면 변환된 결과는 문자열 '2'와 다른 값이 된다.
+'3.141' 는 정수인덱스가 아니다. 3.141 자체가 정수가 아니기 때문이다.
+ES6에서, 문자열과 Typed Arrays는 정수인덱스를 갖는다. 일반 배열에 있는 인덱스는 정수인덱스의 부분집합이다: 일반배열의 인덱스는 32bit의 범위보다 작다. 배열 인덱스에 대한 더 자세한 정보는 자바스크립트를 말하다 책의 배열인덱스 상세편을 보라.
 
-14.4.1.2 Example
-The following code demonstrates the order in which the own keys of an object are iterated over:
+정수인덱스는 53-bit 범위를 가지며, 이는 자바스크립트가 다룰 수 있는 가장 큰 정수의 범위다. 자세한 내용은 "안전한 정수"섹션을 참고한다.
+
+14.4.1.2 예제
+아래 코드는 오브젝트가 자신의 키를 순회할대의 순서를 보여준다:
 ```javascript
 const obj = {
     [Symbol('first')]: true,
@@ -358,17 +375,19 @@ const obj = {
 Reflect.ownKeys(obj);
     // [ '2', '10', '02', '01',
     //   Symbol('first'), Symbol('second') ]
-Explanation:
+```
+설명:
 
-'2' and '10' are integer indices, come first and are sorted numerically (not in the order in which they were added).
-'02' and '01' are normal string keys, come next and appear in the order in which they were added to obj.
-Symbol('first') and Symbol('second') are symbols and come last, in the order in which they were added to obj.
-14.4.1.3 Why does the spec standardize in which order property keys are returned?
-Answer by Tab Atkins Jr.:
+'2' 과 '10'는 정수인덱스로 제일 처음 나오고 숫자의 크기로 정렬되어있다(이들은 추가된 순서로 정렬되지 않았다).
+'02' 과 '01'는 보통의 문자열키로 취급되며 뒤이어 나오는데 이들은 obj에 추가된 순서대로 나온다.
+Symbol('first')와 Symbol('second')는 심볼로 마지막에 오며, obj에 추가된 순서대로 나온다.
 
-Because, for objects at least, all implementations used approximately the same order (matching the current spec), and lots of code was inadvertently written that depended on that ordering, and would break if you enumerated it in a different order. Since browsers have to implement this particular ordering to be web-compatible, it was specced as a requirement.
+14.4.1.3 반환되는 속성키가 정렬되는 것이 왜 표준 사양화 되었을까?
+Tab Atkins Jr.의 답변이다:
 
-There was some discussion about breaking from this in Maps/Sets, but doing so would require us to specify an order that is impossible for code to depend on; in other words, we’d have to mandate that the ordering be random, not just unspecified. This was deemed too much effort, and creation-order is reasonable valuable (see OrderedDict in Python, for example), so it was decided to have Maps and Sets match Objects.
+적어도 오브젝트에 대해 모든 구현체는 대략 같은 순서를 사용한다(현재 스펙에 부합하는), 많은 코드가 실수로 그 순서에 의존적으로 작성되어 있으며 다른 순서가 되면 정지하게 될 것이다. 브라우저들은 웹에서 호환성을 갖추려고 특정 순서를 구현했고, 이에 대한 표준화에 대한 요구사항이 있어 스펙화 되었다.
+
+Map과 Set에서는 이러한 순서를 깨트리자는 몇몇 의견이 있었다. 하지만 그렇게 하면 코드에서 의존할 수 없는 형태의 특별한 순서를 요구받는다. 이는 순서가 특정할 수 없을 뿐 아니라 랜덤으로 주어지도록 위임해야한다. 져야하며  이렇게 하는 것은 코드에 의존하는 것이 불가능한 순서를 특정하는 것을 요구한다; 다른말로, 특정화되지 않는 것으로 끝나는게 아니라 랜덤하게 순서를 위임해야만 한다. 이는 머누 많은 노력을 요구하고 생성순서가 합리적이다.(예를들어 파이썬의 OrderedDict을 보라) 그러므로 Map과 Set도 Object와 동일하게 결정했다.
 
 14.4.1.4 The order of properties in the spec
 Two parts of the spec are relevant:
