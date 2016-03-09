@@ -314,10 +314,8 @@ for (var i=0; i < 3; i++) {
 arr.map(x => x()); // [3,3,3]
 ```
 
-Every i in the bodies of the three arrow functions refers to the same binding, which is why they all return the same value.
 모든 세개의 *arrow function* 바디 안의 *i* 는 같은 바인딩이며, 모두 같은 값을 반환하는 이유가 된다.
 
-If you let-declare a variable, a new binding is created for each loop iteration:
 만일 let으로 변수를 선언하면, 새로운 바인딩이 루프 이터레이션마다 생성된다.
 
 ```javascript
@@ -463,8 +461,6 @@ bar(); // ReferenceError
 ```
 
 ### 9.6.3 파라미터 기본값은 함수 바디의 스코프를 보지 않는다.
-The scope of parameter default values is separate from the scope of the body (the former surrounds the latter). That means that methods or functions defined “inside” parameter default values don’t see the local variables of the body:
-
 파라미터 기본값 스코프는 함수 바디의 스코프(전자가 후자를 둘러싼)와는 다른 것이다. 즉, 메소드 혹은 함수에 정의 된 내부 파라미터 기본값은 함수 바디의 로컬 변수가 보이지 않는다는걸 의미한다.
 
 ```javascript
@@ -495,7 +491,6 @@ JavaScript의 전역 객체 (웹브라우저에 window, Node.js의 global)는 �
 + 마찬가지로 전역 객체에 (전역에있는 동안) 속성으로 만들어진다. var 처럼.
 + 호이스팅된다.
 
-The following code demonstrates the hoisting of function declarations:
 다음 코드는 함수 선언의 호이스팅을 보여준다
 
 ```javascript
