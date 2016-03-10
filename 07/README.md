@@ -85,8 +85,13 @@ const sym = Symbol('desc');
 
 const str1 = '' + sym; // TypeError
 const str2 = `${sym}`; // TypeError
-The only solution is to convert explicitly:
+```
 
+명시적으로 형변환하는 것이 유일한 방법이다.
+
+> The only solution is to convert explicitly:
+
+```js
 const str2 = String(sym); // 'Symbol(desc)'
 const str3 = sym.toString(); // 'Symbol(desc)'
 ```
