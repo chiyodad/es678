@@ -1,8 +1,7 @@
-15. Classes
-
+# 15. Classes
 This chapter explains how ES6 classes work.
 
-15.1 Overview
+## 15.1 Overview
 A class and a subclass:
 
 ```javascript
@@ -48,8 +47,9 @@ Under the hood, ES6 classes are not something that is radically new: They mainly
 'function'
 ```
 
-15.2 The essentials
-15.2.1 Base classes
+## 15.2 The essentials
+
+### 15.2.1 Base classes
 A class is defined like this in ECMAScript 6:
 
 ```javascript
@@ -88,7 +88,7 @@ TypeError: Classes can’t be function-called
 
 > In the spec, function-calling classes is prevented in the internal method [[Call]] of function objects.
 
-15.2.1.1 Class declarations are not hoisted
+#### 15.2.1.1 Class declarations are not hoisted
 Function declarations are hoisted: When entering a scope, the functions that are declared in it are immediately available – independently of where the declarations happen. That means that you can call a function that is declared later:
 
 ```javascript
@@ -119,7 +119,7 @@ class Bar {}
 functionThatUsesBar(); // OK
 ```
 
-15.2.1.2 Class expressions
+#### 15.2.1.2 Class expressions
 Similarly to functions, there are two kinds of class definitions, two ways to define a class: class declarations and class expressions.
 
 Similarly to function expressions, class expressions can be anonymous:
@@ -147,10 +147,10 @@ console.log(Me.name); // ReferenceError: Me is not defined
 
 The last two lines demonstrate that Me does not become a variable outside of the class, but can be used inside it.
 
-15.2.2 Inside the body of a class definition
+### 15.2.2 Inside the body of a class definition
 A class body can only contain methods, but not data properties. Prototypes having data properties is generally considered an anti-pattern, so this just enforces a best practice.
 
-15.2.2.1 constructor, static methods, prototype methods
+#### 15.2.2.1 constructor, static methods, prototype methods
 Let’s examine three kinds of methods that you often find in class definitions.
 
 ```javascript
@@ -201,7 +201,7 @@ Third, prototype methods. The prototype properties of Foo are the properties of 
 'prototypical'
 ```
 
-15.2.2.2 Static data properties
+#### 15.2.2.2 Static data properties
 For now, classes only let you create static methods, but not static data properties. There are two work-arounds for that.
 
 First, you can manually add a static property:
@@ -232,7 +232,7 @@ class Point {
 
 In both cases, you get a property Point.ZERO that you can read. In the former case, you could use Object.defineProperty() to create a read-only property, but I like the simplicity of an assignment.
 
-15.2.2.3 Getters and setters
+#### 15.2.2.3 Getters and setters
 The syntax for getters and setters is just like in ECMAScript 5 object literals:
 
 ```javascript
@@ -256,7 +256,7 @@ setter: 123
 'getter'
 ```
 
-15.2.2.4 Computed method names
+#### 15.2.2.4 Computed method names
 You can define the name of a method via an expression, if you put it in square brackets. For example, the following ways of defining Foo are all equivalent.
 
 ```javascript
@@ -284,7 +284,7 @@ class IterableClass {
 }
 ```
 
-15.2.2.5 Generator methods
+#### 15.2.2.5 Generator methods
 If you prefix a method definition with an asterisk (*), it becomes a generator method. Among other things, a generator is useful for defining the method whose key is Symbol.iterator. The following code demonstrates how that works.
 
 ```javascript
@@ -308,7 +308,7 @@ for (const x of new IterableArguments('hello', 'world')) {
 // world
 ```
 
-15.2.3 Subclassing
+### 15.2.3 Subclassing
 The extends clause lets you create a subclass of an existing constructor (which may or may not have been defined via a class):
 
 ```javascript
@@ -356,7 +356,7 @@ There are two ways of using super:
 - A class constructor (the pseudo-method constructor in a class definition) uses it like a function call (super(···)), in order to make a superconstructor call (line A).
 - Method definitions (in object literals or classes, with or without static) use it like property references (super.prop) or method calls (super.method(···)), in order to refer to superproperties (line B).
 
-15.2.3.1 The prototype of a subclass is the superclass
+#### 15.2.3.1 The prototype of a subclass is the superclass
 The prototype of a subclass is the superclass in ECMAScript 6:
 
 ```javascript
@@ -395,7 +395,7 @@ class Bar extends Foo {
 Bar.classMethod(); // 'hello, too'
 ```
 
-15.2.3.2 Superconstructor calls
+#### 15.2.3.2 Superconstructor calls
 In a derived class, you must call super() before you can use this:
 
 ```javascript
@@ -424,7 +424,7 @@ class Bar extends Foo {
 const bar = new Bar(); // ReferenceError
 ```
 
-15.2.3.3 Overriding the result of a constructor
+#### 15.2.3.3 Overriding the result of a constructor
 Just like in ES5, you can override the result of a constructor by explicitly returning an object:
 
 ```javascript
@@ -438,7 +438,7 @@ console.log(new Foo() instanceof Foo); // false
 
 If you do so, it doesn’t matter whether this has been initialized or not. In other words: you don’t have to call super() in a derived constructor if you override the result in this manner.
 
-15.2.3.4 Default constructors for classes
+#### 15.2.3.4 Default constructors for classes
 If you don’t specify a constructor for a base class, the following definition is used:
 
 ```javascript
@@ -453,7 +453,7 @@ constructor(...args) {
 }
 ```
 
-15.2.3.5 Subclassing built-in constructors
+#### 15.2.3.5 Subclassing built-in constructors
 In ECMAScript 6, you can finally subclass all built-in constructors (there are work-arounds for ES5, but these have significant limitations).
 
 For example, you can now create your own exception classes (that will inherit the feature of having a stack trace in most engines):
@@ -482,7 +482,7 @@ console.log(myArr.length); // 1
 
 Note that subclassing built-in constructors is something that engines have to support natively, you won’t get this feature via transpilers.
 
-15.3 Private data for classes
+## 15.3 Private data for classes
 This section explains four approaches for managing private data for ES6 classes:
 
 * Keeping private data in the environment of a class constructor
@@ -492,7 +492,7 @@ This section explains four approaches for managing private data for ES6 classes:
 
 Approaches #1 and #2 were already common in ES5, for constructors. Approaches #3 and #4 are new in ES6. Let’s implement the same example four times, via each of the approaches.
 
-15.3.1 Private data via constructor environments
+### 15.3.1 Private data via constructor environments
 Our running example is a class Countdown that invokes a callback action once a counter (whose initial value is counter) reaches zero. The two parameters action and counter should be stored as private data.
 
 In the first implementation, we store action and counter in the environment of the class constructor. An environment is the internal data structure, in which a JavaScript engine stores the parameters and local variables that come into existence whenever a new scope is entered (e.g. via a function call or a constructor call). This is the code:
@@ -534,7 +534,7 @@ Cons:
 
 More information on this technique: Sect. “Private Data in the Environment of a Constructor (Crockford Privacy Pattern)” in “Speaking JavaScript”.
 
-15.3.2 Private data via a naming convention
+### 15.3.2 Private data via a naming convention
 The following code keeps private data in properties whose names a marked via a prefixed underscore:
 
 ```javascript
@@ -563,7 +563,7 @@ Cons:
 - Not safe, only a guideline for client code.
 - The names of private properties can clash.
 
-15.3.3 Private data via WeakMaps
+### 15.3.3 Private data via WeakMaps
 There is a neat technique involving WeakMaps that combines the advantage of the first approach (safety) with the advantage of the second approach (being able to use prototype methods). This technique is demonstrated in the following code: we use the WeakMaps _counter and _action to store private data.
 
 ```javascript
@@ -599,7 +599,7 @@ Con:
 
 - Code is not as elegant as a naming convention.
 
-15.3.4 Private data via symbols
+### 15.3.4 Private data via symbols
 Another storage location for private data are properties whose keys are symbols:
 
 ```javascript
@@ -642,11 +642,11 @@ Cons:
 - Code is not as elegant as a naming convention.
 - Not safe: you can list all property keys (including symbols!) of an object via Reflect.ownKeys().
 
-15.3.5 Further reading
+### 15.3.5 Further reading
 
 - Sect. “Keeping Data Private” in “Speaking JavaScript” (covers ES5 techniques)
 
-15.4 Simple mixins
+## 15.4 Simple mixins
 Subclassing in JavaScript is used for two reasons:
 
 - Interface inheritance: Every object that is an instance of a subclass (as tested by instanceof) is also an instance of the superclass. The expectation is that subclass instances behave like superclass instances, but may do more.
@@ -700,7 +700,7 @@ class Employee extends Storage(Validation(Person)) { ··· }
 
 Acknowledgement. The first occurrence of this technique that I’m aware of is [a Gist by Sebastian Markbåge](https://gist.github.com/sebmarkbage/fac0830dbb13ccbff596).
 
-15.5 The details of classes
+## 15.5 The details of classes
 What we have seen so far are the essentials of classes. You only need to read on if you are interested how things happen under the hood. Let’s start with the syntax of classes. The following is a slightly modified version of the syntax shown in [Sect. A.4 of the ECMAScript 6 specification.](http://www.ecma-international.org/ecma-262/6.0/#sec-functions-and-classes)
 
 ```javascript
@@ -745,7 +745,7 @@ Two observations:
   ```  
 - Semicolons are allowed between methods.
 
-15.5.1 Various checks
+### 15.5.1 Various checks
 
 - Error checks: the class name cannot be eval or arguments; duplicate class element names are not allowed; the name constructor can only be used for a normal method, not for a getter, a setter or a generator method.
 - Classes can’t be function-called. They throw a TypeException if they are.
@@ -757,7 +757,7 @@ Two observations:
   new C.prototype.m(); // TypeError
   ```
   
-15.5.2 Attributes of properties
+### 15.5.2 Attributes of properties
 Class declarations create (mutable) let bindings. For a given class Foo:
 
 - Static methods Foo.* are writable and configurable, but not enumerable. Making them writable allows for dynamic patching.
@@ -768,10 +768,10 @@ Class declarations create (mutable) let bindings. For a given class Foo:
 
 Note that method definitions in object literals produce enumerable properties.
 
-15.5.3 Classes have inner names
+### 15.5.3 Classes have inner names
 Classes have lexical inner names, just like named function expressions.
 
-15.5.3.1 The inner names of named function expressions
+#### 15.5.3.1 The inner names of named function expressions
 You may know that named function expressions have lexical inner names:
 
 ```javascript
@@ -789,7 +789,7 @@ console.log(fac(3)); // 6
 
 The name me of the named function expression becomes a lexically bound variable that is unaffected by which variable currently holds the function.
 
-15.5.3.2 The inner names of classes
+#### 15.5.3.2 The inner names of classes
 Interestingly, ES6 classes also have lexical inner names that you can use in methods (constructor methods and regular methods):
 
 ```javascript
@@ -823,7 +823,7 @@ new D().logProp();
 
 Acknowledgement: Thanks to Michael Ficarra for pointing out that classes have inner names.
 
-15.6 The details of subclassing
+## 15.6 The details of subclassing
 In ECMAScript 6, subclassing looks as follows.
 
 ```javascript
@@ -857,14 +857,14 @@ console.log(jane.toString()); // Person named Jane (CTO)
 
 The next section examines the structure of the objects that were created by the previous example. The section after that examines how jane is allocated and initialized.
 
-15.6.1 Prototype chains
+### 15.6.1 Prototype chains
 The previous example creates the following objects.
 
 ![classes----subclassing_es6.jpg](images/classes----subclassing_es6.jpg)
 
 Prototype chains are objects linked via the [[Prototype]] relationship (which is an inheritance relationship). In the diagram, you can see two prototype chains:
 
-15.6.1.1 Left column: classes (functions)
+#### 15.6.1.1 Left column: classes (functions)
 The prototype of a derived class is the class it extends. The reason for this setup is that you want a subclass to inherit all properties of its superclass:
 
 ```javascript
@@ -885,7 +885,7 @@ true
 
 That means that base classes and all their derived classes (their prototypees) are functions. Traditional ES5 functions are essentially base classes.
 
-15.6.1.2 Right column: the prototype chain of the instance
+#### 15.6.1.2 Right column: the prototype chain of the instance
 The main purpose of a class is to set up this prototype chain. The prototype chain ends with Object.prototype (whose prototype is null). That makes Object an implicit superclass of every base class (as far as instances and the instanceof operator are concerned).
 
 The reason for this setup is that you want the instance prototype of a subclass to inherit all properties of the superclass instance prototype.
@@ -897,7 +897,7 @@ As an aside, objects created via object literals also have the prototype Object.
 true
 ```
 
-15.6.2 Allocating and initializing instances
+### 15.6.2 Allocating and initializing instances
 The data flow between class constructors is different from the canonical way of subclassing in ES5. Under the hood, it roughly looks as follows.
 
 ```javascript
@@ -961,7 +961,7 @@ Employee.prototype.constructor = Employee;
 ···
 ```
 
-15.6.2.1 Safety checks
+#### 15.6.2.1 Safety checks
 
 - this originally being uninitialized in derived constructors means that an error is thrown if they access this in any way before they have called super().
 - Once this is initialized, calling super() produces a ReferenceError. This protects you against calling super() twice.
@@ -969,7 +969,7 @@ Employee.prototype.constructor = Employee;
 - If a constructor explicitly returns a non-object (including undefined and null), the result is this (this behavior is required to remain compatible with ES5 and earlier). If this is uninitialized, a TypeError is thrown.
 - If a constructor explicitly returns an object, it is used as its result. Then it doesn’t matter whether this is initialized or not.
 
-15.6.2.2 The extends clause
+#### 15.6.2.2 The extends clause
 Let’s examine how the extends clause influences how a class is set up (Sect. 14.5.14 of the spec).
 
 The value of an extends clause must be “constructible” (invocable via new). null is allowed, though.
@@ -1021,7 +1021,7 @@ class C extends null {
 
 new.target ensures that C can be subclassed properly – the prototype of _this will always be the operand of new.
 
-15.6.3 Why can’t you subclass built-in constructors in ES5?
+### 15.6.3 Why can’t you subclass built-in constructors in ES5?
 In ECMAScript 5, most built-in constructors can’t be subclassed ([several work-arounds exist](http://speakingjs.com/es5/ch28.html)).
 
 To understand why, let’s use the canonical ES5 pattern to subclass Array. As we shall soon find out, this doesn’t work.
@@ -1061,7 +1061,7 @@ true
 
 Second obstacle: allocation. The instance objects created by Array are exotic (a term used by the ECMAScript specification for objects that have features that normal objects don’t have): Their property length tracks and influences the management of Array elements. In general, exotic objects can be created from scratch, but you can’t convert an existing normal object into an exotic one. Unfortunately, that is what Array would have to do, when called in line A: It would have to turn the normal object created for MyArray into an exotic Array object.
 
-15.6.3.1 The solution: ES6 subclassing
+#### 15.6.3.1 The solution: ES6 subclassing
 In ECMAScript 6, subclassing Array looks as follows:
 
 ```javascript
@@ -1088,7 +1088,7 @@ Let’s examine how the ES6 approach to subclassing removes the previously menti
 - The first obstacle, Array not being able to set up an instance, is removed by Array returning a fully configured instance. In contrast to ES5, this instance has the prototype of the subclass.
 - The second obstacle, subconstructors not creating exotic instances, is removed by derived classes relying on base classes for allocating instances.
 
-15.6.4 Referring to superproperties in methods
+### 15.6.4 Referring to superproperties in methods
 The following ES6 code makes a supermethod call in line B.
 
 ```javascript
@@ -1154,20 +1154,20 @@ Variation 3 is how ECMAScript 6 handles super-calls. This approach is supported 
 > Methods are a special kind of function now
 > In a class, a method definition that uses super creates a special kind of function: It is still a function, but it has the internal property [[HomeObject]]. That property is set up by the method definition and can’t be changed in JavaScript. Therefore, you can’t meaningfully move such a method to a different object. (But maybe it’ll be possible in a future version of ECMAScript.)
 
-15.6.4.1 Where can you use super?
+####15.6.4.1 Where can you use super?
 Referring to superproperties is handy whenever prototype chains are involved, which is why you can use it in method definitions (incl. generator method definitions, getters and setters) inside object literals and class definitions. The class can be derived or not, the method can be static or not.
 
 Using super to refer to a property is not allowed in function declarations, function expressions and generator functions.
 
-15.6.4.2 A method that uses super can’t be moved
+#### 15.6.4.2 A method that uses super can’t be moved
 You can’t move a method that uses super: Such a method has an internal property [[HomeObject]] that ties it to the object it was created in. If you move it via an assignment, it will continue to refer to the superproperties of the original object. In future ECMAScript versions, there may be a way to transfer such a method, too.
 
-15.7 The species pattern
+## 15.7 The species pattern
 One more mechanism of built-in constructors has been made extensible in ECMAScript 6: Sometimes a method creates new instances of its class. If you create a subclass – should the method return an instance of its class or an instance of the subclass? A few built-in ES6 methods let you configure how they create instances via the so-called species pattern.
 
 As an example, consider a subclass SortedArray of Array. If we invoke map() on instances of that class, we want it to return instances of Array, to avoid unnecessary sorting. By default, map() returns instances of the receiver (this), but the species patterns lets you change that.
 
-15.7.1 Helper methods for examples
+### 15.7.1 Helper methods for examples
 In the following three sections, I’ll use two helper functions in the examples:
 
 ```javascript
@@ -1186,7 +1186,7 @@ function isConstructor(x) {
 }
 ```
 
-15.7.2 The standard species pattern
+### 15.7.2 The standard species pattern
 The standard species pattern is used by Promise.prototype.then(), the filter() method of Typed Arrays and other operations. It works as follows:
 
 - If this.constructor[Symbol.species] exists, use it as a constructor for the new instance.
@@ -1216,7 +1216,7 @@ function SpeciesConstructor(O, defaultConstructor) {
 
 > The standard species pattern is implemented in the spec via the operation [SpeciesConstructor()](http://www.ecma-international.org/ecma-262/6.0/#sec-speciesconstructor).
 
-15.7.3 The species pattern for Arrays
+### 15.7.3 The species pattern for Arrays
 Normal Arrays implement the species pattern slightly differently:
 
 ```javascript
@@ -1247,7 +1247,7 @@ Array.prototype.map() creates the Array it returns via ArraySpeciesCreate(this, 
 
 > The species pattern for Arrays is implemented in the spec via the operation [ArraySpeciesCreate()](http://www.ecma-international.org/ecma-262/6.0/#sec-arrayspeciescreate).
 
-15.7.4 The species pattern in static methods
+### 15.7.4 The species pattern in static methods
 Promises use a variant of the species pattern for static methods such as Promise.all():
 
 ```javascript
@@ -1266,7 +1266,7 @@ if (!IsConstructor(C)) {
 const instance = new C(···);
 ```
 
-15.7.5 Overriding the default species in subclasses
+### 15.7.5 Overriding the default species in subclasses
 This is the default getter for the property [Symbol.species]:
 
 ```javascript
@@ -1279,7 +1279,7 @@ This default getter is implemented by the built-in classes Array, ArrayBuffer, M
 
 There are two ways in which you can override the default species: with a constructor of your choosing or with null.
 
-15.7.5.1 Setting the species to a constructor of your choosing
+#### 15.7.5.1 Setting the species to a constructor of your choosing
 You can override the default species via a static getter (line A):
 
 ```javascript
@@ -1306,7 +1306,7 @@ const result2 = new MyArray2().map(x => x);
 console.log(result2 instanceof MyArray2); // true
 ```
 
-15.7.5.1.1 Specifying the species via a data property
+##### 15.7.5.1.1 Specifying the species via a data property
 If you don’t want to use a static getter, you need to use Object.defineProperty(). You can’t use assignment, as there is already a property with that key that only has a getter. That means that it is read-only and can’t be assigned to.
 
 For example, here we set the species of MyArray1 to Array:
@@ -1318,7 +1318,7 @@ Object.defineProperty(
     });
 ````
 
-15.7.5.2 Setting the species to null
+#### 15.7.5.2 Setting the species to null
 If you set the species to null then the default constructor is used (which one that is depends on which variant of the species pattern is used, consult the previous sections for more information).
 
 ```javascript
@@ -1332,7 +1332,7 @@ const result3 = new MyArray3().map(x => x);
 console.log(result3 instanceof Array); // true
 ```
 
-15.8 The pros and cons of classes
+## 15.8 The pros and cons of classes
 Classes are controversial within the JavaScript community: On one hand, people coming from class-based languages are happy that they don’t have to deal with JavaScript’s unconventional inheritance mechanisms, anymore. On the other hand, there are many JavaScript programmers who argue that what’s complicated about JavaScript is not prototypal inheritance, but constructors.
 
 ES6 classes provide a few clear benefits:
@@ -1347,14 +1347,14 @@ ES6 classes provide a few clear benefits:
 
 Let’s look at a few common complaints about ES6 classes. You will see me agree with most of them, but I also think that they benefits of classes much outweigh their disadvantages. I’m glad that they are in ES6 and I recommend to use them.
 
-15.8.1 Complaint: ES6 classes obscure the true nature of JavaScript inheritance
+### 15.8.1 Complaint: ES6 classes obscure the true nature of JavaScript inheritance
 Yes, ES6 classes do obscure the true nature of JavaScript inheritance. There is an unfortunate disconnect between what a class looks like (its syntax) and how it behaves (its semantics): It looks like an object, but it is a function. My preference would have been for classes to be constructor objects, not constructor functions. I explore that approach in [the Proto.js project](https://github.com/rauschma/proto-js), via a tiny library (which proves how good a fit this approach is).
 
 However, backwards-compatibility matters, which is why classes being constructor functions also makes sense. That way, ES6 code and ES5 are more interoperable.
 
 The disconnect between syntax and semantics will cause some friction in ES6 and later. But you can lead a comfortable life by simply taking ES6 classes at face value. I don’t think the illusion will ever bite you. Newcomers can get started more quickly and later read up on what goes on behind the scenes (after they are more comfortable with the language).
 
-15.8.2 Complaint: Classes provide only single inheritance
+### 15.8.2 Complaint: Classes provide only single inheritance
 Classes only give you single inheritance, which severely limits your freedom of expression w.r.t. object-oriented design. However, the plan has always been for them to be the foundation of a multiple-inheritance mechanism such as traits.
 
 > traits.js: traits library for JavaScript
@@ -1362,7 +1362,7 @@ Classes only give you single inheritance, which severely limits your freedom of 
 
 Then a class becomes an instantiable entity and a location where you assemble traits. Until that happens, you will need to resort to libraries if you want multiple inheritance.
 
-15.8.3 Complaint: Classes lock you in, due to mandatory new
+### 15.8.3 Complaint: Classes lock you in, due to mandatory new
 If you want to instantiate a class, you are forced to use new in ES6. That means that you can’t switch from a class to a factory function without changing the call sites. That is indeed a limitation, but there are two mitigating factors:
 
 - You can override the default result returned by the new operator, by returning an object from the constructor method of a class.
@@ -1370,11 +1370,11 @@ If you want to instantiate a class, you are forced to use new in ES6. That means
 
 Therefore, classes do somewhat limit you syntactically, but, once JavaScript has traits, they won’t limit you conceptually (w.r.t. object-oriented design).
 
-15.9 FAQ: classes
-15.9.1 Why can’t classes be function-called?
+## 15.9 FAQ: classes
+### 15.9.1 Why can’t classes be function-called?
 Function-calling classes is currently forbidden. That was done to keep options open for the future, to eventually add a way to handle function calls via classes. One possibility is to do so via a special method (e.g. [Symbol.functionCall]).
 
-15.9.2 How do I instantiate a class, given an Array of arguments?
+### 15.9.2 How do I instantiate a class, given an Array of arguments?
 What is the analog of Function.prototype.apply() for classes? That is, if I have a class TheClass and an Array args of arguments, how do I instantiate TheClass?
 
 One way of doing so is via the spread operator (...):
@@ -1393,12 +1393,12 @@ function instantiate(TheClass, args) {
 }
 ```
 
-15.10 What is next for classes?
+## 15.10 What is next for classes?
 The design motto for classes was “maximally minimal”. Several advanced features were discussed, but ultimately discarded in order to get a design that would be unanimously accepted by TC39.
 
 Upcoming versions of ECMAScript can now extend this minimal design – classes will provide a foundation for features such as traits (or mixins), value objects (where different objects are equal if they have the same content) and const classes (that produce immutable instances).
 
-15.11 Further reading
+## 15.11 Further reading
 The following document is an important source of this chapter:
 
 [“Instantiation Reform: One last time”](https://github.com/rwaldron/tc39-notes/blob/master/es6/2015-01/jan2015-allen-slides.pdf), slides by Allen Wirfs-Brock.
