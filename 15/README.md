@@ -850,12 +850,13 @@ new D().logProp();
     // logProp: Hi!
 ```
 
-( ES6의 스펙에서 inner name은 [the dynamic semantics of ClassDefinitionEvaluation.](http://www.ecma-international.org/ecma-262/6.0/#sec-runtime-semantics-classdefinitionevaluation)에서 설정되어 있습니다. )
+( ES6의 스펙에서 inner name은 [the dynamic semantics of ClassDefinitionEvaluation](http://www.ecma-international.org/ecma-262/6.0/#sec-runtime-semantics-classdefinitionevaluation)에서 설정되어 있습니다. ) `In the ES6 spec the inner name is set up by the dynamic semantics of ClassDefinitionEvaluation.`
 
-Acknowledgement: Thanks to Michael Ficarra for pointing out that classes have inner names.
+승인 : 클래스 내 이름이 있음을 지적 Michael Ficarra 감사합니다. `Acknowledgement: Thanks to Michael Ficarra for pointing out that classes have inner names.`
 
-## 15.6 The details of subclassing
-In ECMAScript 6, subclassing looks as follows.
+## 15.6 서브 클래스의 세부 사항 `The details of subclassing`
+
+ECMAScript 6의 서브클래싱은 아래와 같습니다 `In ECMAScript 6, subclassing looks as follows.`
 
 ```javascript
 class Person {
@@ -886,24 +887,26 @@ const jane = new Employee('Jane', 'CTO');
 console.log(jane.toString()); // Person named Jane (CTO)
 ```
 
-The next section examines the structure of the objects that were created by the previous example. The section after that examines how jane is allocated and initialized.
+다음 섹션에서는 앞의 예에 의해 생성 된 객체의 구조를 검사합니다. 그 후 할당하고 초기화하는 방법을 살펴 본다. `The next section examines the structure of the objects that were created by the previous example. The section after that examines how jane is allocated and initialized.`
 
-### 15.6.1 Prototype chains
-The previous example creates the following objects.
+### 15.6.1 프로토 타입 체인 `Prototype chains`
+
+앞의 예는 다음과 같은 개체를 만듭니다. `The previous example creates the following objects.`
 
 ![classes----subclassing_es6.jpg](images/classes----subclassing_es6.jpg)
 
-Prototype chains are objects linked via the [[Prototype]] relationship (which is an inheritance relationship). In the diagram, you can see two prototype chains:
+프로토 타입 체인 (상속 관계) [[Prototype]]의 관계를 통해 링크 된 개체입니다. 그림에서 두 개의 프로토 타입 체인을 볼 수 있습니다 `Prototype chains are objects linked via the [[Prototype]] relationship (which is an inheritance relationship). In the diagram, you can see two prototype chains:`
 
-#### 15.6.1.1 Left column: classes (functions)
-The prototype of a derived class is the class it extends. The reason for this setup is that you want a subclass to inherit all properties of its superclass:
+#### 15.6.1.1 왼쪽 열 : 클래스 (함수) `Left column: classes (functions)`
+
+파생 클래스의 프로토 타입은 확장하는 클래스이다. 이 설정에 대한 이유는 super 클래스의 모든 속성를 상속하는 하위 클래스를 할 것입니다 : `The prototype of a derived class is the class it extends. The reason for this setup is that you want a subclass to inherit all properties of its superclass:`
 
 ```javascript
 > Employee.logNames === Person.logNames
 true
 ```
 
-The prototype of a base class is Function.prototype, which is also the prototype of functions:
+기본 클래스의 prototype은 function과 마찬가지로 Function.prototype입니다. `The prototype of a base class is Function.prototype, which is also the prototype of functions:`
 
 ```javascript
 > const getProto = Object.getPrototypeOf.bind(Object);
@@ -914,22 +917,24 @@ true
 true
 ```
 
-That means that base classes and all their derived classes (their prototypees) are functions. Traditional ES5 functions are essentially base classes.
+즉, 그 기본 클래스를 의미하며 모든 파생 클래스 (자신의 프로토 타입) 함수입니다. 전통 ES5 기능은 기본적으로 기본 클래스입니다. `That means that base classes and all their derived classes (their prototypees) are functions. Traditional ES5 functions are essentially base classes.`
 
-#### 15.6.1.2 Right column: the prototype chain of the instance
-The main purpose of a class is to set up this prototype chain. The prototype chain ends with Object.prototype (whose prototype is null). That makes Object an implicit superclass of every base class (as far as instances and the instanceof operator are concerned).
+#### 15.6.1.2 오른쪽 열 : 인스턴스의 프로토 타입 체인 `Right column: the prototype chain of the instance`
 
-The reason for this setup is that you want the instance prototype of a subclass to inherit all properties of the superclass instance prototype.
+클래스의 주요 목적은 이러한 프로토 타입 체인을 설정하는 것이다. 프로토 타입 체인은 (누구의 프로토 타입 널) Object.prototype에 끝납니다. 즉, (지금까지 인스턴스로하고 instanceof 연산자는 우려) 모든 기본 클래스의 암시 슈퍼 클래스 개체 수 있습니다. `The main purpose of a class is to set up this prototype chain. The prototype chain ends with Object.prototype (whose prototype is null). That makes Object an implicit superclass of every base class (as far as instances and the instanceof operator are concerned).`
 
-As an aside, objects created via object literals also have the prototype Object.prototype:
+이 설정에 대한 이유는 슈퍼 클래스의 인스턴스 프로토 타입의 모든 속성을 상속하는 서브 클래스의 인스턴스 프로토 타입을 할 것입니다. `The reason for this setup is that you want the instance prototype of a subclass to inherit all properties of the superclass instance prototype.`
+
+옆으로, 객체 리터럴을 통해 생성 된 객체는 프로토 타입 Object.prototype에이 같이 : `As an aside, objects created via object literals also have the prototype Object.prototype:`
 
 ```javascript
 > Object.getPrototypeOf({}) === Object.prototype
 true
 ```
 
-### 15.6.2 Allocating and initializing instances
-The data flow between class constructors is different from the canonical way of subclassing in ES5. Under the hood, it roughly looks as follows.
+### 15.6.2 인스턴스를 할당 및 초기화 `Allocating and initializing instances`
+
+클래스 생성자 간의 데이터 흐름은 ES5에 서브 클래스의 표준 방법과 다르다. `The data flow between class constructors is different from the canonical way of subclassing in ES5. Under the hood, it roughly looks as follows.`
 
 ```javascript
 // Base class: this is where the instance is allocated
@@ -959,14 +964,14 @@ const jane = Reflect.construct( // (B)
     // const jane = new Employee('Jane', 'CTO')
 ```
 
-The instance object is created in different locations in ES6 and ES5:
+인스턴스 객체는 ES6 및 ES5에서 서로 다른 위치에 생성됩니다 : `The instance object is created in different locations in ES6 and ES5:`
 
-- In ES6, it is created in the base constructor, the last in a chain of constructor calls. The superconstructor is invoked via super(), which triggers a constructor call.
-- In ES5, it is created in the operand of new, the first in a chain of constructor calls. The superconstructor is invoked via a function call.
+- ES6에서,베이스 생성자 생성자 호출 체인의 마지막에서 생성된다. super 생성자는 생성자 호출을 트리거 super 생성자를 통해 호출됩니다. `In ES6, it is created in the base constructor, the last in a chain of constructor calls. The superconstructor is invoked via super(), which triggers a constructor call.`
+- ES5에서, new의 피연산자, 생성자 호출 체인의 첫 번째에 생성됩니다. 슈퍼 생성자 함수 호출을 통해 호출됩니다. `In ES5, it is created in the operand of new, the first in a chain of constructor calls. The superconstructor is invoked via a function call.`
 
-The previous code uses two new ES6 features:
+앞의 코드는 두 개의 새로운 ES6 기능을 사용합니다 : `The previous code uses two new ES6 features:`
 
-- new.target is an implicit parameter that all functions have. In a chain of constructor calls, its role is similar to this in a chain of supermethod calls.
+- new.target는 모든 기능이 내재 된 매개 변수입니다. 생성자 호출 체인에 그 역할 supermethod 호출 체인이 유사하다. `new.target is an implicit parameter that all functions have. In a chain of constructor calls, its role is similar to this in a chain of supermethod calls.`
 If a constructor is directly invoked via new (as in line B), the value of new.target is that constructor.
 If a constructor is called via super() (as in line A), the value of new.target is the new.target of the constructor that makes the call.
 During a normal function call, it is undefined. That means that you can use new.target to determine whether a function was function-called or constructor-called (via new).
