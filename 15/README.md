@@ -723,8 +723,9 @@ class Employee extends Storage(Validation(Person)) { ··· }
 
 승인. 제가 알고이 기술의 첫 번째 항목은 [a Gist by Sebastian Markbåge](https://gist.github.com/sebmarkbage/fac0830dbb13ccbff596) 이다 `Acknowledgement. The first occurrence of this technique that I’m aware of is a Gist by Sebastian Markbåge.`
 
-## 15.5 The details of classes
-What we have seen so far are the essentials of classes. You only need to read on if you are interested how things happen under the hood. Let’s start with the syntax of classes. The following is a slightly modified version of the syntax shown in [Sect. A.4 of the ECMAScript 6 specification.](http://www.ecma-international.org/ecma-262/6.0/#sec-functions-and-classes)
+## 15.5 클래스의 세부 사항 `The details of classes`
+
+지금까지 본 것은 클래스의 필수 요소입니다. 당신이 후드 아래에 일이 관심이 있다면 읽어해야합니다. 의 클래스의 구문 시작하자. 다음은 [Sect. A.4 of the ECMAScript 6 specification.](http://www.ecma-international.org/ecma-262/6.0/#sec-functions-and-classes)의 약간 수정 된 버전입니다.  'What we have seen so far are the essentials of classes. You only need to read on if you are interested how things happen under the hood. Let’s start with the syntax of classes. The following is a slightly modified version of the syntax shown in [Sect. A.4 of the ECMAScript 6 specification.](http://www.ecma-international.org/ecma-262/6.0/#sec-functions-and-classes)'
 
 ```javascript
 ClassDeclaration:
