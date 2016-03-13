@@ -319,8 +319,9 @@ for (const x of new IterableArguments('hello', 'world')) {
 // world
 ```
 
-### 15.2.3 Subclassing
-The extends clause lets you create a subclass of an existing constructor (which may or may not have been defined via a class):
+### 15.2.3 서브클래싱 `Subclassing`
+
+절은 당신이 (또는 클래스를 통해 정의되지 않았을 수도 있습니다) 기존의 생성자의 서브 클래스를 만들 수 확장 : `The extends clause lets you create a subclass of an existing constructor (which may or may not have been defined via a class):`
 
 ```javascript
 class Point {
@@ -344,7 +345,7 @@ class ColorPoint extends Point {
 }
 ```
 
-Again, this class is used like you’d expect:
+당신이 기대하는 것처럼 또 다시,이 클래스가 사용됩니다 : `Again, this class is used like you’d expect:`
 
 ```javascript
 > const cp = new ColorPoint(25, 8, 'green');
@@ -357,25 +358,26 @@ true
 true
 ```
 
-There are two kinds of classes:
+클래스의 두 가지 종류가 있습니다 : `There are two kinds of classes:`
 
-- Point is a base class, because it doesn’t have an extends clause.
-- ColorPoint is a derived class.
+- 이 절을 확장하지 않기 때문에 Point, 기본 클래스입니다. `Point is a base class, because it doesn’t have an extends clause.`
+- ColorPoint는 파생 클래스입니다. `ColorPoint is a derived class.`
 
-There are two ways of using super:
+super를 사용하는 두 가지 방법이 있습니다 : `There are two ways of using super:`
 
-- A class constructor (the pseudo-method constructor in a class definition) uses it like a function call (super(···)), in order to make a superconstructor call (line A).
-- Method definitions (in object literals or classes, with or without static) use it like property references (super.prop) or method calls (super.method(···)), in order to refer to superproperties (line B).
+- 클래스 생성자 (클래스 정의에 유사 방법 생성자) 함수 호출처럼 사용 (super (···)), 슈퍼 생성자 호출 (라인 A)를 확인하기 위해. `A class constructor (the pseudo-method constructor in a class definition) uses it like a function call (super(···)), in order to make a superconstructor call (line A).`
+- (또는 정적없이 객체 리터럴 또는 클래스에서) 메소드의 정의는 super 특성 (라인 B)를 참조하기 위해, 속성 참조 (super.prop) 또는 메서드 호출 (super.method (···))처럼 사용합니다. `Method definitions (in object literals or classes, with or without static) use it like property references (super.prop) or method calls (super.method(···)), in order to refer to superproperties (line B).`
 
-#### 15.2.3.1 The prototype of a subclass is the superclass
-The prototype of a subclass is the superclass in ECMAScript 6:
+#### 15.2.3.1 서브 클래스의 프로토 타입은 슈퍼 클래스입니다 `The prototype of a subclass is the superclass`
+
+서브 클래스의 프로토 타입은 ECMAScript를 6 슈퍼 클래스입니다 : `The prototype of a subclass is the superclass in ECMAScript 6:`
 
 ```javascript
 > Object.getPrototypeOf(ColorPoint) === Point
 true
 ```
 
-That means that static properties are inherited:
+즉, 정적 속성이 상속된다는 것을 의미한다 : `That means that static properties are inherited:`
 
 ```javascript
 class Foo {
@@ -389,7 +391,7 @@ class Bar extends Foo {
 Bar.classMethod(); // 'hello'
 ```
 
-You can even super-call static methods:
+정적 메소드를 super 호출 할 수 있습니다 : `You can even super-call static methods:`
 
 ```javascript
 class Foo {
@@ -406,8 +408,9 @@ class Bar extends Foo {
 Bar.classMethod(); // 'hello, too'
 ```
 
-#### 15.2.3.2 Superconstructor calls
-In a derived class, you must call super() before you can use this:
+#### 15.2.3.2 슈퍼 생성자 호출 `Superconstructor calls`
+
+사용하기 전에 파생 클래스에서는 super ()를 호출해야합니다 : `In a derived class, you must call super() before you can use this:`
 
 ```javascript
 class Foo {}
@@ -422,7 +425,7 @@ class Bar extends Foo {
 }
 ```
 
-Implicitly leaving a derived constructor without calling super() also causes an error:
+암시 적 super()는 에러가 발생를 호출하지 않고 파생 생성자를 떠나 : `Implicitly leaving a derived constructor without calling super() also causes an error:`
 
 ```javascript
 class Foo {}
@@ -435,8 +438,9 @@ class Bar extends Foo {
 const bar = new Bar(); // ReferenceError
 ```
 
-#### 15.2.3.3 Overriding the result of a constructor
-Just like in ES5, you can override the result of a constructor by explicitly returning an object:
+#### 15.2.3.3 생성자의 결과를 재정의 `Overriding the result of a constructor`
+
+그냥 ES5처럼, 당신은 명시 적으로 객체를 반환하여 생성자의 결과를 재정의 할 수 있습니다 : `Just like in ES5, you can override the result of a constructor by explicitly returning an object:`
 
 ```javascript
 class Foo {
@@ -447,16 +451,17 @@ class Foo {
 console.log(new Foo() instanceof Foo); // false
 ```
 
-If you do so, it doesn’t matter whether this has been initialized or not. In other words: you don’t have to call super() in a derived constructor if you override the result in this manner.
+이렇게하면,이 초기화되었는지 아닌지 상관 없다. 즉 : 이 방식으로 결과를 무시할 경우 파생 생성자 () super를 호출 할 필요가 없습니다. `If you do so, it doesn’t matter whether this has been initialized or not. In other words: you don’t have to call super() in a derived constructor if you override the result in this manner.`
 
-#### 15.2.3.4 Default constructors for classes
-If you don’t specify a constructor for a base class, the following definition is used:
+#### 15.2.3.4 클래스의 기본 생성자 `Default constructors for classes`
+
+기본 클래스의 생성자를 지정하지 않을 경우, 다음과 같은 정의가 사용된다 : `If you don’t specify a constructor for a base class, the following definition is used:`
 
 ```javascript
 constructor() {}
 ```
 
-For derived classes, the following default constructor is used:
+파생 클래스의 경우, 다음과 같은 기본 생성자가 사용된다 : `For derived classes, the following default constructor is used:`
 
 ```javascript
 constructor(...args) {
@@ -464,10 +469,11 @@ constructor(...args) {
 }
 ```
 
-#### 15.2.3.5 Subclassing built-in constructors
-In ECMAScript 6, you can finally subclass all built-in constructors (there are work-arounds for ES5, but these have significant limitations).
+#### 15.2.3.5 기본 생성자를 서브 클래싱 `Subclassing built-in constructors`
 
-For example, you can now create your own exception classes (that will inherit the feature of having a stack trace in most engines):
+ECMAScript를 6에서, 마지막으로 모든 내장 생성자 (가 ES5에 대한 해결 방법이 있지만,이 상당한 제한이 있습니다)를 서브 클래 싱 할 수 있습니다. `In ECMAScript 6, you can finally subclass all built-in constructors (there are work-arounds for ES5, but these have significant limitations).`
+
+예를 들어, 지금 자신의 예외 클래스 (즉, 대부분의 엔진에 스택 트레이스를 갖는 기능을 상속합니다) 만들 수 있습니다 : `For example, you can now create your own exception classes (that will inherit the feature of having a stack trace in most engines):`
 
 ```javascript
 class MyError extends Error {
@@ -475,7 +481,7 @@ class MyError extends Error {
 throw new MyError('Something happened!');
 ```
 
-You can also create subclasses of Array whose instances properly handle length:
+또한 인스턴스 제대로 길이를 처리 할 배열의 하위 클래스를 만들 수 있습니다 : `You can also create subclasses of Array whose instances properly handle length:`
 
 ```javascript
 class MyArray extends Array {
@@ -491,17 +497,18 @@ myArr[0] = 'foo';
 console.log(myArr.length); // 1
 ```
 
-Note that subclassing built-in constructors is something that engines have to support natively, you won’t get this feature via transpilers.
+엔진이 기본적으로 지원해야 뭔가가 서브 클래스 기본 생성자를 참고, 당신은 transpilers를 통해이 기능을받지 않습니다. `Note that subclassing built-in constructors is something that engines have to support natively, you won’t get this feature via transpilers.`
 
-## 15.3 Private data for classes
-This section explains four approaches for managing private data for ES6 classes:
+## 15.3 클래스의 Private 데이터 `Private data for classes`
 
-* Keeping private data in the environment of a class constructor
-* Marking private properties via a naming convention (e.g. a prefixed underscore)
-* Keeping private data in WeakMaps
-* Using symbols as keys for private properties
+이 섹션에서는 ES6 클래스에 대한 private 정보를 관리하기위한 네 가지 방법을 설명합니다 : `This section explains four approaches for managing private data for ES6 classes:`
 
-Approaches #1 and #2 were already common in ES5, for constructors. Approaches #3 and #4 are new in ES6. Let’s implement the same example four times, via each of the approaches.
+1. 클래스 생성자의 환경에서 private 정보를 유지 `Keeping private data in the environment of a class constructor`
+2. 이름 지정 규칙 (예를 들어, 접두사 밑줄)를 통해 private 특성을 표시 `Marking private properties via a naming convention (e.g. a prefixed underscore)`
+3. WeakMaps에 private 정보를 유지 `Keeping private data in WeakMaps`
+4. private 속성에 대한 키로 기호를 사용하여 `Using symbols as keys for private properties`
+
+접근 방법 \#1과 \#2는 생성자를 들어, ES5 이미 일반적이었다. \#3, \#4 ES6의 새로운 접근. 의는 접근 각을 통해, 같은 예를 네 번을 구현할 수 있습니다. `Approaches #1 and #2 were already common in ES5, for constructors. Approaches #3 and #4 are new in ES6. Let’s implement the same example four times, via each of the approaches.`
 
 ### 15.3.1 Private data via constructor environments
 Our running example is a class Countdown that invokes a callback action once a counter (whose initial value is counter) reaches zero. The two parameters action and counter should be stored as private data.
