@@ -1,7 +1,9 @@
 # 15. 클래스 `Classes`
+
 이 장에서는 ES6 클래스가 작동하는 방법에 대해 설명합니다. `This chapter explains how ES6 classes work.`
 
 ## 15.1 개요 `Overview`
+
 클래스와 서브 클래스 `A class and a subclass:`
 
 ```javascript
@@ -40,16 +42,17 @@ true
 true
 ```
 
-Under the hood, ES6 classes are not something that is radically new: They mainly provide more convenient syntax to create old-school constructor functions. You can see that if you use typeof:
+그들은 주로 구식 생성자 함수를 만들 수있는 편리한 구문을 제공 : 후드, ES6 클래스는 근본적으로 새로운 무언가 없습니다. 당신은 당신의 typeof 사용하면 볼 수 있습니다 : `Under the hood, ES6 classes are not something that is radically new: They mainly provide more convenient syntax to create old-school constructor functions. You can see that if you use typeof:`
 
 ```javascript
 > typeof Point
 'function'
 ```
 
-## 15.2 The essentials
+## 15.2 필수 `The essentials`
 
-### 15.2.1 Base classes
+### 15.2.1 기본 클래스 `Base classes`
+
 A class is defined like this in ECMAScript 6:
 
 ```javascript
