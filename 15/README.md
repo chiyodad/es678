@@ -265,7 +265,7 @@ setter: 123
 'getter'
 ```
 
-#### 15.2.2.4 계산 방법 이름 `Computed method names`
+#### 15.2.2.4 계산 메소드 이름 `Computed method names`
 
 당신이 괄호에 넣어 경우, 식을 통해 메소드의 이름을 정의 할 수 있습니다. 예를 들어, Foo를 정의하는 다음과 같은 방법으로 모두 동일합니다. `You can define the name of a method via an expression, if you put it in square brackets. For example, the following ways of defining Foo are all equivalent.`
 
@@ -296,7 +296,7 @@ class IterableClass {
 
 #### 15.2.2.5 제너레이터 메소드 `Generator methods`
 
-별표 (*)에있어서 정의 접두사 경우 발생 방법이된다. 무엇보다도, 제너레이터는 그 키 Symbol.iterator있는 방법을 정의하는 데 유용합니다. 그 작동 방법 다음 코드는 보여줍니다. `If you prefix a method definition with an asterisk (*), it becomes a generator method. Among other things, a generator is useful for defining the method whose key is Symbol.iterator. The following code demonstrates how that works.`
+별표 (\*)에있어서 정의 접두사 경우 발생 방법이된다. 무엇보다도, 제너레이터는 그 키 Symbol.iterator있는 방법을 정의하는 데 유용합니다. 그 작동 방법 다음 코드는 보여줍니다. `If you prefix a method definition with an asterisk (*), it becomes a generator method. Among other things, a generator is useful for defining the method whose key is Symbol.iterator. The following code demonstrates how that works.`
 
 ```javascript
 class IterableArguments {
