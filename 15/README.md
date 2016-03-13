@@ -1,5 +1,5 @@
 # 15. 클래스 `Classes`
-This chapter explains how ES6 classes work.
+이 장에서는 ES6 클래스가 작동하는 방법에 대해 설명합니다. `This chapter explains how ES6 classes work.`
 
 ## 15.1 Overview
 A class and a subclass:
