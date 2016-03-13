@@ -790,8 +790,8 @@ ComputedPropertyName:
 
 - 정적 방법은 Foo.\* 쓰기 및 구성,하지만 열거 할 수 없습니다. 그들이 쓰기 만들기 동적 패치 수 있습니다. `Static methods Foo.* are writable and configurable, but not enumerable. Making them writable allows for dynamic patching.`
 - 생성자와 속성 프로토 타입의 객체는 불변의 링크가 : `A constructor and the object in its property prototype have an immutable link:`
--- Foo.prototype 비 구성, 비 열거, 쓰기 가능하지 않습니다. `Foo.prototype is non-writable, non-enumerable, non-configurable.`
--- Foo.prototype.constructor 비 구성, 비 열거, 쓰기 가능하지 않습니다. `Foo.prototype.constructor is non-writable, non-enumerable, non-configurable.`
+  - Foo.prototype 비 구성, 비 열거, 쓰기 가능하지 않습니다. `Foo.prototype is non-writable, non-enumerable, non-configurable.`
+  - Foo.prototype.constructor 비 구성, 비 열거, 쓰기 가능하지 않습니다. `Foo.prototype.constructor is non-writable, non-enumerable, non-configurable.`
 - 프로토 타입 메서드는 Foo.prototype.\* 쓰기 및 구성,하지만 열거 할 수 없습니다. `Prototype methods Foo.prototype.* are writable and configurable, but not enumerable.`
 
 Note that method definitions in object literals produce enumerable properties.
