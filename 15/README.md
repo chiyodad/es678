@@ -850,7 +850,7 @@ new D().logProp();
     // logProp: Hi!
 ```
 
-( ES6의 스펙에서 inner name은 [the dynamic semantics of ClassDefinitionEvaluation.](http://www.ecma-international.org/ecma-262/6.0/#sec-runtime-semantics-classdefinitionevaluation)[the dynamic semantics of ClassDefinitionEvaluation.](http://www.ecma-international.org/ecma-262/6.0/#sec-runtime-semantics-classdefinitionevaluation)에서 설정되어 있습니다. )
+( ES6의 스펙에서 inner name은 [the dynamic semantics of ClassDefinitionEvaluation.](http://www.ecma-international.org/ecma-262/6.0/#sec-runtime-semantics-classdefinitionevaluation)에서 설정되어 있습니다. )
 
 Acknowledgement: Thanks to Michael Ficarra for pointing out that classes have inner names.
 
