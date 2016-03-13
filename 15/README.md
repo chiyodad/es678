@@ -91,8 +91,9 @@ TypeError: Classes can’t be function-called
 
 > 스펙에서, 함수 호출 클래스가 내부 방법에 방지 함수 객체의 [[Call]]. `In the spec, function-calling classes is prevented in the internal method [[Call]] of function objects.`
 
-#### 15.2.1.1 Class declarations are not hoisted
-Function declarations are hoisted: When entering a scope, the functions that are declared in it are immediately available – independently of where the declarations happen. That means that you can call a function that is declared later:
+#### 15.2.1.1 클래스 선언은 호이스팅되지 않습니다 `Class declarations are not hoisted`
+
+함수 선언이 호이스팅되어 범위를 입력 할 때, 그 안에 선언 된 함수는 즉시 사용할 수 있습니다 - 독립 선언 일 경우의. 즉, 나중에 선언 된 함수를 호출 할 수 있다는 것을 의미한다 : `Function declarations are hoisted: When entering a scope, the functions that are declared in it are immediately available – independently of where the declarations happen. That means that you can call a function that is declared later:`
 
 ```javascript
 foo(); // works, because `foo` is hoisted
@@ -100,7 +101,7 @@ foo(); // works, because `foo` is hoisted
 function foo() {}
 ```
 
-In contrast, class declarations are not hoisted. Therefore, a class only exists after execution reached its definition and it was evaluated. Accessing it beforehand leads to a ReferenceError:
+반면, 클래스 선언은 게양되지 않습니다. 실행의 정의에 도달하고 평가 후 따라서, 클래스는 존재한다. 미리에 액세스하면 ReferenceError가 발생 : `In contrast, class declarations are not hoisted. Therefore, a class only exists after execution reached its definition and it was evaluated. Accessing it beforehand leads to a ReferenceError:`
 
 ```javascript
 new Foo(); // ReferenceError
@@ -108,9 +109,9 @@ new Foo(); // ReferenceError
 class Foo {}
 ```
 
-The reason for this limitation is that classes can have an extends clause whose value is an arbitrary expression. That expression must be evaluated in the proper “location”, its evaluation can’t be hoisted.
+이 제한에 대한 이유는 클래스가 값이 임의의 표현이다 절을 확장 할 수 있다는 것입니다. 그 표현이 적절한 "위치"에서 평가되어야하며, 그 평가는 호이스팅 할 수 없습니다. `The reason for this limitation is that classes can have an extends clause whose value is an arbitrary expression. That expression must be evaluated in the proper “location”, its evaluation can’t be hoisted.`
 
-Not having hoisting is less limiting than you may think. For example, a function that comes before a class declaration can still refer to that class, but you have to wait until the class declaration has been evaluated before you can call the function.
+호이스팅 되지 않는 것은 당신이 생각하는 것보다 제한 이하이다. 예를 들어, 클래스 선언 앞에 오는 기능은 여전히 클래스를 참조 할 수 있습니다,하지만 당신은 당신이 함수를 호출하기 전에 클래스 선언이 평가 될 때까지 기다려야합니다. `Not having hoisting is less limiting than you may think. For example, a function that comes before a class declaration can still refer to that class, but you have to wait until the class declaration has been evaluated before you can call the function.`
 
 ```javascript
 function functionThatUsesBar() {
@@ -122,10 +123,11 @@ class Bar {}
 functionThatUsesBar(); // OK
 ```
 
-#### 15.2.1.2 Class expressions
-Similarly to functions, there are two kinds of class definitions, two ways to define a class: class declarations and class expressions.
+#### 15.2.1.2 클래스 식 `Class expressions`
 
-Similarly to function expressions, class expressions can be anonymous:
+클래스 선언과 클래스 식 : 마찬가지로 함수, 클래스 정의 이가지, 두 개의 클래스를 정의하는 방법이 있습니다. `Similarly to functions, there are two kinds of class definitions, two ways to define a class: class declarations and class expressions.`
+
+유사 표현을 작동하려면, 클래스 표현식은 익명으로 할 수 있습니다 : `Similarly to function expressions, class expressions can be anonymous:`
 
 ```javascript
 const MyClass = class {
@@ -134,7 +136,7 @@ const MyClass = class {
 const inst = new MyClass();
 ```
 
-Also similarly to function expressions, class expressions can have names that are only visible inside them:
+또한 유사하게 표현 기능, 클래스 표현은 그들 내부에서만 볼 수 있습니다 이름을 가질 수 있습니다 : `Also similarly to function expressions, class expressions can have names that are only visible inside them:`
 
 ```javascript
 const MyClass = class Me {
@@ -148,13 +150,15 @@ console.log(inst.getClassName()); // Me
 console.log(Me.name); // ReferenceError: Me is not defined
 ```
 
-The last two lines demonstrate that Me does not become a variable outside of the class, but can be used inside it.
+마지막 두 라인 째는 클래스 변수 밖에되지 않지만, 내부에 사용될 수 있음을 보여준다. `The last two lines demonstrate that Me does not become a variable outside of the class, but can be used inside it.`
 
-### 15.2.2 Inside the body of a class definition
-A class body can only contain methods, but not data properties. Prototypes having data properties is generally considered an anti-pattern, so this just enforces a best practice.
+### 15.2.2 클래스 정의 체내 `Inside the body of a class definition`
 
-#### 15.2.2.1 constructor, static methods, prototype methods
-Let’s examine three kinds of methods that you often find in class definitions.
+클래스 본문은 방법,하지만 데이터 속성을 포함 할 수 있습니다. 데이터 특성을 갖는 프로토 타입은 일반적으로 안티 패턴으로 간주됩니다, 그래서 이것은 단지 최선의 방법을 적용합니다. `A class body can only contain methods, but not data properties. Prototypes having data properties is generally considered an anti-pattern, so this just enforces a best practice.`
+
+#### 15.2.2.1 생성자, 정적 메소드, 프로토 타입 메소드 `constructor, static methods, prototype methods`
+
+이제 당신은 종종 클래스 정의에서 찾을 방법의 3 종류 살펴 보자. `Let’s examine three kinds of methods that you often find in class definitions.`
 
 ```javascript
 class Foo {
@@ -171,11 +175,11 @@ class Foo {
 const foo = new Foo(123);
 ```
 
-The object diagram for this class declaration looks as follows. Tip for understanding it: [[Prototype]] is an inheritance relationship between objects, while prototype is a normal property whose value is an object. The property prototype is only special because the new operator uses its value as the prototype for instances it creates.
+다음과 같이 클래스 선언에 대한 객체도 보인다. 그것을 이해하기위한 팁 : 프로토 타입 값이 목적은 일반 속성이있는 동안 [[Prototype]], 객체 사이의 상속 관계이다. 새로운 운영자가 자신이 생성 인스턴스의 프로토 타입으로 값을 사용하기 때문에 속성 프로토 타입은 특별하다. `The object diagram for this class declaration looks as follows. Tip for understanding it: [[Prototype]] is an inheritance relationship between objects, while prototype is a normal property whose value is an object. The property prototype is only special because the new operator uses its value as the prototype for instances it creates.`
 
 ![classes----methods.jpg](images/classes----methods.jpg)
 
-First, the pseudo-method constructor. This method is special, as it defines the function that represents the class:
+첫째, 의사 메소드 생성자입니다. 이 클래스를 나타내는 함수를 정의하는이 방법은 특별하다 : `First, the pseudo-method constructor. This method is special, as it defines the function that represents the class:`
 
 ```javascript
 > Foo === Foo.prototype.constructor
@@ -184,9 +188,9 @@ true
 'function'
 ```
 
-It is sometimes called a class constructor. It has features that normal constructor functions don’t have (mainly the ability to constructor-call its superconstructor via super(), which is explained later).
+그것은 때로는 클래스 생성자라고합니다. 정상 생성자 함수가없는 기능 (나중에 설명 슈퍼 통해 자사의 슈퍼 생성자 () - 전화 생성자에 주로 능력)을가집니다. `It is sometimes called a class constructor. It has features that normal constructor functions don’t have (mainly the ability to constructor-call its superconstructor via super(), which is explained later).`
 
-Second, static methods. Static properties (or class properties) are properties of Foo itself. If you prefix a method definition with static, you create a class method:
+둘째, 정적 방법. 정적 특성 (또는 클래스 속성은) Foo 자체의 속성입니다. 정적와 메소드 정의 앞에 경우에, 당신은 클래스 메소드를 만듭니다 `Second, static methods. Static properties (or class properties) are properties of Foo itself. If you prefix a method definition with static, you create a class method:`
 
 ```javascript
 > typeof Foo.staticMethod
@@ -195,7 +199,7 @@ Second, static methods. Static properties (or class properties) are properties o
 'classy'
 ```
 
-Third, prototype methods. The prototype properties of Foo are the properties of Foo.prototype. They are usually methods and inherited by instances of Foo.
+셋째, 프로토 방법. Foo의 프로토 타입 속성 Foo.prototype의 재산입니다. 그들은 일반적으로 방법과 Foo의 인스턴스에 의해 상속됩니다. `Third, prototype methods. The prototype properties of Foo are the properties of Foo.prototype. They are usually methods and inherited by instances of Foo.`
 
 ```javascript
 > typeof Foo.prototype.prototypeMethod
@@ -204,10 +208,11 @@ Third, prototype methods. The prototype properties of Foo are the properties of 
 'prototypical'
 ```
 
-#### 15.2.2.2 Static data properties
-For now, classes only let you create static methods, but not static data properties. There are two work-arounds for that.
+#### 15.2.2.2 정적 데이터 등록 `Static data properties`
 
-First, you can manually add a static property:
+지금은 클래스는 당신이 정적 메서드가 아닌 정적 데이터 속성을 만들 수 있습니다. 그에 대한 해결 방법에는 두 가지가 있습니다. `For now, classes only let you create static methods, but not static data properties. There are two work-arounds for that.`
+
+첫째, 당신은 수동으로 정적 속성을 추가 할 수 있습니다 : `First, you can manually add a static property:`
 
 ```javascript
 class Point {
@@ -219,7 +224,7 @@ class Point {
 Point.ZERO = new Point(0, 0);
 ```
 
-Second, you can create a static getter:
+둘째, 정적 게터를 만들 수 있습니다 : `Second, you can create a static getter:`
 
 ```javascript
 class Point {
@@ -233,10 +238,11 @@ class Point {
 }
 ```
 
-In both cases, you get a property Point.ZERO that you can read. In the former case, you could use Object.defineProperty() to create a read-only property, but I like the simplicity of an assignment.
+두 경우 모두, 당신은 당신이 읽을 수있는 속성 Point.ZERO을 찾으실 수 있습니다. 전자의 경우, 당신은 읽기 전용 속성을 만들 Object.defineProperty ()를 사용할 수 있습니다,하지만 난 과제의 단순함을 좋아한다. `In both cases, you get a property Point.ZERO that you can read. In the former case, you could use Object.defineProperty() to create a read-only property, but I like the simplicity of an assignment.`
 
-#### 15.2.2.3 Getters and setters
-The syntax for getters and setters is just like in ECMAScript 5 object literals:
+#### 15.2.2.3 게터와 세터 `Getters and setters`
+
+getter와 setter의 구문은 단지 인 ECMAScript 5 객체 리터럴에서 같다 : `The syntax for getters and setters is just like in ECMAScript 5 object literals:`
 
 ```javascript
 class MyClass {
@@ -249,7 +255,7 @@ class MyClass {
 }
 ```
 
-You use MyClass as follows.
+다음과 같이 MyClass를 사용합니다. `You use MyClass as follows.`
 
 ```javascript
 > const inst = new MyClass();
@@ -259,8 +265,9 @@ setter: 123
 'getter'
 ```
 
-#### 15.2.2.4 Computed method names
-You can define the name of a method via an expression, if you put it in square brackets. For example, the following ways of defining Foo are all equivalent.
+#### 15.2.2.4 계산 방법 이름 `Computed method names`
+
+당신이 괄호에 넣어 경우, 식을 통해 메소드의 이름을 정의 할 수 있습니다. 예를 들어, Foo를 정의하는 다음과 같은 방법으로 모두 동일합니다. `You can define the name of a method via an expression, if you put it in square brackets. For example, the following ways of defining Foo are all equivalent.`
 
 ```javascript
 class Foo() {
@@ -277,7 +284,7 @@ class Foo() {
 }
 ```
 
-Several special methods in ECMAScript 6 have keys that are symbols. Computed method names allow you to define such methods. For example, if an object has a method whose key is Symbol.iterator, it is iterable. That means that its contents can be iterated over by the for-of loop and other language mechanisms.
+ECMAScript를 6에서 몇 가지 특별한 방법이 상징 키를 가지고있다. 계산 방법 이름은 당신이 그런 방법을 정의 할 수 있습니다. 객체가 그 키 Symbol.iterator 인 방법을 가지고 예를 들어, 그것은 반복 가능하다. 즉, 그 내용은 for에 대한 루프 및 기타 언어 메커니즘에 의해 이상 반복 할 수 있다는 것을 의미한다. `Several special methods in ECMAScript 6 have keys that are symbols. Computed method names allow you to define such methods. For example, if an object has a method whose key is Symbol.iterator, it is iterable. That means that its contents can be iterated over by the for-of loop and other language mechanisms.`
 
 ```javascript
 class IterableClass {
@@ -287,8 +294,9 @@ class IterableClass {
 }
 ```
 
-#### 15.2.2.5 Generator methods
-If you prefix a method definition with an asterisk (*), it becomes a generator method. Among other things, a generator is useful for defining the method whose key is Symbol.iterator. The following code demonstrates how that works.
+#### 15.2.2.5 제너레이터 메소드 `Generator methods`
+
+별표 (*)에있어서 정의 접두사 경우 발생 방법이된다. 무엇보다도, 제너레이터는 그 키 Symbol.iterator있는 방법을 정의하는 데 유용합니다. 그 작동 방법 다음 코드는 보여줍니다. `If you prefix a method definition with an asterisk (*), it becomes a generator method. Among other things, a generator is useful for defining the method whose key is Symbol.iterator. The following code demonstrates how that works.`
 
 ```javascript
 class IterableArguments {
