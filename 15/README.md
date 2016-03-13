@@ -1,5 +1,5 @@
-# 15. Classes
-This chapter explains how ES6 classes work. ~~test~~
+# 15. Classes `클래스`
+This chapter explains how ES6 classes work.
 
 ## 15.1 Overview
 A class and a subclass:
