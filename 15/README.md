@@ -761,12 +761,14 @@ ComputedPropertyName:
     "[" Expression "]"
 ```
     
-Two observations:
+두 관측 : `Two observations:`
 
-- The value to be extended can be produced by an arbitrary expression. Which means that you’ll be able to write code such as the following:
+- 확장 될 값은 임의의 식에 의해 생성 될 수있다. 어떤 다음과 같은 코드를 작성 할 수 있습니다 것을 의미한다 : `The value to be extended can be produced by an arbitrary expression. Which means that you’ll be able to write code such as the following:`
+  
   ```javascript
   class Foo extends combine(MyMixin, MySuperClass) {}
-  ```  
+  ```
+
 - Semicolons are allowed between methods.
 
 ### 15.5.1 Various checks
