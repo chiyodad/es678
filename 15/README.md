@@ -1004,52 +1004,57 @@ Employee.prototype.constructor = Employee;
 
 #### 15.6.2.1 안전성 체크 `Safety checks`
 
-- this originally being uninitialized in derived constructors means that an error is thrown if they access this in any way before they have called super().
-- Once this is initialized, calling super() produces a ReferenceError. This protects you against calling super() twice.
-- If a constructor returns implicitly (without a return statement), the result is this. If this is uninitialized, a ReferenceError is thrown. This protects you against forgetting to call super().
-- If a constructor explicitly returns a non-object (including undefined and null), the result is this (this behavior is required to remain compatible with ES5 and earlier). If this is uninitialized, a TypeError is thrown.
-- If a constructor explicitly returns an object, it is used as its result. Then it doesn’t matter whether this is initialized or not.
+- super를 호출하기 전에 어떤 식으로든 액세스하는 경우 원래 파생된 생성자에서 초기화되는 이 오류가 발생된다는 것을 의미한다. `this originally being uninitialized in derived constructors means that an error is thrown if they access this in any way before they have called super().`
+- 초기화되면 (슈퍼를 호출하면 ReferenceError가 생성됩니다. 이것은 슈퍼를 중복해서 호출하는 것으로부터 사용자를 보호합니다. `Once this is initialized, calling super() produces a ReferenceError. This protects you against calling super() twice.`
+- 생성자 (return 문없이) 암시 적으로 반환하는 경우, 결과는 이것입니다. 이 초기화되지 않은 경우, ReferenceError가 발생합니다. 이것은 super 호출을 잊는 경우로부터 사용자를 보호합니다. `If a constructor returns implicitly (without a return statement), the result is this. If this is uninitialized, a ReferenceError is thrown. This protects you against forgetting to call super().`
+- 생성자는 명시 적으로 (undefined 및 null 포함)이 아닌 객체를 반환하는 경우, 결과는 (이 문제가 ES5와 호환을 유지하고 이전하는 데 필요한)이있다. 이 초기화되지 않은 경우, 입력 오류가 발생합니다. `If a constructor explicitly returns a non-object (including undefined and null), the result is this (this behavior is required to remain compatible with ES5 and earlier). If this is uninitialized, a TypeError is thrown.`
+- 생성자는 명시 적으로 객체를 반환 경우, 그 결과로 사용된다. 그런 다음이 초기화 여부는 중요하지 않습니다. `If a constructor explicitly returns an object, it is used as its result. Then it doesn’t matter whether this is initialized or not.`
 
-#### 15.6.2.2 The extends clause
-Let’s examine how the extends clause influences how a class is set up (Sect. 14.5.14 of the spec).
+#### 15.6.2.2 확장 `The extends clause`
 
-The value of an extends clause must be “constructible” (invocable via new). null is allowed, though.
+클래스 설정 방법에 영향을 확장하는 방법을 살펴 보자 (분파. 스펙 14.5.14). `Let’s examine how the extends clause influences how a class is set up (Sect. 14.5.14 of the spec).`
+
+extend의 값은 "constructible"(new를 통해 invocable)이어야 확장합니다. 하지만 널 (null)은 허용됩니다. `The value of an extends clause must be “constructible” (invocable via new). null is allowed, though.`
 
 ```javascript
 class C {
 }
 ```
 
-- Constructor kind: base
-- Prototype of C: Function.prototype (like a normal function)
-- Prototype of C.prototype: Object.prototype (which is also the prototype of objects created via object literals)
+- 생성자의 종류 : 기본 `Constructor kind: base`
+- C의 프로토 타입 : (정상적인 기능 등) 같이 Function.prototype `Prototype of C: Function.prototype (like a normal function)`
+- C.prototype의 프로토 타입 : Object.prototype에 (또한 객체 리터럴을 통해 생성 된 객체의 프로토 타입입니다) `Prototype of C.prototype: Object.prototype (which is also the prototype of objects created via object literals)`
 
 ```javascript
 class C extends B {
 }
 ```
 
-- Constructor kind: derived
-- Prototype of C: B
-- Prototype of C.prototype: B.prototype
+- 생성자의 종류 : 파생 `Constructor kind: derived`
+- C의 프로토타입 : B `Prototype of C: B`
+- C.prototype의 프로토타입 : B.prototype `Prototype of C.prototype: B.prototype`
 
 ```javascript
 class C extends Object {
 }
 ```
 
-- Constructor kind: derived
-- Prototype of C: Object
-- Prototype of C.prototype: Object.prototype
+- 생성자의 종류 : 파생 `Constructor kind: derived`
+- C의 프로토타입 : Object `Prototype of C: Object`
+- C.prototype의 프로토타입 : Object.prototype `Prototype of C.prototype: Object.prototype`
 
-Note the following subtle difference with the first case: If there is no extends clause, the class is a base class and allocates instances. If a class extends Object, it is a derived class and Object allocates the instances. The resulting instances (including their prototype chains) are the same, but you get there differently.
+첫 번째 경우 다음과 같은 미묘한 차이를 참고 : 확장하는 경우 클래스는 기본 클래스 및 인스턴스를 할당합니다. 클래스는 객체를 확장, 그것은 파생 클래스이며, 개체 인스턴스를 할당합니다. (자신의 프로토 타입 체인 포함) 결과 인스턴스는 동일하지만, 다르게 거기에 도착. `Note the following subtle difference with the first case: If there is no extends clause, the class is a base class and allocates instances. If a class extends Object, it is a derived class and Object allocates the instances. The resulting instances (including their prototype chains) are the same, but you get there differently.`
 
+```javascript
 class C extends null {
 }
-Constructor kind: derived
-Prototype of C: Function.prototype
-Prototype of C.prototype: null
-Such a class lets you avoid Object.prototype in the prototype chain. But that is rarely useful. Furthermore, you have to be careful: new-calling such a class leads to an error, because the default constructor makes a superconstructor call and Function.prototype (the superconstructor) can’t be constructor-called. The only way to make the error go away is by adding a constructor that returns an object:
+```
+
+- 생성자의 종류 : 파생 `Constructor kind: derived`
+- C의 프로토타입 : Function.prototype `Prototype of C: Function.prototype`
+- C.prototype의 프로토타입 : null `Prototype of C.prototype: null`
+
+이러한 클래스는 프로토 타입 체인에 Object.prototype에를 방지 할 수 있습니다. 그러나 그것은 거의 유용합니다. 기본 생성자는 생성자 호출 할 수 없습니다 슈퍼 생성자 호출을하고 같이 Function.prototype (슈퍼 생성자) 때문에, 새로운 호출과 같은 클래스가 오류로 리드 : 또한, 당신은 조심해야합니다. 오류가 멀리 갈 수 있도록하는 유일한 방법은 객체를 반환하는 생성자를 추가하는 것입니다 : `Such a class lets you avoid Object.prototype in the prototype chain. But that is rarely useful. Furthermore, you have to be careful: new-calling such a class leads to an error, because the default constructor makes a superconstructor call and Function.prototype (the superconstructor) can’t be constructor-called. The only way to make the error go away is by adding a constructor that returns an object:`
 
 ```javascript
 class C extends null {
@@ -1060,12 +1065,13 @@ class C extends null {
 }
 ```
 
-new.target ensures that C can be subclassed properly – the prototype of _this will always be the operand of new.
+new.target는 C가 제대로 서브 클래스 될 수 있도록 보장 - _this의 프로토 타입은 항상 new의 피연산자 될 것입니다. `new.target ensures that C can be subclassed properly – the prototype of _this will always be the operand of new.`
 
-### 15.6.3 Why can’t you subclass built-in constructors in ES5?
-In ECMAScript 5, most built-in constructors can’t be subclassed ([several work-arounds exist](http://speakingjs.com/es5/ch28.html)).
+### 15.6.3 왜 ES5에는 내장 서브 클래스의 생성자가 없을까? `Why can’t you subclass built-in constructors in ES5?`
 
-To understand why, let’s use the canonical ES5 pattern to subclass Array. As we shall soon find out, this doesn’t work.
+ECMAScript 5에서, 가장 기본 생성자가 서브 클래 싱 할 수 없습니다 ([several work-arounds exist](http://speakingjs.com/es5/ch28.html)). `In ECMAScript 5, most built-in constructors can’t be subclassed ([several work-arounds exist](http://speakingjs.com/es5/ch28.html)).`
+
+이유를 이해하기 위해, 배열을 하위 클래스로 정식 ES5 패턴을 사용 할 수 있습니다. 곧 알게 되겠지만 이것은 작동하지 않습니다. `To understand why, let’s use the canonical ES5 pattern to subclass Array. As we shall soon find out, this doesn’t work.`
 
 ```javascript
 function MyArray(len) {
@@ -1074,7 +1080,7 @@ function MyArray(len) {
 MyArray.prototype = Object.create(Array.prototype);
 ```
 
-Unfortunately, if we instantiate MyArray, we find out that it doesn’t work properly: The instance property length does not change in reaction to us adding Array elements:
+MyArray의 인스턴스 경우 불행하게도, 제대로 작동하지 않는 것을 발견 : 인스턴스 속성 길이가 배열 요소를 추가해도 변경되지 않습니다 : `Unfortunately, if we instantiate MyArray, we find out that it doesn’t work properly: The instance property length does not change in reaction to us adding Array elements:`
 
 ```javascript
 > var myArr = new MyArray(0);
@@ -1085,9 +1091,9 @@ Unfortunately, if we instantiate MyArray, we find out that it doesn’t work pro
 0
 ```
 
-There are two obstracles that prevent myArr from being a proper Array.
+myArr가 적절한 배열이 되는 것을 방지하는 두개의 장애물이있다. `There are two obstracles that prevent myArr from being a proper Array.`
 
-First obstacle: initialization. The this you hand to the constructor Array (in line A) is completely ignored. That means you can’t use Array to set up the instance that was created for MyArray.
+첫 번째 장애물 : 초기화. (A 라인에서) 생성자 배열에이 당신의 손을 완전히 무시됩니다. 즉,이 경우 MyArray 생성 된 인스턴스를 설정하는 배열을 사용할 수 없습니다 의미합니다. `First obstacle: initialization. The this you hand to the constructor Array (in line A) is completely ignored. That means you can’t use Array to set up the instance that was created for MyArray.`
 
 ```javascript
 > var a = [];
@@ -1100,10 +1106,11 @@ true
 0
 ```
 
-Second obstacle: allocation. The instance objects created by Array are exotic (a term used by the ECMAScript specification for objects that have features that normal objects don’t have): Their property length tracks and influences the management of Array elements. In general, exotic objects can be created from scratch, but you can’t convert an existing normal object into an exotic one. Unfortunately, that is what Array would have to do, when called in line A: It would have to turn the normal object created for MyArray into an exotic Array object.
+두 번째 장애물 : 할당. 그들의 속성 길이 트랙과 배열 요소의 관리에 영향을 미친다 : 배열에 의해 만들어진 개체 인스턴스는 (일반 객체가없는 기능이 개체의 ECMAScript를 사양에서 사용되는 용어) 이국적인 있습니다. 일반적으로, 이국적인 개체가 처음부터 만들 수 있습니다,하지만 당신은 이국적인 하나에 기존의 일반 객체를 변환 할 수 없습니다. 그것은 이국적인 Array 객체로 내 배열을 위해 만든 일반 객체를 설정해야 할 것이다 : 불행하게도, 그 배열이 라인에서 호출 할 때 수행해야하는 것이다. `Second obstacle: allocation. The instance objects created by Array are exotic (a term used by the ECMAScript specification for objects that have features that normal objects don’t have): Their property length tracks and influences the management of Array elements. In general, exotic objects can be created from scratch, but you can’t convert an existing normal object into an exotic one. Unfortunately, that is what Array would have to do, when called in line A: It would have to turn the normal object created for MyArray into an exotic Array object.`
 
-#### 15.6.3.1 The solution: ES6 subclassing
-In ECMAScript 6, subclassing Array looks as follows:
+#### 15.6.3.1 솔루션 : ES6의 서브 클래스 `The solution: ES6 subclassing`
+
+다음과 같이 ECMAScript6에서 배열을 서브 클래싱합니다. : `In ECMAScript 6, subclassing Array looks as follows:`
 
 ```javascript
 class MyArray extends Array {
@@ -1113,7 +1120,7 @@ class MyArray extends Array {
 }
 ```
 
-This works:
+이렇게 작동합니다 : `This works:`
 
 ```javascript
 > const myArr = new MyArray(0);
@@ -1124,13 +1131,14 @@ This works:
 1
 ```
 
-Let’s examine how the ES6 approach to subclassing removes the previously mentioned obstacles:
+서브 클래스에 ES6의 접근 방식으로 앞서 언급 한 장애물을 제거하는 방법을 살펴 보자 : `Let’s examine how the ES6 approach to subclassing removes the previously mentioned obstacles:`
 
-- The first obstacle, Array not being able to set up an instance, is removed by Array returning a fully configured instance. In contrast to ES5, this instance has the prototype of the subclass.
-- The second obstacle, subconstructors not creating exotic instances, is removed by derived classes relying on base classes for allocating instances.
+- 첫 번째 장애물, 배열 인스턴스를 설정 할 수없는, Array가 완전히 구성된 인스턴스를 반환하여 제거한다. ES5는 달리,이 경우는 서브 클래스의 프로토 타입이 있습니다. `The first obstacle, Array not being able to set up an instance, is removed by Array returning a fully configured instance. In contrast to ES5, this instance has the prototype of the subclass.`
+- 두 번째 장애물은, 이국적인 인스턴스를 생성하지, 인스턴스를 할당하기위한 기본 클래스에 의존하는 파생 클래스에 의해 제거된다. `The second obstacle, subconstructors not creating exotic instances, is removed by derived classes relying on base classes for allocating instances.`
 
-### 15.6.4 Referring to superproperties in methods
-The following ES6 code makes a supermethod call in line B.
+### 15.6.4 메소드에서 super 속성을 참조 `Referring to superproperties in methods`
+
+다음 ES6 코드는 라인 B에서 슈퍼 메서드 호출합니다. `The following ES6 code makes a supermethod call in line B.`
 
 ```javascript
 class Person {
@@ -1156,21 +1164,21 @@ const jane = new Employee('Jane', 'CTO');
 console.log(jane.toString()); // Person named Jane (CTO)
 ```
 
-To understand how super-calls work, let’s look at the object diagram of jane:
+super 호출이 작동하는 방법을 이해하기 위해 제인의 객체 다이어그램을 살펴 보자 : `To understand how super-calls work, let’s look at the object diagram of jane:`
 
 ![classes----supercalls.jpg](images/classes----supercalls.jpg)
 
-In line B, Employee.prototype.toString makes a super-call (line B) to the method (starting in line A) that it has overridden. Let’s call the object, in which a method is stored, the home object of that method. For example, Employee.prototype is the home object of Employee.prototype.toString().
+라인 B에서 Employee.prototype.toString는 오버라이드 (override) 것을 방법 (라인에서 시작)에 슈퍼 호출 (라인 B)를 만든다. 이제 방법은 저장되는 객체, 메소드의 홈 개체를 호출하자. 예를 들어,이 Employee.prototype Employee.prototype.toString의 홈 객체 ()이다. `In line B, Employee.prototype.toString makes a super-call (line B) to the method (starting in line A) that it has overridden. Let’s call the object, in which a method is stored, the home object of that method. For example, Employee.prototype is the home object of Employee.prototype.toString().`
 
-The super-call in line B involves three steps:
+라인 B의 슈퍼 호출은 세 단계를 포함한다 : `The super-call in line B involves three steps:`
 
-* Start your search in the prototype of the home object of the current method.
-* Look for a method whose name is toString. That method may be found in the object where the search started or later in the prototype chain.
-* Call that method with the current this. The reason for doing so is: the super-called method must be able to access the same instance properties (in our example, the own properties of jane).
+1. 현재 메소드의 홈 객체의 프로토 타입에서 검색을 시작합니다. `Start your search in the prototype of the home object of the current method.`
+2. 이름이 toString있는 메소드를 찾아보십시오. 검색이 나중에 프로토 타입 체인에서 시작되거나 곳 메서드는 개체에서 찾을 수있다. `Look for a method whose name is toString. That method may be found in the object where the search started or later in the prototype chain.`
+3. 이 메소드를 호출합니다. 이렇게하는 이유는 다음과 같습니다 super라는 방법은 (우리의 예에서 제인의 자신의 속성을) 같은 인스턴스 속성에 액세스 할 수 있어야합니다. `Call that method with the current this. The reason for doing so is: the super-called method must be able to access the same instance properties (in our example, the own properties of jane).`
 
-Note that even if you are only getting (super.prop) or setting (super.prop = 123) a superproperty (versus making a method call), this may still (internally) play a role in step #3, because a getter or a setter may be invoked.
+(super.prop)를 얻거나 (메소드 호출 대) (super.prop = 123) suuper 속성을 설정하는 경우에도, 이것은 여전히 (내부) 게터 때문에, 스텝 \#3에서 역할을 할 수 있음을 유의 또는 세터가 호출 할 수있다. `Note that even if you are only getting (super.prop) or setting (super.prop = 123) a superproperty (versus making a method call), this may still (internally) play a role in step #3, because a getter or a setter may be invoked.`
 
-Let’s express these steps in three different – but equivalent – ways:
+세 가지의 - 하지만 동등한 - 다음과 같이 표현 할 수있는 방법을 : `Let’s express these steps in three different – but equivalent – ways:`
 
 ```javascript
 // Variation 1: supermethod calls in ES5
@@ -1189,8 +1197,8 @@ var result = superMethod.call(this) // step 3
 Variation 3 is how ECMAScript 6 handles super-calls. This approach is supported by two internal bindings that the environments of functions have (environments provide storage space, so-called bindings, for the variables in a scope):
 ```
 
-- [[thisValue]]: This internal binding also exists in ECMAScript 5 and stores the value of this.
-- [[HomeObject]]: Refers to the home object of the environment’s function. Filled in via an internal property [[HomeObject]] that all methods have that use super. Both the binding and the property are new in ECMAScript 6.
+- [[thisValue]]이 내부 결합도는 ECMAScript 5에 존재하고,이 값을 저장한다. `[[thisValue]]: This internal binding also exists in ECMAScript 5 and stores the value of this.`
+- [[HomeObject]] : 환경의 기능의 홈 객체를 참조합니다. 모든 메소드가 사용하는 슈퍼가 있는지 내부 속성 [[HomeObject]]를 통해에 가득합니다. 모두 바인딩 및 속성의 ECMAScript 6의 새로운 기능입니다. `[[HomeObject]]: Refers to the home object of the environment’s function. Filled in via an internal property [[HomeObject]] that all methods have that use super. Both the binding and the property are new in ECMAScript 6.`
 
 > Methods are a special kind of function now
 > In a class, a method definition that uses super creates a special kind of function: It is still a function, but it has the internal property [[HomeObject]]. That property is set up by the method definition and can’t be changed in JavaScript. Therefore, you can’t meaningfully move such a method to a different object. (But maybe it’ll be possible in a future version of ECMAScript.)
