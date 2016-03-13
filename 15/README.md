@@ -510,10 +510,11 @@ console.log(myArr.length); // 1
 
 접근 방법 \#1과 \#2는 생성자를 들어, ES5 이미 일반적이었다. \#3, \#4 ES6의 새로운 접근. 의는 접근 각을 통해, 같은 예를 네 번을 구현할 수 있습니다. `Approaches #1 and #2 were already common in ES5, for constructors. Approaches #3 and #4 are new in ES6. Let’s implement the same example four times, via each of the approaches.`
 
-### 15.3.1 Private data via constructor environments
-Our running example is a class Countdown that invokes a callback action once a counter (whose initial value is counter) reaches zero. The two parameters action and counter should be stored as private data.
+### 15.3.1 생성자 환경을 통해 private 데이터 `Private data via constructor environments`
 
-In the first implementation, we store action and counter in the environment of the class constructor. An environment is the internal data structure, in which a JavaScript engine stores the parameters and local variables that come into existence whenever a new scope is entered (e.g. via a function call or a constructor call). This is the code:
+실행 예는 (초기 값으로 카운터)는 0에 도달 한 번 카운터 콜백 동작을 호출하는 클래스 카운트이다. 두 개의 매개 변수 작업 및 카운터는 private 데이터로 저장해야합니다. `Our running example is a class Countdown that invokes a callback action once a counter (whose initial value is counter) reaches zero. The two parameters action and counter should be stored as private data.`
+
+첫 번째 구현에서, 우리는 클래스 생성자의 환경에서 작업하고 카운터를 저장합니다. 환경은 자바 스크립트 엔진은 새로운 범위가 (예를 들어, 함수 호출이나 생성자 호출을 통해)에 입력 될 때마다 존재하게 매개 변수 및 로컬 변수들을 저장하는 내부 데이터 구조이다. 이 코드입니다 : `In the first implementation, we store action and counter in the environment of the class constructor. An environment is the internal data structure, in which a JavaScript engine stores the parameters and local variables that come into existence whenever a new scope is entered (e.g. via a function call or a constructor call). This is the code:`
 
 ```javascript
 class Countdown {
@@ -531,7 +532,7 @@ class Countdown {
 }
 ```
 
-Using Countdown looks like this:
+Countdown을 사용하면 다음과 같다 : `Using Countdown looks like this:`
 
 ```javascript
 > const c = new Countdown(2, () => console.log('DONE'));
@@ -540,20 +541,21 @@ Using Countdown looks like this:
 DONE
 ```
 
-Pros:
+장점 : `Pros:`
 
-- The private data is completely safe
-- The names of private properties won’t clash with the names of other private properties (of superclasses or subclasses).
+- private 정보는 완전히 안전하다 `The private data is completely safe`
+- private 속성의 이름은 (슈퍼 클래스와 서브 클래스의) 다른 private 속성의 이름과 충돌하지 않습니다. `The names of private properties won’t clash with the names of other private properties (of superclasses or subclasses).`
 
-Cons:
+단점 : `Cons:`
 
-- The code becomes less elegant, because you need to add all methods to the instance, inside the constructor (at least those methods that need access to the private data).
-- Due to the instance methods, the code wastes memory. If the methods were prototype methods, they would be shared.
+- 생성자 내부에서, 인스턴스 (private 데이터에 액세스해야 적어도 그 방법을) 모든 방법을 추가 할 필요가 있기 때문에 코드는 덜 우아한된다. `The code becomes less elegant, because you need to add all methods to the instance, inside the constructor (at least those methods that need access to the private data).`
+- 인해 인스턴스 메소드에, 코드는 메모리를 낭비한다. 방법은 프로토 타입 방법이었다, 그들은 공유 할 것입니다. `Due to the instance methods, the code wastes memory. If the methods were prototype methods, they would be shared.`
 
-More information on this technique: Sect. “Private Data in the Environment of a Constructor (Crockford Privacy Pattern)” in “Speaking JavaScript”.
+이 기술에 대한 추가 정보 : 분파. "자바 스크립트를 말하기"에서 "생성자의 환경 (Crockford에 private 정보 보호 패턴)의 private 정보". `More information on this technique: Sect. “Private Data in the Environment of a Constructor (Crockford Privacy Pattern)” in “Speaking JavaScript”.`
 
-### 15.3.2 Private data via a naming convention
-The following code keeps private data in properties whose names a marked via a prefixed underscore:
+### 15.3.2 이름 지정 규칙을 통해 private 데이터 `Private data via a naming convention`
+
+다음 코드는 이름을 접두어로 밑줄로 표시 속성에서 private 데이터를 유지합니다 : `The following code keeps private data in properties whose names a marked via a prefixed underscore:`
 
 ```javascript
 class Countdown {
@@ -571,18 +573,19 @@ class Countdown {
 }
 ```
 
-Pros:
+장점 : `Pros:`
 
-- Code looks nice.
-- We can use prototype methods.
+- 코드가 좋아 보인다. `Code looks nice.`
+- 프로토 타입 방법을 사용할 수 있습니다. `We can use prototype methods.`
 
-Cons:
+단점 : `Cons:`
 
-- Not safe, only a guideline for client code.
-- The names of private properties can clash.
+- 안전하지 않다, 클라이언트 코드의 가이드라인일 뿐. `Not safe, only a guideline for client code.`
+- private 속성의 이름이 충돌 할 수 있습니다. `The names of private properties can clash.`
 
-### 15.3.3 Private data via WeakMaps
-There is a neat technique involving WeakMaps that combines the advantage of the first approach (safety) with the advantage of the second approach (being able to use prototype methods). This technique is demonstrated in the following code: we use the WeakMaps _counter and _action to store private data.
+### 15.3.3 WeakMaps를 통해 private 데이터 `Private data via WeakMaps`
+
+(프로토 타입 메소드를 사용 수있는) 두 번째 접근법의 이점 첫 번째 방법 (안전성)의 장점을 결합한 WeakMap 관련된 깔끔한 기술이있다. 이 기술은 다음 코드에서 설명한다 : 우리는 private 데이터를 저장하기 위해 WeakMap _counter 및 _action를 사용합니다. `There is a neat technique involving WeakMaps that combines the advantage of the first approach (safety) with the advantage of the second approach (being able to use prototype methods). This technique is demonstrated in the following code: we use the WeakMaps _counter and _action to store private data.`
 
 ```javascript
 const _counter = new WeakMap();
@@ -604,21 +607,22 @@ class Countdown {
 }
 ```
 
-Each of the two WeakMaps _counter and _action maps objects to their private data. Due to how WeakMaps work that won’t prevent objects from being garbage-collected. As long as you keep the WeakMaps hidden from the outside world, the private data is safe. If you want to be even safer, you can store WeakMap.prototype.get and WeakMap.prototype.set in temporary variables and invoke those (instead of the methods, dynamically). Then our code wouldn’t be affected if malicious code replaced those methods with ones that snoop on our private data. However, we are only protected against code that runs after our code. There is nothing we can do if it runs before ours.
+자신의 private 정보에 대한 두 WeakMap _counter 및 _action WeakMap 객체의 각. 방법에 의한 것은 가비지 수집에서 개체를 방지 할 수 없습니다 작업을 WeakMaps. 만큼 외부 세계에서 숨겨진 WeakMaps을 유지으로, private 데이터는 안전합니다. 안전 할하려는 경우, 임시 변수에 WeakMap.prototype.get 및 WeakMap.prototype.set를 저장하고 (동적 대신 방법의) 호출합니다. 악성 코드는 private 데이터 스누핑 그 방법을 대체하는 경우 그리고 코드는 영향을받지 않습니다. 그러나, 코드 뒤에 실행되는 코드에 대해 보호됩니다. 그것은 전에 실행하는 경우 할 수있는 것은 아무것도 없습니다. `Each of the two WeakMaps _counter and _action maps objects to their private data. Due to how WeakMaps work that won’t prevent objects from being garbage-collected. As long as you keep the WeakMaps hidden from the outside world, the private data is safe. If you want to be even safer, you can store WeakMap.prototype.get and WeakMap.prototype.set in temporary variables and invoke those (instead of the methods, dynamically). Then our code wouldn’t be affected if malicious code replaced those methods with ones that snoop on our private data. However, we are only protected against code that runs after our code. There is nothing we can do if it runs before ours.`
 
-Pros:
+장점 : `Pros:`
 
-- We can use prototype methods.
-- Safer than a naming convention for property keys.
-- The names of private properties can’t clash.
-- Relatively elegant.
+- 프로토 타입 메소드를 사용할 수 있습니다. `We can use prototype methods.`
+- 속성 키에 대한 명명 규칙을보다 안전. `Safer than a naming convention for property keys.`
+- private 속성의 이름은 충돌 할 수 없습니다. `The names of private properties can’t clash.`
+- 상대적으로 우아한. `Relatively elegant.`
 
-Con:
+단점 : `Con:`
 
-- Code is not as elegant as a naming convention.
+- 코드 명명 규칙처럼 우아하지 않다. `Code is not as elegant as a naming convention.`
 
-### 15.3.4 Private data via symbols
-Another storage location for private data are properties whose keys are symbols:
+### 15.3.4 Symbol을 통해 private 데이터 `Private data via symbols`
+
+private 정보에 대한 또 다른 저장 위치는 그 키 Symbol 프로퍼티입니다 : `Another storage location for private data are properties whose keys are symbols:`
 
 ```javascript
 const _counter = Symbol('counter');
@@ -639,7 +643,7 @@ class Countdown {
 }
 ```
 
-Each symbol is unique, which is why a symbol-valued property key will never clash with any other property key. Additionally, symbols are somewhat hidden from the outside world, but not completely:
+각 Symbol은 기호 값 속성 키는 다른 속성 키와 충돌하지 않습니다 이유입니다, 유니크합니다. 또한, Symbol은 약간 바깥 세상에서 숨겨진 있지만 완전히 있습니다 : `Each symbol is unique, which is why a symbol-valued property key will never clash with any other property key. Additionally, symbols are somewhat hidden from the outside world, but not completely:`
 
 ```javascript
 const c = new Countdown(2, () => console.log('DONE'));
@@ -650,12 +654,12 @@ console.log(Reflect.ownKeys(c));
     // [ Symbol(counter), Symbol(action) ]
 ```
 
-Pros:
+장점 : `Pros:`
 
 - We can use prototype methods.
 - The names of private properties can’t clash.
 
-Cons:
+단점 : `Cons:`
 
 - Code is not as elegant as a naming convention.
 - Not safe: you can list all property keys (including symbols!) of an object via Reflect.ownKeys().
