@@ -972,10 +972,15 @@ const jane = Reflect.construct( // (B)
 앞의 코드는 두 개의 새로운 ES6 기능을 사용합니다 : `The previous code uses two new ES6 features:`
 
 - new.target는 모든 기능이 내재 된 매개 변수입니다. 생성자 호출 체인에 그 역할 supermethod 호출 체인이 유사하다. `new.target is an implicit parameter that all functions have. In a chain of constructor calls, its role is similar to this in a chain of supermethod calls.`
-If a constructor is directly invoked via new (as in line B), the value of new.target is that constructor.
+
+생성자가 직접 (라인 B에서와 같이)를 통해 새로운 호출되면 new.target의 값은 그 생성자이다. `If a constructor is directly invoked via new (as in line B), the value of new.target is that constructor.`
+
 If a constructor is called via super() (as in line A), the value of new.target is the new.target of the constructor that makes the call.
+
 During a normal function call, it is undefined. That means that you can use new.target to determine whether a function was function-called or constructor-called (via new).
+
 Inside an arrow function, new.target refers to the new.target of the surrounding non-arrow function.
+
 - Reflect.construct() lets you make constructor calls while specifying new.target via the last parameter.
 
 The advantage of this way of subclassing is that it enables normal code to subclass built-in constructors (such as Error and Array). A later section explains why a different approach was necessary.
