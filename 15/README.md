@@ -769,28 +769,30 @@ ComputedPropertyName:
   class Foo extends combine(MyMixin, MySuperClass) {}
   ```
 
-- Semicolons are allowed between methods.
+- 세미콜론은 메소드 사이에 사용할 수 있습니다. `Semicolons are allowed between methods.`
 
-### 15.5.1 Various checks
+### 15.5.1 각종 검사 `Various checks`
 
-- Error checks: the class name cannot be eval or arguments; duplicate class element names are not allowed; the name constructor can only be used for a normal method, not for a getter, a setter or a generator method.
-- Classes can’t be function-called. They throw a TypeException if they are.
-- Prototype methods cannot be used as constructors:
+- 오류 검사 : 클래스 이름은 평가 또는 인자가 될 수 없습니다; 중복 클래스 요소 이름은 허용되지 않습니다; 생성자의 이름은, 통상 방법에 사용되지 게터 들면 될 수 세터 또는 발생 방법. `Error checks: the class name cannot be eval or arguments; duplicate class element names are not allowed; the name constructor can only be used for a normal method, not for a getter, a setter or a generator method.`
+- 클래스는 함수 호출 할 수 없습니다. 그들이 한 경우에는 TypeException을 던져. `Classes can’t be function-called. They throw a TypeException if they are.`
+- 프로토 타입 메서드는, 생성자로서 사용될 수 없다 : `Prototype methods cannot be used as constructors:`
+
   ```javascript
   class C {
       m() {}
   }
   new C.prototype.m(); // TypeError
   ```
-  
-### 15.5.2 Attributes of properties
-Class declarations create (mutable) let bindings. For a given class Foo:
 
-- Static methods Foo.* are writable and configurable, but not enumerable. Making them writable allows for dynamic patching.
-- A constructor and the object in its property prototype have an immutable link:
--- Foo.prototype is non-writable, non-enumerable, non-configurable.
--- Foo.prototype.constructor is non-writable, non-enumerable, non-configurable.
-- Prototype methods Foo.prototype.* are writable and configurable, but not enumerable.
+### 15.5.2 속성의 속성 `Attributes of properties`
+
+클래스 선언 작성 (여러) 바인딩을 할 수 있습니다. 지정된 클래스 Foo의 경우 : `Class declarations create (mutable) let bindings. For a given class Foo:`
+
+- 정적 방법은 Foo.\* 쓰기 및 구성,하지만 열거 할 수 없습니다. 그들이 쓰기 만들기 동적 패치 수 있습니다. `Static methods Foo.* are writable and configurable, but not enumerable. Making them writable allows for dynamic patching.`
+- 생성자와 속성 프로토 타입의 객체는 불변의 링크가 : `A constructor and the object in its property prototype have an immutable link:`
+-- Foo.prototype 비 구성, 비 열거, 쓰기 가능하지 않습니다. `Foo.prototype is non-writable, non-enumerable, non-configurable.`
+-- Foo.prototype.constructor 비 구성, 비 열거, 쓰기 가능하지 않습니다. `Foo.prototype.constructor is non-writable, non-enumerable, non-configurable.`
+- 프로토 타입 메서드는 Foo.prototype.\* 쓰기 및 구성,하지만 열거 할 수 없습니다. `Prototype methods Foo.prototype.* are writable and configurable, but not enumerable.`
 
 Note that method definitions in object literals produce enumerable properties.
 
