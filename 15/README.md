@@ -53,7 +53,7 @@ true
 
 ### 15.2.1 기본 클래스 `Base classes`
 
-A class is defined like this in ECMAScript 6:
+클래스는 ECMAScript6에서 다음과 같이 정의된다 : `A class is defined like this in ECMAScript 6:`
 
 ```javascript
 class Point {
@@ -67,7 +67,7 @@ class Point {
 }
 ```
 
-You use this class just like an ES5 constructor function:
+당신은 ES5 생성자 함수처럼이 클래스를 사용 : `You use this class just like an ES5 constructor function:`
 
 ```javascript
 > var p = new Point(25, 8);
@@ -75,21 +75,21 @@ You use this class just like an ES5 constructor function:
 '(25, 8)'
 ```
 
-In fact, the result of a class definition is a function:
+사실, 클래스 정의의 결과는 함수이다 : `In fact, the result of a class definition is a function:`
 
 ```javascript
 > typeof Point
 'function'
 ```
 
-However, you can only invoke a class via new, not via a function call (the rationale behind this is explained later):
+그러나, 당신은뿐만 아니라 함수 호출 (이 뒤에있는 근거가 나중에 설명)를 통해, 새로운 통해 클래스를 호출 할 수 있습니다 : `However, you can only invoke a class via new, not via a function call (the rationale behind this is explained later):`
 
 ```javascript
 > Point()
 TypeError: Classes can’t be function-called
 ```
 
-> In the spec, function-calling classes is prevented in the internal method [[Call]] of function objects.
+> 스펙에서, 함수 호출 클래스가 내부 방법에 방지 함수 객체의 [[Call]]. `In the spec, function-calling classes is prevented in the internal method [[Call]] of function objects.`
 
 #### 15.2.1.1 Class declarations are not hoisted
 Function declarations are hoisted: When entering a scope, the functions that are declared in it are immediately available – independently of where the declarations happen. That means that you can call a function that is declared later:
