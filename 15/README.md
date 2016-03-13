@@ -794,13 +794,15 @@ ComputedPropertyName:
   - Foo.prototype.constructor 비 구성, 비 열거, 쓰기 가능하지 않습니다. `Foo.prototype.constructor is non-writable, non-enumerable, non-configurable.`
 - 프로토 타입 메서드는 Foo.prototype.\* 쓰기 및 구성,하지만 열거 할 수 없습니다. `Prototype methods Foo.prototype.* are writable and configurable, but not enumerable.`
 
-Note that method definitions in object literals produce enumerable properties.
+객체 리터럴에서 메소드 정의를 열거 속성을 생성합니다. `Note that method definitions in object literals produce enumerable properties.`
 
-### 15.5.3 Classes have inner names
-Classes have lexical inner names, just like named function expressions.
+### 15.5.3 클래스에는 inner 이름이 있습니다 `Classes have inner names`
 
-#### 15.5.3.1 The inner names of named function expressions
-You may know that named function expressions have lexical inner names:
+클래스는 이름이 지정된 함수 표현처럼, 어휘 내 이름이 있습니다. `Classes have lexical inner names, just like named function expressions.`
+
+#### 15.5.3.1 이름이 지정된 함수 식의 내부 이름 `The inner names of named function expressions`
+
+이름이 지정된 함수의 표현 어휘 내 이름을 알고있다 : `You may know that named function expressions have lexical inner names:`
 
 ```javascript
 const fac = function me(n) {
@@ -815,10 +817,11 @@ const fac = function me(n) {
 console.log(fac(3)); // 6
 ```
 
-The name me of the named function expression becomes a lexically bound variable that is unaffected by which variable currently holds the function.
+명명 된 함수 표현식의 이름은 현재 기능을 보유하고 변수에 의해 영향을받지 않습니다 어휘 바인딩 변수가된다. `The name me of the named function expression becomes a lexically bound variable that is unaffected by which variable currently holds the function.`
 
-#### 15.5.3.2 The inner names of classes
-Interestingly, ES6 classes also have lexical inner names that you can use in methods (constructor methods and regular methods):
+#### 15.5.3.2 클래스 내 이름 `The inner names of classes`
+
+흥미롭게도, ES6 클래스는 또한 메소드 (생성자 방법과 규칙적인 메소드)에서 사용할 수있는 어휘 내 이름을 가지고 : `Interestingly, ES6 classes also have lexical inner names that you can use in methods (constructor methods and regular methods):`
 
 ```javascript
 class C {
@@ -847,7 +850,7 @@ new D().logProp();
     // logProp: Hi!
 ```
 
-(In the ES6 spec the inner name is set up by [the dynamic semantics of ClassDefinitionEvaluation.](http://www.ecma-international.org/ecma-262/6.0/#sec-runtime-semantics-classdefinitionevaluation))
+( ES6의 스펙에서 inner name은 [the dynamic semantics of ClassDefinitionEvaluation.](http://www.ecma-international.org/ecma-262/6.0/#sec-runtime-semantics-classdefinitionevaluation)[the dynamic semantics of ClassDefinitionEvaluation.](http://www.ecma-international.org/ecma-262/6.0/#sec-runtime-semantics-classdefinitionevaluation)에서 설정되어 있습니다. )
 
 Acknowledgement: Thanks to Michael Ficarra for pointing out that classes have inner names.
 
