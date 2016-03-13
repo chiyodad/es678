@@ -973,19 +973,19 @@ const jane = Reflect.construct( // (B)
 
 - new.target는 모든 기능이 내재 된 매개 변수입니다. 생성자 호출 체인에 그 역할 supermethod 호출 체인이 유사하다. `new.target is an implicit parameter that all functions have. In a chain of constructor calls, its role is similar to this in a chain of supermethod calls.`
 
-  생성자가 직접 (라인 B에서와 같이)를 통해 새로운 호출되면 new.target의 값은 그 생성자이다. `If a constructor is directly invoked via new (as in line B), the value of new.target is that constructor.
+  생성자가 직접 (라인 B에서와 같이)를 통해 새로운 호출되면 new.target의 값은 그 생성자이다. `If a constructor is directly invoked via new (as in line B), the value of new.target is that constructor.`
 
-If a constructor is called via super() (as in line A), the value of new.target is the new.target of the constructor that makes the call.
+  생성자가 super를 통해 호출되면 (A 라인에서와 같이), new.target의 값은 호출 할 생성자의 new.target입니다. `If a constructor is called via super() (as in line A), the value of new.target is the new.target of the constructor that makes the call.`
 
-During a normal function call, it is undefined. That means that you can use new.target to determine whether a function was function-called or constructor-called (via new).
+  일반 함수 호출 동안, 정의되지 않습니다. 즉, 함수는 함수 호출 또는 생성자 소위 (new를 통해) 여부를 결정하기 위해 new.target를 사용할 수 있다는 것을 의미한다. `During a normal function call, it is undefined. That means that you can use new.target to determine whether a function was function-called or constructor-called (via new).`
 
-Inside an arrow function, new.target refers to the new.target of the surrounding non-arrow function.
+  화살표 함수 내부, new.target 주변이 아닌 화살표 함수의 new.target을 의미한다. `Inside an arrow function, new.target refers to the new.target of the surrounding non-arrow function.`
 
-- Reflect.construct() lets you make constructor calls while specifying new.target via the last parameter.
+- Reflect.construct ()는 마지막 매개 변수를 통해 new.target 지정하는 동안 생성자 호출을 할 수 있습니다. `Reflect.construct() lets you make constructor calls while specifying new.target via the last parameter.`
 
-The advantage of this way of subclassing is that it enables normal code to subclass built-in constructors (such as Error and Array). A later section explains why a different approach was necessary.
+  서브 클래 싱이 방법의 장점은 (예 : 오류 및 배열 등) 기본 생성자를 하위 클래스로 정상 코드를 수 있다는 것입니다. 다른 접근이 필요한 이유를 나중에 설명합니다. `The advantage of this way of subclassing is that it enables normal code to subclass built-in constructors (such as Error and Array). A later section explains why a different approach was necessary.`
 
-As a reminder, here is how you do subclassing in ES5:
+참고로, ES5에서 서브 클래싱하는 방법입니다. : `As a reminder, here is how you do subclassing in ES5:`
 
 ```javascript
 function Person(name) {
@@ -1002,7 +1002,7 @@ Employee.prototype.constructor = Employee;
 ···
 ```
 
-#### 15.6.2.1 Safety checks
+#### 15.6.2.1 안전성 체크 `Safety checks`
 
 - this originally being uninitialized in derived constructors means that an error is thrown if they access this in any way before they have called super().
 - Once this is initialized, calling super() produces a ReferenceError. This protects you against calling super() twice.
