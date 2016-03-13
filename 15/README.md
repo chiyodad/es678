@@ -656,34 +656,35 @@ console.log(Reflect.ownKeys(c));
 
 장점 : `Pros:`
 
-- We can use prototype methods.
-- The names of private properties can’t clash.
+- 프로토 타입 메서드를 사용할 수 있습니다. `We can use prototype methods.`
+- private 속성의 이름은 충돌 할 수 없습니다. `The names of private properties can’t clash.`
 
 단점 : `Cons:`
 
-- Code is not as elegant as a naming convention.
-- Not safe: you can list all property keys (including symbols!) of an object via Reflect.ownKeys().
+- 코드 명명 규칙처럼 우아하지 않다. `Code is not as elegant as a naming convention.`
+- 안전하지 않다. : (Symbol을 포함!) Reflection.own() 키를 통해 개체의 모든 속성 키를 나열 할 수 있습니다. `Not safe: you can list all property keys (including symbols!) of an object via Reflect.ownKeys().`
 
-### 15.3.5 Further reading
+### 15.3.5 더 읽기 `Further reading`
 
-- Sect. “Keeping Data Private” in “Speaking JavaScript” (covers ES5 techniques)
+- 분파. "말하기 자바 스크립트"의 "데이터 private 유지"(ES5 기술을 포함) `Sect. “Keeping Data Private” in “Speaking JavaScript” (covers ES5 techniques)`
 
-## 15.4 Simple mixins
-Subclassing in JavaScript is used for two reasons:
+## 15.4 간단한 mixins `Simple mixins`
 
-- Interface inheritance: Every object that is an instance of a subclass (as tested by instanceof) is also an instance of the superclass. The expectation is that subclass instances behave like superclass instances, but may do more.
-- Implementation inheritance: Superclasses pass on functionality to their subclasses.
+자바 스크립트에서 서브 클래 싱은 두 가지 이유로 사용됩니다 : `Subclassing in JavaScript is used for two reasons:`
 
-The usefulness of classes for implementation inheritance is limited, because they only support single inheritance (a class can have at most one superclass). Therefore, it is impossible to inherit tool methods from multiple sources – they must all come from the superclass.
+- 인터페이스 상속 (instanceof를하여 시험 한대로) 서브 클래스의 인스턴스 인 모든 객체는 슈퍼 클래스의 인스턴스입니다. 기대는 서브 클래스의 인스턴스가 슈퍼 클래스 인스턴스처럼 행동하지만, 더 많은 일을 할 수 있다는 것이다. `Interface inheritance: Every object that is an instance of a subclass (as tested by instanceof) is also an instance of the superclass. The expectation is that subclass instances behave like superclass instances, but may do more.`
+- 구현 상속 : 상위 클래스 자신의 서브 클래스에 기능에 전달합니다. `Implementation inheritance: Superclasses pass on functionality to their subclasses.`
 
-So how can we solve this problem? Let’s explore a solution via an example. Consider a management system for an enterprise where Employee is a subclass of Person.
+그들은 단지 하나의 상속을 지원하기 때문에 구현 상속 클래스의 유용성은 (클래스가 최대 하나의 수퍼 클래스를 가질 수있다), 제한된다. 따라서, 여러 소스에서 공구 메소드를 상속하는 것은 불가능하다 - 모두 상위 클래스에서 와야합니다. `The usefulness of classes for implementation inheritance is limited, because they only support single inheritance (a class can have at most one superclass). Therefore, it is impossible to inherit tool methods from multiple sources – they must all come from the superclass.`
+
+그래서 어떻게 이 문제를 해결할 수 있습니까? 예제를 통해 해결책을 알아 보자. 직원이 사람의 서브 클래스 기업에 대한 관리 시스템을 생각 해보자. `So how can we solve this problem? Let’s explore a solution via an example. Consider a management system for an enterprise where Employee is a subclass of Person.`
 
 ```javascript
 class Person { ··· }
 class Employee extends Person { ··· }
 ```
 
-Additionally, there are tool classes for storage and for data validation:
+또한, 스토리지 및 데이터 검증을위한 도구 클래스가 있습니다 : `Additionally, there are tool classes for storage and for data validation:`
 
 ```javascript
 class Storage {
@@ -694,16 +695,16 @@ class Validation {
 }
 ```
 
-It would be nice if we could include the tool classes like this:
+우리는이 같은 도구 클래스를 포함 할 수 있다면 그것은 좋은 것입니다 : `It would be nice if we could include the tool classes like this:`
 
 ```javascript
 // Invented ES6 syntax:
 class Employee extends Storage, Validation, Person { ··· }
 ```
 
-That is, we want Employee to be a subclass of Storage which should be a subclass of Validation which should be a subclass of Person. Employee and Person will only be used in one such chain of classes. But Storage and Validation will be used multiple times. We want them to be templates for classes whose superclasses we fill in. Such templates are called abstract subclasses or mixins.
+그것은 우리가 직원이 사람의 서브 클래스해야 검증의 서브 클래스해야 스토리지의 서브 클래스로 할 것이다. 직원과 사람은 클래스의 하나의 체인에 사용됩니다. 그러나 저장 및 검증은 여러 번 사용할 수 있습니다. 우리는 그들이 super 우리가 작성 클래스 템플릿되고 싶어요. 이러한 템플릿 추상 서브 클래스 또는 유지 mixin라고합니다. `That is, we want Employee to be a subclass of Storage which should be a subclass of Validation which should be a subclass of Person. Employee and Person will only be used in one such chain of classes. But Storage and Validation will be used multiple times. We want them to be templates for classes whose superclasses we fill in. Such templates are called abstract subclasses or mixins.`
 
-One way of implementing a mixin in ES6 is to view it as a function whose input is a superclass and whose output is a subclass extending that superclass:
+ES6의 mixin을 구현하는 한 가지 방법은 그 입력 super 클래스이며, 출력이 그 super 클래스를 확장하는 서브 클래스의 함수로 볼 수 있습니다 : `One way of implementing a mixin in ES6 is to view it as a function whose input is a superclass and whose output is a subclass extending that superclass:`
 
 ```javascript
 const Storage = Sup => class extends Sup {
@@ -714,13 +715,13 @@ const Validation = Sup => class extends Sup {
 };
 ```
 
-Here, we profit from the operand of the extends clause not being a fixed identifier, but an arbitrary expression. With these mixins, Employee is created like this:
+고정 된 식별자하지만, 임의의 표현되지 않는 확장의 여기, 우리는 피연산자에서 이익. 이러한 유지 mixin으로, 직원은 다음과 같이 생성된다 : `Here, we profit from the operand of the extends clause not being a fixed identifier, but an arbitrary expression. With these mixins, Employee is created like this:`
 
 ```javascript
 class Employee extends Storage(Validation(Person)) { ··· }
 ```
 
-Acknowledgement. The first occurrence of this technique that I’m aware of is [a Gist by Sebastian Markbåge](https://gist.github.com/sebmarkbage/fac0830dbb13ccbff596).
+승인. 제가 알고이 기술의 첫 번째 항목은 [a Gist by Sebastian Markbåge](https://gist.github.com/sebmarkbage/fac0830dbb13ccbff596) 이다 `Acknowledgement. The first occurrence of this technique that I’m aware of is a Gist by Sebastian Markbåge.`
 
 ## 15.5 The details of classes
 What we have seen so far are the essentials of classes. You only need to read on if you are interested how things happen under the hood. Let’s start with the syntax of classes. The following is a slightly modified version of the syntax shown in [Sect. A.4 of the ECMAScript 6 specification.](http://www.ecma-international.org/ecma-262/6.0/#sec-functions-and-classes)
