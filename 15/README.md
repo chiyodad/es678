@@ -1200,8 +1200,9 @@ Variation 3 is how ECMAScript 6 handles super-calls. This approach is supported 
 - [[thisValue]]이 내부 결합도는 ECMAScript 5에 존재하고,이 값을 저장한다. `[[thisValue]]: This internal binding also exists in ECMAScript 5 and stores the value of this.`
 - [[HomeObject]] : 환경의 기능의 홈 객체를 참조합니다. 모든 메소드가 사용하는 슈퍼가 있는지 내부 속성 [[HomeObject]]를 통해에 가득합니다. 모두 바인딩 및 속성의 ECMAScript 6의 새로운 기능입니다. `[[HomeObject]]: Refers to the home object of the environment’s function. Filled in via an internal property [[HomeObject]] that all methods have that use super. Both the binding and the property are new in ECMAScript 6.`
 
-> Methods are a special kind of function now
-> In a class, a method definition that uses super creates a special kind of function: It is still a function, but it has the internal property [[HomeObject]]. That property is set up by the method definition and can’t be changed in JavaScript. Therefore, you can’t meaningfully move such a method to a different object. (But maybe it’ll be possible in a future version of ECMAScript.)
+> 메소드는 이제 특별한 종류의 함수이다 `Methods are a special kind of function now`
+
+> 여전히 함수이지만, 내부 속성 [[HomeObject]]를 가지고 클래스에서 최고 사용 방법 정의는 특별한 종류의 함수를 생성한다. 그 속성은 메서드 정의에 의해 설정되고 자바 스크립트로 변경할 수 없습니다. 따라서 의미있는 다른 개체에 이러한 방법을 이동할 수 없습니다. (하지만 어쩌면 그것은 ECMAScript에의 이후 버전에서는 가능합니다.) `In a class, a method definition that uses super creates a special kind of function: It is still a function, but it has the internal property [[HomeObject]]. That property is set up by the method definition and can’t be changed in JavaScript. Therefore, you can’t meaningfully move such a method to a different object. (But maybe it’ll be possible in a future version of ECMAScript.)`
 
 ####15.6.4.1 Where can you use super?
 Referring to superproperties is handy whenever prototype chains are involved, which is why you can use it in method definitions (incl. generator method definitions, getters and setters) inside object literals and class definitions. The class can be derived or not, the method can be static or not.
