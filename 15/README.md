@@ -1204,21 +1204,25 @@ Variation 3 is how ECMAScript 6 handles super-calls. This approach is supported 
 
 > 여전히 함수이지만, 내부 속성 [[HomeObject]]를 가지고 클래스에서 최고 사용 방법 정의는 특별한 종류의 함수를 생성한다. 그 속성은 메서드 정의에 의해 설정되고 자바 스크립트로 변경할 수 없습니다. 따라서 의미있는 다른 개체에 이러한 방법을 이동할 수 없습니다. (하지만 어쩌면 그것은 ECMAScript에의 이후 버전에서는 가능합니다.) `In a class, a method definition that uses super creates a special kind of function: It is still a function, but it has the internal property [[HomeObject]]. That property is set up by the method definition and can’t be changed in JavaScript. Therefore, you can’t meaningfully move such a method to a different object. (But maybe it’ll be possible in a future version of ECMAScript.)`
 
-####15.6.4.1 Where can you use super?
-Referring to superproperties is handy whenever prototype chains are involved, which is why you can use it in method definitions (incl. generator method definitions, getters and setters) inside object literals and class definitions. The class can be derived or not, the method can be static or not.
+####15.6.4.1 어디에서 슈퍼를 사용할 수 있습니까? `Where can you use super?`
 
-Using super to refer to a property is not allowed in function declarations, function expressions and generator functions.
+프로토 타입 체인이 관련 될 때마다 super 특성을 참조하면 객체 리터럴 및 클래스 정의 내부 메소드 정의 (제너레이터 메소드 정의, getter 및 setter 포함)에서 사용할 수 있습니다. 편리하기 때문입니다. 클래스가 유도되거나되지 않을 수 있으며,이 방법은 정적 또는되지 않을 수있다. `Referring to superproperties is handy whenever prototype chains are involved, which is why you can use it in method definitions (incl. generator method definitions, getters and setters) inside object literals and class definitions. The class can be derived or not, the method can be static or not.`
 
-#### 15.6.4.2 A method that uses super can’t be moved
-You can’t move a method that uses super: Such a method has an internal property [[HomeObject]] that ties it to the object it was created in. If you move it via an assignment, it will continue to refer to the superproperties of the original object. In future ECMAScript versions, there may be a way to transfer such a method, too.
+속성을 참조하는 super를 사용하는 것은 함수 선언, 기능 식 및 제너레이터 기능에서 허용되지 않습니다. `Using super to refer to a property is not allowed in function declarations, function expressions and generator functions.`
 
-## 15.7 The species pattern
-One more mechanism of built-in constructors has been made extensible in ECMAScript 6: Sometimes a method creates new instances of its class. If you create a subclass – should the method return an instance of its class or an instance of the subclass? A few built-in ES6 methods let you configure how they create instances via the so-called species pattern.
+#### 15.6.4.2 super를 사용하는 메소드는 이동할 수 없다. `A method that uses super can’t be moved`
 
-As an example, consider a subclass SortedArray of Array. If we invoke map() on instances of that class, we want it to return instances of Array, to avoid unnecessary sorting. By default, map() returns instances of the receiver (this), but the species patterns lets you change that.
+super를 사용하는 메소드를 이동할 수 없습니다 : 이러한 메소드는 내부 속성이 [[HomeObject]]에서 만든 객체에 묶어 당신이 과제를 통해 이동하는 경우, 원본 객체의 super 속성을 참조 할 것입니다. 미래의 ECMAScript 버전에는 같은 메소드를 전송하는 방법이있을 수있다. `You can’t move a method that uses super: Such a method has an internal property [[HomeObject]] that ties it to the object it was created in. If you move it via an assignment, it will continue to refer to the superproperties of the original object. In future ECMAScript versions, there may be a way to transfer such a method, too.`
 
-### 15.7.1 Helper methods for examples
-In the following three sections, I’ll use two helper functions in the examples:
+## 15.7 종 패턴 `The species pattern`
+
+내장 생성자의 또 하나의 메커니즘은 ECMAScript를 확장하여 만들어졌다 : 때때로 메소드는 클래스의 새로운 인스턴스를 생성합니다. 당신이 서브 클래스를 작성하는 경우 - 메소드는 클래스의 인스턴스 또는 서브 클래스의 인스턴스를 반환해야합니까? ES6 내장된 몇 가지 방법은 소위 종의 패턴을 통해 인스턴스를 생성하는 방법을 구성 할 수 있습니다. `One more mechanism of built-in constructors has been made extensible in ECMAScript 6: Sometimes a method creates new instances of its class. If you create a subclass – should the method return an instance of its class or an instance of the subclass? A few built-in ES6 methods let you configure how they create instances via the so-called species pattern.`
+
+예를 들어, 배열의 서브 클래스 정렬된 배열을 고려하십시오. 우리가 그 클래스의 인스턴스에 대한 map()을 호출하면, 배열의 인스턴스를 반환하는 불필요한 정렬을 방지 할 수 있습니다. 기본적으로지도 map()은 reciver(this)의 인스턴스를 반환하지만 종의 패턴으로 변경할 수 있습니다. `As an example, consider a subclass SortedArray of Array. If we invoke map() on instances of that class, we want it to return instances of Array, to avoid unnecessary sorting. By default, map() returns instances of the receiver (this), but the species patterns lets you change that.`
+
+### 15.7.1 예제를 위한 헬퍼 메소드 `Helper methods for examples`
+
+다음 세 가지 섹션의 예에서 두 도우미 함수를 사용합니다 : `In the following three sections, I’ll use two helper functions in the examples:`
 
 ```javascript
 function isObject(value) {
@@ -1236,13 +1240,14 @@ function isConstructor(x) {
 }
 ```
 
-### 15.7.2 The standard species pattern
-The standard species pattern is used by Promise.prototype.then(), the filter() method of Typed Arrays and other operations. It works as follows:
+### 15.7.2 표준 종 패턴 `The standard species pattern`
 
-- If this.constructor[Symbol.species] exists, use it as a constructor for the new instance.
-- Otherwise, use a default constructor (e.g. Array for Arrays).
+표준 종 패턴은 Promise.prototype.then(), Typed Array 및 기타 작업의 필터 메소드에 의해 사용됩니다. 다음과 같이 작동합니다 : `The standard species pattern is used by Promise.prototype.then(), the filter() method of Typed Arrays and other operations. It works as follows:`
 
-Implemented in JavaScript, the pattern would look like this:
+- this.constructor가 [Symbol.species]에 존재하는 경우, 새 인스턴스의 생성자로 사용합니다. `If this.constructor[Symbol.species] exists, use it as a constructor for the new instance.`
+- 그렇지 않으면, 기본 생성자 (예를 들어 배열 안의 배열)를 사용합니다. `Otherwise, use a default constructor (e.g. Array for Arrays).`
+
+자바 스크립트로 구현한 패턴은 다음과 같습니다. : `Implemented in JavaScript, the pattern would look like this:`
 
 ```javascript
 function SpeciesConstructor(O, defaultConstructor) {
@@ -1264,10 +1269,11 @@ function SpeciesConstructor(O, defaultConstructor) {
 }
 ```
 
-> The standard species pattern is implemented in the spec via the operation [SpeciesConstructor()](http://www.ecma-international.org/ecma-262/6.0/#sec-speciesconstructor).
+> T표준 종 패턴을 통해 동작 사양에서 구현 [SpeciesConstructor()](http://www.ecma-international.org/ecma-262/6.0/#sec-speciesconstructor) `he standard species pattern is implemented in the spec via the operation SpeciesConstructor().`
 
-### 15.7.3 The species pattern for Arrays
-Normal Arrays implement the species pattern slightly differently:
+### 15.7.3 배열의 종 패턴 `The species pattern for Arrays`
+
+일반 배열이 약간 다르게 종 패턴을 구현 : `Normal Arrays implement the species pattern slightly differently:`
 
 ```javascript
 function ArraySpeciesCreate(self, length) {
@@ -1293,12 +1299,13 @@ function ArraySpeciesCreate(self, length) {
 }
 ```
 
-Array.prototype.map() creates the Array it returns via ArraySpeciesCreate(this, this.length).
+Array.prototype.map는 배열 종 만들기를 통해 반환할 배열 (this, this.length)을 만듭니다. `Array.prototype.map() creates the Array it returns via ArraySpeciesCreate(this, this.length).`
 
-> The species pattern for Arrays is implemented in the spec via the operation [ArraySpeciesCreate()](http://www.ecma-international.org/ecma-262/6.0/#sec-arrayspeciescreate).
+> Array 종 패턴을 통해 동작 사양에서 구현 [ArraySpeciesCreate()](http://www.ecma-international.org/ecma-262/6.0/#sec-arrayspeciescreate). `The species pattern for Arrays is implemented in the spec via the operation ArraySpeciesCreate().`
 
-### 15.7.4 The species pattern in static methods
-Promises use a variant of the species pattern for static methods such as Promise.all():
+### 15.7.4 정적 메소드의 종 패턴 `The species pattern in static methods`
+
+Promise는 Promise.all() 정적 메소드에서 종 패턴의 변형을 사용합니다 : `Promises use a variant of the species pattern for static methods such as Promise.all():`
 
 ```javascript
 let C = this; // default
@@ -1316,8 +1323,9 @@ if (!IsConstructor(C)) {
 const instance = new C(···);
 ```
 
-### 15.7.5 Overriding the default species in subclasses
-This is the default getter for the property [Symbol.species]:
+### 15.7.5 서브 클래스에서 기본 종을 재정의 `Overriding the default species in subclasses`
+
+[Symbol.species]에 대한 기본 게터입니다 : `This is the default getter for the property [Symbol.species]:`
 
 ```javascript
 static get [Symbol.species]() {
@@ -1325,12 +1333,13 @@ static get [Symbol.species]() {
 }
 ```
 
-This default getter is implemented by the built-in classes Array, ArrayBuffer, Map, Promise, RegExp, Set and %TypedArray%. It is automatically inherited by subclasses of these built-in classes.
+이 기본 게터는 내장 클래스 배열, ArrayBuffer, Map, Promise, 정규식, Set와 %TypedArray%에 의해 구현됩니다. 자동으로 내장 클래스의 서브 클래스에 의해 상속됩니다. `This default getter is implemented by the built-in classes Array, ArrayBuffer, Map, Promise, RegExp, Set and %TypedArray%. It is automatically inherited by subclasses of these built-in classes.`
 
-There are two ways in which you can override the default species: with a constructor of your choosing or with null.
+사용자가 선택한 또는 또는 null과 사용된 생성자 : 기본 종을 대체 할 수있는 두 가지 방법이 있습니다. `There are two ways in which you can override the default species: with a constructor of your choosing or with null.`
 
-#### 15.7.5.1 Setting the species to a constructor of your choosing
-You can override the default species via a static getter (line A):
+#### 15.7.5.1 사용자가 선택한 생성자에 종을 설정 `Setting the species to a constructor of your choosing`
+
+정적 게터 (라인)을 통해 기본 종을 대체 할 수 있습니다 : `You can override the default species via a static getter (line A):`
 
 ```javascript
 class MyArray1 extends Array {
@@ -1340,14 +1349,14 @@ class MyArray1 extends Array {
 }
 ```
 
-As a result, map() returns an instance of Array:
+결과적으로, map()은 어레이의 인스턴스를 리턴 `As a result, map() returns an instance of Array:`
 
 ```javascript
 const result1 = new MyArray1().map(x => x);
 console.log(result1 instanceof Array); // true
 ```
 
-If you don’t override the default species, map() returns an instance of the subclass:
+기본 종을 오버라이드 (override)하지 않는 경우, map() 서브 클래스의 인스턴스를 반환합니다 : `If you don’t override the default species, map() returns an instance of the subclass:`
 
 ```javascript
 class MyArray2 extends Array { }
@@ -1356,10 +1365,11 @@ const result2 = new MyArray2().map(x => x);
 console.log(result2 instanceof MyArray2); // true
 ```
 
-##### 15.7.5.1.1 Specifying the species via a data property
-If you don’t want to use a static getter, you need to use Object.defineProperty(). You can’t use assignment, as there is already a property with that key that only has a getter. That means that it is read-only and can’t be assigned to.
+##### 15.7.5.1.1 데이터 속성을 통해 종 지정 `Specifying the species via a data property`
 
-For example, here we set the species of MyArray1 to Array:
+정적 게터를 사용하지 않으려면, Object.defineProperty()를 사용해야합니다. 하지만 이미 게터가 그 키 속성이있는 한 당신은 할당을 사용할 수 없습니다. 즉, 읽기 전용 및 할당 할 수 없음을 의미합니다. `If you don’t want to use a static getter, you need to use Object.defineProperty(). You can’t use assignment, as there is already a property with that key that only has a getter. That means that it is read-only and can’t be assigned to.`
+
+예를 들어, 배열은 MyArray1의 종류를 설정합니다 : `For example, here we set the species of MyArray1 to Array:`
 
 ```javascript
 Object.defineProperty(
@@ -1368,8 +1378,9 @@ Object.defineProperty(
     });
 ````
 
-#### 15.7.5.2 Setting the species to null
-If you set the species to null then the default constructor is used (which one that is depends on which variant of the species pattern is used, consult the previous sections for more information).
+#### 15.7.5.2 종을 null로 설정하면 `Setting the species to null`
+
+null로 종을 설정하면 기본 생성자가 사용된다 (종 패턴의 변형이 사용되는에 의존하는, 자세한 내용은 이전 섹션을 참조). `If you set the species to null then the default constructor is used (which one that is depends on which variant of the species pattern is used, consult the previous sections for more information).`
 
 ```javascript
 class MyArray3 extends Array {
@@ -1382,52 +1393,60 @@ const result3 = new MyArray3().map(x => x);
 console.log(result3 instanceof Array); // true
 ```
 
-## 15.8 The pros and cons of classes
-Classes are controversial within the JavaScript community: On one hand, people coming from class-based languages are happy that they don’t have to deal with JavaScript’s unconventional inheritance mechanisms, anymore. On the other hand, there are many JavaScript programmers who argue that what’s complicated about JavaScript is not prototypal inheritance, but constructors.
+## 15.8 클래스의 장단점 `The pros and cons of classes`
 
-ES6 classes provide a few clear benefits:
+클래스는 자바 스크립트 커뮤니티 내에서 논란 : 한편으로는, 클래스 기반 언어에서 오는 사람들은 더 이상, 자바 스크립트의 틀에 얽매이지 않는 상속 메커니즘을 처리하지 않는 것이 행복하다. 반면에, 어떤 자바 스크립트에 대한 복잡하면 프로토 타입 상속하지만, 생성자가 아니라고 주장 많은 자바 스크립트 프로그래머가있다. `Classes are controversial within the JavaScript community: On one hand, people coming from class-based languages are happy that they don’t have to deal with JavaScript’s unconventional inheritance mechanisms, anymore. On the other hand, there are many JavaScript programmers who argue that what’s complicated about JavaScript is not prototypal inheritance, but constructors.`
 
-- They are backwards compatible with much of the current code.
-- Compared to constructors and constructor inheritance, classes make it easier for beginners to get started.
-- Subclassing is supported within the language.
-- Built-in constructors are subclassable.
-- No library for inheritance is needed, anymore; code will become more portable between frameworks.
-- They provide a foundation for advanced features in the future: traits (or mixins), immutable instances, etc.
-- They help tools that statically analyze code (IDEs, type checkers, style checkers, etc.).
+ES6 클래스는 몇 가지 명확한 이점을 제공합니다 : `ES6 classes provide a few clear benefits:`
 
-Let’s look at a few common complaints about ES6 classes. You will see me agree with most of them, but I also think that they benefits of classes much outweigh their disadvantages. I’m glad that they are in ES6 and I recommend to use them.
+- 그들은 현재 코드의 대부분과 호환됩니다. `They are backwards compatible with much of the current code.`
+- 생성자와 생성자 상속에 비해, 클래스는 초보자도 쉽게 시작 할 수 있습니다. `Compared to constructors and constructor inheritance, classes make it easier for beginners to get started.`
+- 서브 클래싱은 언어에서 지원됩니다. `Subclassing is supported within the language.`
+- 내장 생성자는 서브 클래스 테이블입니다. `Built-in constructors are subclassable.`
+- 상속에 대한 라이브러리는 더 이상 필요하지 않습니다; 코드는 프레임 워크 사이의 이식성이 될 것입니다. `No library for inheritance is needed, anymore; code will become more portable between frameworks.`
+- 특성( minxin 라던지 ), 불변의 인스턴스 등 : 그들은 미래에 고급 기능을위한 기반을 제공 `They provide a foundation for advanced features in the future: traits (or mixins), immutable instances, etc.`
+- 정적 코드 (IDE를 입력 체커, 스타일 체커 등) 분석 도구를 도와줍니다. `They help tools that statically analyze code (IDEs, type checkers, style checkers, etc.).`
 
-### 15.8.1 Complaint: ES6 classes obscure the true nature of JavaScript inheritance
-Yes, ES6 classes do obscure the true nature of JavaScript inheritance. There is an unfortunate disconnect between what a class looks like (its syntax) and how it behaves (its semantics): It looks like an object, but it is a function. My preference would have been for classes to be constructor objects, not constructor functions. I explore that approach in [the Proto.js project](https://github.com/rauschma/proto-js), via a tiny library (which proves how good a fit this approach is).
+이제 ES6 클래스에 대한 몇 가지 일반적인 불만을 살펴 보자. 대부분 동의할 수 있을 것이다, 그러나 또한 많은 종류의 혜택이 단점을 능가한다고 생각합니다. 나는 ES6이 있음을 기뻐하고 그들을 사용하는 것이 좋습니다. `Let’s look at a few common complaints about ES6 classes. You will see me agree with most of them, but I also think that they benefits of classes much outweigh their disadvantages. I’m glad that they are in ES6 and I recommend to use them.`
 
-However, backwards-compatibility matters, which is why classes being constructor functions also makes sense. That way, ES6 code and ES5 are more interoperable.
+### 15.8.1 불만 : ES6 클래스는 자바 스크립트 상속의 본질을 모호 `Complaint: ES6 classes obscure the true nature of JavaScript inheritance`
 
-The disconnect between syntax and semantics will cause some friction in ES6 and later. But you can lead a comfortable life by simply taking ES6 classes at face value. I don’t think the illusion will ever bite you. Newcomers can get started more quickly and later read up on what goes on behind the scenes (after they are more comfortable with the language).
+그래, ES6 클래스는 자바 스크립트 상속의 본질을 모호 않습니다. 그것은 개체처럼 보이지만 그것은 함수 :이 클래스 (문법)과 어떻게 동작 (의 의미)의 모습 사이의 불행한 분리이다. 내 취향은 생성자 객체가 아닌 생성자 함수로 수업을했을 것이다. 나는 (이 방법이 얼마나 좋은 적합 증명하는) 작은 라이브러리를 통해 [the Proto.js project](https://github.com/rauschma/proto-js)에서 그 방법을 탐구한다. `Yes, ES6 classes do obscure the true nature of JavaScript inheritance. There is an unfortunate disconnect between what a class looks like (its syntax) and how it behaves (its semantics): It looks like an object, but it is a function. My preference would have been for classes to be constructor objects, not constructor functions. I explore that approach in the Proto.js project, via a tiny library (which proves how good a fit this approach is).`
 
-### 15.8.2 Complaint: Classes provide only single inheritance
-Classes only give you single inheritance, which severely limits your freedom of expression w.r.t. object-oriented design. However, the plan has always been for them to be the foundation of a multiple-inheritance mechanism such as traits.
+하지만, 생성자 함수 인 클래스는, 이전 버전과의 호환성 문제를 그런 식으로, ES6 코드와 ES5는 상호 운용성이 있습니다. `However, backwards-compatibility matters, which is why classes being constructor functions also makes sense. That way, ES6 code and ES5 are more interoperable.`
 
-> traits.js: traits library for JavaScript
-> Check out traits.js if you are interested in how traits work (they are similar to mixins, which you may be familiar with).
+구문과 의미 사이의 분리는 ES6에서 나중에 약간의 마찰의 원인이됩니다. 하지만 단순히 ES6 클래스를 사용하여 편안한 생활을 할 수 있습니다. (그들은 언어와 더 편안 후) 신규 입문자는 더 빨리 시작하고 나중에 무대 뒤에서 어떤 일이 일어나는지에 대해 읽을 수 있습니다. `The disconnect between syntax and semantics will cause some friction in ES6 and later. But you can lead a comfortable life by simply taking ES6 classes at face value. I don’t think the illusion will ever bite you. Newcomers can get started more quickly and later read up on what goes on behind the scenes (after they are more comfortable with the language).`
 
-Then a class becomes an instantiable entity and a location where you assemble traits. Until that happens, you will need to resort to libraries if you want multiple inheritance.
+### 15.8.2 불만 : 클래스는 단일 상속을 제공 `Complaint: Classes provide only single inheritance`
 
-### 15.8.3 Complaint: Classes lock you in, due to mandatory new
-If you want to instantiate a class, you are forced to use new in ES6. That means that you can’t switch from a class to a factory function without changing the call sites. That is indeed a limitation, but there are two mitigating factors:
+클래스는 심각한 표현의 자유를 제한하는 단일 상속을 제공 w.r.t. 객체 지향 설계. 이러한 특성으로 다중 상속 메커니즘의 기반이 될 수 있도록하지만, 계획은 항상하고있다. `Classes only give you single inheritance, which severely limits your freedom of expression w.r.t. object-oriented design. However, the plan has always been for them to be the foundation of a multiple-inheritance mechanism such as traits.`
 
-- You can override the default result returned by the new operator, by returning an object from the constructor method of a class.
-- Due to its built-in modules and classes, ES6 makes it easier for IDEs to refactor code. Therefore, going from new to a function call will be simple. Obviously that doesn’t help you if you don’t control the code that calls your code, as is the case for libraries.
+> traits.js : 자바 스크립트에 대한 특성 라이브러리 `traits.js: traits library for JavaScript`
 
-Therefore, classes do somewhat limit you syntactically, but, once JavaScript has traits, they won’t limit you conceptually (w.r.t. object-oriented design).
+> 이 특성의 (잘 알고있는 mixin과 유사하다) 작동 방식에 관심이 있다면 traits.js를 확인하십시오. `Check out traits.js if you are interested in how traits work (they are similar to mixins, which you may be familiar with).`
 
-## 15.9 FAQ: classes
-### 15.9.1 Why can’t classes be function-called?
-Function-calling classes is currently forbidden. That was done to keep options open for the future, to eventually add a way to handle function calls via classes. One possibility is to do so via a special method (e.g. [Symbol.functionCall]).
+그런 다음 클래스는 인스턴스화 개체 및 특성을 조립하는 위치가됩니다. 그렇게 될 때까지, 다중 상속을 원하는 경우 라이브러리에 의존해야합니다. `Then a class becomes an instantiable entity and a location where you assemble traits. Until that happens, you will need to resort to libraries if you want multiple inheritance.`
 
-### 15.9.2 How do I instantiate a class, given an Array of arguments?
-What is the analog of Function.prototype.apply() for classes? That is, if I have a class TheClass and an Array args of arguments, how do I instantiate TheClass?
+### 15.8.3 불만 : 클래스 인해 new를 필수로 사용하도록 강제 `Complaint: Classes lock you in, due to mandatory new`
 
-One way of doing so is via the spread operator (...):
+클래스를 인스턴스화하려면 ES6의 new를 사용하도록 강제하고 있습니다. 즉, 호출 사이트를 변경하지 않고 팩토리 함수 클래스에서 전환 할 수 있다는 것을 의미한다. 그것은 참으로 제한적이지만, 두 완화 요소가 있습니다 : `If you want to instantiate a class, you are forced to use new in ES6. That means that you can’t switch from a class to a factory function without changing the call sites. That is indeed a limitation, but there are two mitigating factors:`
+
+- 클래스의 생성자 메서드에서 개체를 반환하여 new 연산자에 의해 반환되는 기본 결과를 재정의 할 수 있습니다. `You can override the default result returned by the new operator, by returning an object from the constructor method of a class.`
+- 내장 모듈과 클래스, ES6 아이디어 코드를 리팩토링하는 것이 쉬워집니다. 따라서 함수 호출에 new를 추가하는 것은 간단합니다. 라이브러리의 경우와 같이 당신이 당신의 코드를 호출하는 코드를 제어하지 않으면 분명히 그 도움이되지 않습니다. `Due to its built-in modules and classes, ES6 makes it easier for IDEs to refactor code. Therefore, going from new to a function call will be simple. Obviously that doesn’t help you if you don’t control the code that calls your code, as is the case for libraries.`
+
+따라서, 클래스는 다소 (객체 지향 디자인 w.r.t.) 자바 스크립트 특성을 가지고 하면, 구문을 제한하지만 개념적으로 당신을 제한하지 않습니다. `Therefore, classes do somewhat limit you syntactically, but, once JavaScript has traits, they won’t limit you conceptually (w.r.t. object-oriented design).`
+
+## 15.9 FAQ: 클래스 `FAQ: classes`
+
+### 15.9.1 왜 클래스는 함수처럼 호출할 수 없는가? `Why can’t classes be function-called?`
+
+클래스를 함수처럼 호출하는 것은 현재 금지되어 있습니다. 즉, 미래의 개방 옵션을 유지하기 위해, 결국 기능이 클래스를 통해 호출을 처리하는 방법을 추가하기 위해서 입니다. 하나의 가능성은 특별한 방법 (예를 들어 [Symbol.function 전화])를 통해 그렇게 할 것입니다. `Function-calling classes is currently forbidden. That was done to keep options open for the future, to eventually add a way to handle function calls via classes. One possibility is to do so via a special method (e.g. [Symbol.functionCall]).`
+
+### 15.9.2 어떻게 인자의 배열을 넘겨서 클래스를 인스턴스화 하는가? `How do I instantiate a class, given an Array of arguments?`
+
+클래스 Function.prototype.apply()의 아날로그는 무엇입니까? 그건 내가 클래스가 있는 경우 클래스 및 인수의 배열의 인수는, 어떻게 클래스의 인스턴스를 않습니다입니까? `What is the analog of Function.prototype.apply() for classes? That is, if I have a class TheClass and an Array args of arguments, how do I instantiate TheClass?`
+
+그 중 하나는 확산 연산자 (...) 경유 : `One way of doing so is via the spread operator (...):`
 
 ```javascript
 function instantiate(TheClass, args) {
@@ -1435,7 +1454,7 @@ function instantiate(TheClass, args) {
 }
 ```
 
-Another option is to use Reflect.construct():
+또 다른 옵션은 Reflect.construct()를 사용하는 것입니다. `Another option is to use Reflect.construct():`
 
 ```javascript
 function instantiate(TheClass, args) {
@@ -1443,12 +1462,14 @@ function instantiate(TheClass, args) {
 }
 ```
 
-## 15.10 What is next for classes?
-The design motto for classes was “maximally minimal”. Several advanced features were discussed, but ultimately discarded in order to get a design that would be unanimously accepted by TC39.
+## 15.10 클래스에 대한 다음은 무엇입니까? `What is next for classes?`
 
-Upcoming versions of ECMAScript can now extend this minimal design – classes will provide a foundation for features such as traits (or mixins), value objects (where different objects are equal if they have the same content) and const classes (that produce immutable instances).
+클래스의 디자인 모토는 "최대한 최소한의"이었다. 여러 고급 기능을 설명하지만, 궁극적으로 만장일치로 TC39에 의해 허용 될 디자인을 얻기 위해 폐기되었다. `The design motto for classes was “maximally minimal”. Several advanced features were discussed, but ultimately discarded in order to get a design that would be unanimously accepted by TC39.`
 
-## 15.11 Further reading
-The following document is an important source of this chapter:
+ECMAScript의 향후 버전은 지금의 최소한의 디자인을 확장할 수 있습니다 - 클래스는 특성 (또는 mixin), 값 객체 (동일한 내용이 있는 경우 다른 개체가 동일)과 const를 클래스 (불변의 인스턴스를 생성하는) 등의 기능에 대한 기초를 제공 할 것입니다 . `Upcoming versions of ECMAScript can now extend this minimal design – classes will provide a foundation for features such as traits (or mixins), value objects (where different objects are equal if they have the same content) and const classes (that produce immutable instances).`
+
+## 15.11 추가 읽기 `Further reading`
+
+다음 문서는이 장의 중요한 소스입니다 : `The following document is an important source of this chapter:`
 
 [“Instantiation Reform: One last time”](https://github.com/rwaldron/tc39-notes/blob/master/es6/2015-01/jan2015-allen-slides.pdf), slides by Allen Wirfs-Brock.
