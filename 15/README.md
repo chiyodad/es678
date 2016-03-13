@@ -1,4 +1,4 @@
-# 15. Classes `클래스`
+# 15. 클래스 `Classes`
 This chapter explains how ES6 classes work.
 
 ## 15.1 Overview
