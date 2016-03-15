@@ -22,12 +22,12 @@ ECMAScript 6 설계는 기능을 위한 제안의 센터로 저장된다. 제안
 
 [Source of this section: “The Harmony Process” by David Herman.]
 
-1.2.1 The design process after ES6
-Starting with ECMAScript 7 (whose official name is ECMAScript 2016), TC39 will time-box releases. The plan is to release a new version of ECMAScript every year, with whatever features are ready at that time. That means that from now on, ECMAScript versions will be relatively small upgrades.
+### 1.2.1 ES6이후 설계 과정
+ESMAScript 7은 시작되었고(공식적인 이름은 ECMAScript 2016), TC39는 타입박스를 공개할 것이다. 이 계획은 ECMAScript의 그때 준비된 기능과 함께 매년 새로운 버전은 공개되는 것이다. 이것은 지금부터 ECMAScript 버전들은 비교적 작은 업데이트라는것을 의미 한다.
 
-Work on ECMAScript 2016 (and later) has already begun, current proposals are listed on GitHub. The process has changed, too and is described in a TC39 process document.
+ECMAScript 2016(그 이후) 작업은 이미 시작되었고, 현재 제안은 깃헙에 리스트 되어 있다. 그 과정도 변경 되고 있으며, TC39 프로세서 문서에 기술되고 있다.
 
-1.3 JavaScript versus ECMAScript
+## 1.3 자바스크립트 대 ECMAScript
 JavaScript is what everyone calls the language, but that name is trademarked (by Oracle, which inherited the trademark from Sun). Therefore, the official name of JavaScript is ECMAScript. That name comes from the standards organization Ecma, which manages the language standard. Since ECMAScript’s inception, the name of the organization has changed from the acronym “ECMA” to the proper name “Ecma”.
 
 Versions of JavaScript are defined by specifications that carry the official name of the language. Hence, the first standard version of JavaScript is ECMAScript 1 which is short for “ECMAScript Language Specification, Edition 1”. ECMAScript x is often abbreviated ESx.
