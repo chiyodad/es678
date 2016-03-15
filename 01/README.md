@@ -1,5 +1,4 @@
 # 1. ECMAScript 6에 대하여 (ES6)
-1. About ECMAScript 6 (ES6)
 
 그것 끝내기 위해서 오랜 시간이 걸렸지만 자바스크립트 다음 버전인 ECMAScript 6은 마침내 현실이 되었다.:
 
@@ -28,11 +27,12 @@ ESMAScript 7은 시작되었고(공식적인 이름은 ECMAScript 2016), TC39는
 ECMAScript 2016(그 이후) 작업은 이미 시작되었고, 현재 제안은 깃헙에 리스트 되어 있다. 그 과정도 변경 되고 있으며, TC39 프로세서 문서에 기술되고 있다.
 
 ## 1.3 자바스크립트 대 ECMAScript
-JavaScript is what everyone calls the language, but that name is trademarked (by Oracle, which inherited the trademark from Sun). Therefore, the official name of JavaScript is ECMAScript. That name comes from the standards organization Ecma, which manages the language standard. Since ECMAScript’s inception, the name of the organization has changed from the acronym “ECMA” to the proper name “Ecma”.
+자바스크립트는 누구에게나 프로그램 언어로 불리지만 그 이름은 트레이드마크(오라클에 의한,sun으로 부터 받은 트레이드마크)다. 그러므로, 공식적인 자바스크립트 이름은 ECMAscript이다. 이 이름은 언어의 표준을 관리하는 표준 조직인 Ecma로 부터 왔다. ECMAscript 시작 이래로 조직의 이름은 약어 "ECMA"로 부터 고유명사인 "Ecma"로 변경되었다.
 
-Versions of JavaScript are defined by specifications that carry the official name of the language. Hence, the first standard version of JavaScript is ECMAScript 1 which is short for “ECMAScript Language Specification, Edition 1”. ECMAScript x is often abbreviated ESx.
+자바스크립트 버전은 언어의 공식적 이름을 수행하는 명세에 의해서 정의 된다. 따라서 처음 자바스크립트 표준 버전은 "ECMAScript Language Specification, Edition 1"를 줄여서 ECMAScript 1이다. ECMAScript X는 종종 ESX로 줄여 부른다.
 
-1.4 Upgrading to ES6
+## 1.4 ES6으로 업그레이드
+
 The stake holders on the web are:
 
 Implementors of JavaScript engines
