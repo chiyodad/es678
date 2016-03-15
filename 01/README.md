@@ -32,14 +32,13 @@ ECMAScript 2016(그 이후) 작업은 이미 시작되었고, 현재 제안은 �
 자바스크립트 버전은 언어의 공식적 이름을 수행하는 명세에 의해서 정의 된다. 따라서 처음 자바스크립트 표준 버전은 "ECMAScript Language Specification, Edition 1"를 줄여서 ECMAScript 1이다. ECMAScript X는 종종 ESX로 줄여 부른다.
 
 ## 1.4 ES6으로 업그레이드
+웹 이해 관계자들:
+* 자바스크립트 엔진 구현자
+* 웹 애플리케이션 개발자
+* 사용자
+이 그룹들은 서로 매우 작은 제어를 가진다. 그것이 왜 웹언어 업그래이드가 매우 도전적인 이유이다.
 
-The stake holders on the web are:
-
-Implementors of JavaScript engines
-Developers of web applications
-Users
-These groups have remarkably little control over each other. That’s why upgrading a web language is so challenging.
-
+한편 엔진을 업그레이드는 도전이다. 왜냐하면 그들은 모든 종류의 웹코드와 때때로 매우 오래된 코드에 직면해 있기 때문이다. 당신 역시 자연스럽고 사용자가 인지하지 못하게 엔진 업그레이드되길 원한다. 그러므로 ES6은 ES5의 상위 집합으로 아무것도 제거 된게 없다. ES6는 언어를 버전이나 모드를 도입하지 않고 업그래이드 한다. 이것은 심지어 엄격모드를 사실상 기본값으로 관리 한다.
 On one hand, upgrading engines is challenging, because they are confronted with all kinds of code on the web, sometimes very old one. You also want engine upgrades to be automatic and unnoticeable for users. Therefore, ES6 is a superset of ES5, nothing is removed1. ES6 upgrades the language without introducing versions or modes. It even manages to make strict mode the de-facto default (via modules), without increasing the rift between it and sloppy mode. The approach that was taken is called “One JavaScript” and explained in a separate chapter.
 
 On the other hand, upgrading code is challenging, because your code must run on all JavaScript engines that are used by your target audience. Therefore, if you want to use ES6 in your code, you only have two choices: You can either wait until no one in your target audience uses a non-ES6 engine, anymore. That will take years; mainstream audiences were at that point w.r.t. ES5 when ES6 became a standard in June 2015. And ES5 was standardized in December 2009! Or you can compile ES6 to ES5 and use it now. More information on how to do that is given in the book “Setting up ES6”, which is free to read online.
