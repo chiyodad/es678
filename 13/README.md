@@ -205,9 +205,10 @@ this의 출처는 애로우함수가 일반함수와 구별되는 중요한 부�
 
 ###13.5.1 애로우함수는 매우 느슨하게 연결됩니다.
 문법상, 애로우함수는 매우 느슨하게 연결됩니다. 그 이유는 ~~ ( 뭐라는거야 )
-```
+/*
 Syntactically, arrow functions bind very loosely. The reason is that you want every expression that can appear in an expression body to “stick together”; it should bind more tightly than the arrow function:
-```
+*/
+
 ```javascript
 const f = x => (x % 2) === 0 ? x : 0;
 ```
@@ -243,9 +244,10 @@ y) => {
 ```
 이런 제한의 근거는 장차 애로우함수의 “headless”에 대해 열려있는 옵션을 유지 한다는 것 입니다.( ?? )
 만약 인자가 없다면 당신은 괄호를 생략할 수 있습니다.
-```
+/*
 The rationale for this restriction is that it keeps the options open w.r.t. to “headless” arrow functions in the future: if there are zero parameters, you’d be able to omit the parentheses.
-```
+*/
+
 ###13.5.3 식문 같은 문법을 사용할 수 없습니다.
 ####13.5.3.1 식 vs 문
 Quick review ( 더 많은 정보는 “자바스크립트를 말하다”를 찾아보세요 ):
