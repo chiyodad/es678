@@ -80,7 +80,7 @@ Prefixer.prototype.prefixArray = function (arr) {
 아래 A라인의 마지막 인자와 같습니다.
 ```javascript
 function Prefixer(prefix) {
-    this.prefix = prefix;
+    this.prefix = prefix;w
 }
 Prefixer.prototype.prefixArray = function (arr) {
     return arr.map(function (x) {
@@ -193,6 +193,7 @@ function bar(arg) {
 this의 출처는 애로우함수가 일반함수와 구별되는 중요한 부분입니다.
 * 일반함수는 동적 this를 갖습니다. 이 값은 함수가 어떻게 호출되느냐에 따라 결정됩니다.
 * 애로우함수는 어휘적 this를 갖습니다. 이 값은 감싸는 스코프에 의해 결정됩니다.
+
 어휘로 값이 결정되는 변수의 [전체목록](http://exploringjs.com/es6/ch_arrow-functions.html) 입니다.
 * arguments
 * super
