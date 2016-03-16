@@ -204,7 +204,9 @@ this의 출처는 애로우함수가 일반함수와 구별되는 중요한 부�
 가끔 실수를 유발하는 몇가지 문법관련 세부사항이 있습니다.
 
 ###13.5.1 애로우함수는 매우 느슨하게 연결됩니다.
-문법상, 애로우함수는 매우 느슨하게 연결됩니다. 그 이유는 ~~ ( 뭐라는거야 )
+문법상, 애로우함수는 매우 느슨하게 연결됩니다. 그 이유는 모든 표현을 본문표현식에 함께 뭉쳐져 나타나지길 원하기 때문이다
+이것은 화살표 함수보다 더 긴밀히 결합한다.( 뭔소리여 )
+
 /*
 Syntactically, arrow functions bind very loosely. The reason is that you want every expression that can appear in an expression body to “stick together”; it should bind more tightly than the arrow function:
 */
