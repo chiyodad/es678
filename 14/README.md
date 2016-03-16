@@ -623,6 +623,9 @@ var supported = (
 var supported = Object.getPrototypeOf({__proto__: null}) === null;
 ```
 14.6.5 __proto__은 “dunder proto”라 발음됨.
+
+두개의 언더스코어로 감싸진 이름은 보통 파이쎤에서 메타데이터와 데이터 사이의 이름충돌을 피하기 위한것이다.
+
 Bracketing names with double underscores is a common practice in Python to avoid name clashes between meta-data (such as __proto__) and data (user-defined properties). That practice will never become common in JavaScript, because it now has symbols for this purpose. However, we can look to the Python community for ideas on how to pronounce double underscores.
 
 The following pronunciation has been suggested by Ned Batchelder:
