@@ -234,13 +234,13 @@ this의 출처는 애로우함수가 일반함수와 구별되는 중요한 부�
 
 ###13.5.1 애로우함수는 매우 느슨하게 연결됩니다.
 `13.5.1 Arrow functions bind very loosely`
-문법상, 애로우함수는 매우 느슨하게 연결됩니다. 그 이유는 모든 표현을 본문표현식에 함께 뭉쳐져 나타나지길 원하기 때문이다
-이것은 화살표 함수보다 더 긴밀히 결합한다.( 뭔소리여 )
-`Syntactically, arrow functions bind very loosely. The reason is that you want every expression that can appear in an expression body to “stick together”; it should bind more tightly than the arrow function:`
+문법상, 애로우함수는 매우 느슨하게 연결됩니다. 그 이유는 함께 뭉쳐진 표현식 몸통으로 나타낼 수 있는 모든 표현식을 원하기 때문이다.
+표현식은 화살표 함수보다 더 우선적으로 결합될 것이다.
 
 ```javascript
 const f = x => (x % 2) === 0 ? x : 0;
 ```
+
 그 결과, 만약 애로우함수가 다른곳에서 표시 한다면 자주 괄호로 감싸야 합니다. 
 예를들어:
 `As a consequence, you often have to wrap arrow functions in parentheses if they appear somewhere else. For example:`
