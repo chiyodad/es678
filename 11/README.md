@@ -2,19 +2,15 @@
 
 
 #11. Parameter handling
+인자 다루기
 
-ECMAScript 6에서 parameter handling은 크게 향상되었다. 이제 parameter 기본값, rest parameter(varargs : 가변인자?), 그리고 destructing을 지원한다.
+ECMAScript 6에서 인자 다루기는 크게 향상되었다. 이제 인자 기본값, 나머지인자(varargs : 가변인자?), 그리고 해체를 지원한다.
 
-For this chapter, it is useful to be familiar with destructuring (which is explained in the previous chapter).
+이 챕터에서는, 앞 장에서 나온 해체와 친숙하다면 굉장히 유용할 것이다.
 
-이 챕터에서는, 앞 장에서 나온 destructuring과 친숙하다면 굉장히 유용할 것이다.
+##11.1 개요
 
-##11.1 Overview
-
-전체적으로 보기
-
-Default parameter values:
-기본 파라미터 값:
+기본 인자 값:
 
 ```javascript
  function findClosestShape(x=0, y=0) {
@@ -22,8 +18,7 @@ Default parameter values:
  }
  ```
 
-Rest parameters:
-Rest 파라미터 :
+나머지 인자 :
 
 ```javascript
 function format(pattern, ...params) {
@@ -32,16 +27,14 @@ function format(pattern, ...params) {
 console.log(format('a', 'b', 'c')); // ['b', 'c']
 ```
 
-Named parameters via destructuring:
-destructuring을 통해 명명된 파라미터:
+해체에 의한 기명인자:
 
 ```javascript
 function selectEntries({ start=0, end=-1, step=1 } = {}) {
-    // The object pattern is an abbreviation of:
+    
     //객체 패턴의 약자 :
     // { start: start=0, end: end=-1, step: step=1 }
 
-    // Use the variables `start`, `end` and `step` here
     //start, end, step을 여기서 쓰라..
     ···
 }
@@ -52,14 +45,9 @@ selectEntries({});
 selectEntries();
 ```
 
-###11.1.1 Spread operator (...)
-스프레드 연산자 (...)
+###11.1.1 펼치기 연산자 (...)
 
-Spread operator (...)
-
-In function and constructor calls, the spread operator turns iterable values into arguments:
-
-함수나 생성자에서 호출시, 스프래드 연산자는 iterable 값들을 인자로 전환시킨다:
+함수나 생성자에서 호출시, 펼치기 연산자는 이터러블 값을 인자로 전환시킨다:
 
 ```javascript
 > Math.max(-1, 5, 11, 3)
@@ -69,20 +57,17 @@ In function and constructor calls, the spread operator turns iterable values int
 > Math.max(-1, ...[-1, 5, 11], 3)
 11
 ```
-In Array literals, the spread operator turns iterable values into Array elements:
 
-배열 리터럴에서 spread operator는 iterable 변수들을 배열 element로 변환한다.
+배열 리터럴에서 펼치기 연산자는 이터러블 값을 배열 요소로 변환한다.
 ```javascript
 > [1, ...[2,3], 4]
 [1, 2, 3, 4]
 ```
-11.2 Parameter handling as destructuring
+11.2 해체로 인자 다루기
 
-The ES6 way of handling parameters is equivalent to destructuring the actual parameters via the formal parameters.
-ES6의 파라미터 핸들링 방법은은 형식 파라미터를 실제 파라미터로 destructuring하는 것:
+ES6에서 인자 다룰 때 인자를 해체한 것과 선언된 인자를 동등하게 취급한다:
 
-That is, the following function call:
-아래 함수 호출시:
+아래 함수 호출 예를 보자:
 
 ```javascript
 function func(«FORMAL_PARAMETERS») {
@@ -90,7 +75,6 @@ function func(«FORMAL_PARAMETERS») {
 }
 func(«ACTUAL_PARAMETERS»);
 ```
-is roughly equivalent to:
 
 이는 대강 아래와 같다
 
@@ -102,9 +86,8 @@ is roughly equivalent to:
     }
 }
 ```
-Example – the following function call:
 
-예를 들어 아래의 function을 호출하면
+예를 들어 아래의 함수를 호출하면
 
 ```javascript
 function logSum(x=0, y=0) {
@@ -112,9 +95,8 @@ function logSum(x=0, y=0) {
 }
 logSum(7, 8);
 ```
-becomes:
 
-이렇게 된다.
+아래와 같이 될 것이다.
 ```javascript
 {
     let [x=0, y=0] = [7, 8];
@@ -123,14 +105,12 @@ becomes:
     }
 }
 ```
-Let’s look at specific features next.
 
 이제 좀더 상세히 살펴보도록 하겠다.
 
 
-##11.3 Parameter default values
-ECMAScript 6 lets you specify default values for parameters:
-ECMAScript 6는 parameter를 위해 구체적인 default value를 가능하게 해준다???????
+##11.3 인자의 기본 값
+ECMAScript 6는 인자의 기본값을 특정할 수 있게 해준다.
 
 ```javascript
 function f(x, y=0) {
@@ -138,9 +118,7 @@ function f(x, y=0) {
 }
 ```
 
-Omitting the second parameter triggers the default value:
-
-두번째 parameter를 생략함으로써 default value가 되도록 한다.
+두번째 인자를 생략함으로써 기본값이 발동되도록 한다.
 ```javascript
 f(1)
 > [1, 0]
@@ -148,17 +126,14 @@ f()
 > [undefined, 0]
 ```
 
-Watch out – undefined triggers the default value, too:
-undefined 역시 default value를 발생시키는 것을 볼 수 있다.
+주의 - undefined 역시 기본값을 발동시킨다.
 
 ```javascript
 f(undefined, undefined)
 > [undefined, 0]
 ```
 
-The default value is computed on demand, only when it is actually needed:
-
-이 default value는 실질적인 필요가 있을때에는 언제든지 산출된다.
+이 기본값은 실제 필요로 할때 요청에 따라 계산된다.
 
 ```javascript
 const log = console.log.bind(console);
@@ -174,34 +149,26 @@ y
 'DONE'
 ```
 
-###11.3.1 Why does undefined trigger default values?
+###11.3.1 왜 undefined가 기본값 발동시키는가?
 
-왜 undefined가 default value를 발생시키는가?
+왜 undefined가 없는 인자 혹은 객체나 배열의 없는 부분처럼 처리되는지 아주 명확하지는 않다.
+이에 대한 이론적인 근거는 기본값의 정의를 위임할 수 있다는 것이다. 아래의 두 예제를 보자.
 
-It isn’t immediately obvious why undefined should be interpreted as a missing parameter or a missing part of an object or Array.
-The rationale for doing so is that it enables you to delegate the definition of default values. Let’s look at two examples.
-
-왜 undefined가 missing parameter 혹은 object나 array의 missing part처럼 interprete되는지 아주 명확하지는 않다.
-이에 대한 이론적인 근거는 default value의 정의를 위임할 수 있다는 것이다. 아래의 두 예제를 보자.
-
-In the first example (source: Rick Waldron’s TC39 meeting notes from 2012-07-24), we don’t have to define a default value in setOptions(), we can delegate that task to setLevel().
-
-첫번째 예제에서, 우리는 setOption()에서 default value를 정의내릴 필요가 없다. 우리는 이 작업을 setLevel()에 위임할 수 있다.
+첫번째 예제에서, 우리는 setOption()에서 기본값을 정의내릴 필요가 없다. 우리는 이 작업을 setLevel()에 위임할 수 있다.
 ```javascript
 function setLevel(newLevel = 0) {
    light.intensity = newLevel;
 }
 function setOptions(options) {
-   // Missing prop returns undefined => use default
+   // 없는 속성은 undefined를 반환한다 --> 기본값 사용
     setLevel(options.dimmerLevel);
- setMotorSpeed(options.speed);
+    setMotorSpeed(options.speed);
    ···
 }
 setOptions({speed:5});
 ```
-In the second example, square() doesn’t have to define a default for x, it can delegate that task to multiply():
 
-두 번째 예제에서 squrare()는 x의 default를 정의할 필요가 없다. 이는 multiply()에 위임하여 처리할 수 있다.
+두 번째 예제에서 squrare()는 x의 기본을 정의할 필요가 없다. 이는 multiply()에 위임하여 처리할 수 있다.
 ```javascript
 function multiply(x=1, y=1) {
    return x * y;
@@ -210,10 +177,7 @@ function square(x) {
    return multiply(x, x);
 }
 ```
-Default values further entrench the role of undefined as indicating that something doesn’t exist, versus null indicating emptiness.
-
-null이 빈 값을 지칭하는 것과는 대조적으로. default value는 undefined가 존재하지 않는 어떤 것을 보여주는 역할로 자리잡게 해준다.
-
+기본값은 더 나아가 null이 빈 값을 가리키는 것으로, undefined는 존재하지 않는 것을 가리키는 역할로 자리잡게 한다.
 
 ###11.3.2 Referring to other parameters in default values
 
