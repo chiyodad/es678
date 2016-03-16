@@ -152,13 +152,13 @@ console.log(Me.name); // ReferenceError: Me is not defined
 
 마지막 두 라인 째는 클래스 변수 밖에되지 않지만, 내부에 사용될 수 있음을 보여준다. `The last two lines demonstrate that Me does not become a variable outside of the class, but can be used inside it.`
 
-### 15.2.2 클래스 정의 체내 `Inside the body of a class definition`
+### 15.2.2 클래스 정의의 몸체 `Inside the body of a class definition`
 
-클래스 본문은 방법,하지만 데이터 속성을 포함 할 수 있습니다. 데이터 특성을 갖는 프로토 타입은 일반적으로 안티 패턴으로 간주됩니다, 그래서 이것은 단지 최선의 방법을 적용합니다. `A class body can only contain methods, but not data properties. Prototypes having data properties is generally considered an anti-pattern, so this just enforces a best practice.`
+클래스 본문은 데이터 속성은 포함할 수 없고 단지 메소드만 포함할 수 있습니다. 프로토 타입에 데이터 속성을 갖는 것은 일반적으로 안티 패턴이라 여겨지므로 클래스 본문이 메서드만 포함할 수 있는 것은 바른 사용을 강제합니다. `A class body can only contain methods, but not data properties. Prototypes having data properties is generally considered an anti-pattern, so this just enforces a best practice.`
 
 #### 15.2.2.1 생성자, 정적 메소드, 프로토 타입 메소드 `constructor, static methods, prototype methods`
 
-이제 당신은 종종 클래스 정의에서 찾을 방법의 3 종류 살펴 보자. `Let’s examine three kinds of methods that you often find in class definitions.`
+이제 클래스 정의에서 자주 발견하게 될 3가지 종류의 메서드를 살펴보자. `Let’s examine three kinds of methods that you often find in class definitions.`
 
 ```javascript
 class Foo {
@@ -175,11 +175,11 @@ class Foo {
 const foo = new Foo(123);
 ```
 
-다음과 같이 클래스 선언에 대한 객체도 보인다. 그것을 이해하기위한 팁 : 프로토 타입 값이 목적은 일반 속성이있는 동안 [[Prototype]], 객체 사이의 상속 관계이다. 새로운 운영자가 자신이 생성 인스턴스의 프로토 타입으로 값을 사용하기 때문에 속성 프로토 타입은 특별하다. `The object diagram for this class declaration looks as follows. Tip for understanding it: [[Prototype]] is an inheritance relationship between objects, while prototype is a normal property whose value is an object. The property prototype is only special because the new operator uses its value as the prototype for instances it creates.`
+이 클래스 정의의 객체 다이어그램은 아래와 같다. 이해하기 위한 팁 : 프로토 타입 값이 목적은 일반 속성이있는 동안 [[Prototype]]은 객체 사이의 상속 관계다. 프로토타입은 객체를 값으로 가지고 있는 보통의 속성이다. 프로토타입 속성은 new 연산자가 생성할 인스턴스의 프로토타입으로 사용하기 때문에 특별하다. `The object diagram for this class declaration looks as follows. Tip for understanding it: [[Prototype]] is an inheritance relationship between objects, while prototype is a normal property whose value is an object. The property prototype is only special because the new operator uses its value as the prototype for instances it creates.`
 
 ![classes----methods.jpg](images/classes----methods.jpg)
 
-첫째, 의사 메소드 생성자입니다. 이 클래스를 나타내는 함수를 정의하는이 방법은 특별하다 : `First, the pseudo-method constructor. This method is special, as it defines the function that represents the class:`
+첫째, 의사 메소드 생성자입니다. 이 메소드는 클래스를 대표하는 함수를 정의하기 때문에 특별하다 : `First, the pseudo-method constructor. This method is special, as it defines the function that represents the class:`
 
 ```javascript
 > Foo === Foo.prototype.constructor
