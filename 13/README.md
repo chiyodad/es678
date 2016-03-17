@@ -1,11 +1,10 @@
-#Arrow functions
+# 화살표함수
 
-##13.1 Overview
+## 13.1 개요
 
-애로우함수는 두가지 이점이 있습니다.
-`There are two benefits to arrow functions.`
-첫째, 일반함수 표현 보다 덜 복잡합니다.
-`First, they are less verbose than traditional function expressions:`
+화살표함수는 두 가지 이점이 있습니다.
+첫째, 이전함수 표현식 보다 덜 복잡합니다.
+
 ```javascript
 const arr = [1, 2, 3];
 const squares = arr.map(x => x * x);
@@ -13,8 +12,7 @@ const squares = arr.map(x => x * x);
 // Traditional function expression:
 const squares = arr.map(function (x) { return x * x });
 ```
-둘째,  this를 어휘환경에서 찾습니다. 따라서 더 이상 bind() 또는 that = this가 필요없습니다.
-`Second, their this is picked up from surroundings (lexical). Therefore, you don’t need bind() or that = this, anymore.`
+둘째,  this가 주변(lexical)으로부터 찾아집니다. 따라서 더 이상 bind() 또는 that = this가 필요없습니다.
 ```javascript
 function UiComponent() {
     const button = document.getElementById('myButton');
@@ -24,24 +22,20 @@ function UiComponent() {
     });
 }
 ```
-다음의 변수는 모두 애로우함수 어휘안에 포함됩니다.
-`The following variables are all lexical inside arrow functions:`
-* arguments
-* super
-* this
-* new.target
+다음의 변수는 모두 화살표함수 lexical에 포함됩니다.
+ * arguments
+ * super
+ * this
+ * new.target
 
 
-##13.2 non-method 일반함수는 this 때문에 좋지 않다.
-`13.2 Traditional functions are bad non-method functions, due to this`
-자바스크립트에서 일반함수는 다음처럼 사용할 수 있습니다.
-`In JavaScript, traditional functions can be used as:`
-* 1. Non-method함수 `Non-method functions`
-* 2. 메소드 `Methods`
-* 3. 생성자 `Constructors`
+## 13.2 메소드가 아닌 이전함수에서 this 사용은 좋지 않다.
+자바스크립트에서 이전함수는 다음처럼 사용할 수 있습니다:
+ 1. 메소드가 아닌 함수
+ 2. 메소드
+ 3. 생성자
 
-이것들의 역할충돌 : 역할2, 3번 때문에 함수는 항상 자신의 this를 갖습니다. 
-하지만 콜백안에서는 감싸는 메소드의 this 접근을 방지합니다.( 역할1 )
+이들의 역할충돌 : 역할2, 3번 때문에 함수는 항상 그들의 this를 갖습니다.하지만 콜백( 역할1 ) 내부에서 감싸는 메소드의 this에 접근하는 것을 막습니다.
 `These roles clash: Due to roles 2 and 3, functions always have their own this. But that prevents you from accessing the this of, e.g., a surrounding method from inside a callback (role 1).`
 
 ```javascript
@@ -56,16 +50,16 @@ Prefixer.prototype.prefixArray = function (arr) { // (A)
     });
 };
 ```
-C라인에서 우리는 this.prefix에 접근하려 합니다. 하지만 그럴 수 없습니다. 왜냐하면 B라인 함수의 this가 A라인 메소드의 this를 가리기 때문입니다.
-strict mode에서 none-method함수의 this는 undefined이며 이것이 우리가 Prefixer를 사용할 때 에러가 발생하는 이유입니다.
+C라인에서 우리는 this.prefix에 접근해야 하지만 할 수 없는 이유는 B라인 함수의 this가 A라인 메소드의 this를 가리기 때문입니다.
+strict mode시 none-method 함수안에서 this는 undefined이며 이것이 우리가 Prefixer를 사용할 때 에러를 받는 이유입니다:
 `In line C, we’d like to access this.prefix, but can’t do that because the this of the function from line B shadows the this of the method from line A. In strict mode, this is undefined in non-method functions, which is why we get an error if we use Prefixer:`
 ```javascript
 > var pre = new Prefixer('Hi ');
 > pre.prefixArray(['Joe', 'Alex'])
 TypeError: Cannot read property 'prefix' of undefined
 ```
-###13.2.1 해결책 1: that = this
-this를 명시적으로 변수에 할당할 수 있습니다. 즉, 아래  A라인과 같습니다. 
+### 13.2.1 해결책 1: that = this
+명시적인 변수 that에 this를 할당할 수 있습니다. 즉, 아래  A라인과 같습니다. 
 `You can assign this to a variable that isn’t shadowed. That’s what’s done in line A, below:`
 ```javascript
 function Prefixer(prefix) {
@@ -78,14 +72,14 @@ Prefixer.prototype.prefixArray = function (arr) {
     });
 };
 ```
-예상대로  지금은 Prefixer가 동작합니다.
+예상대로 지금은 Prefixer가 동작합니다:
 `Now Prefixer works as expected:`
 ```javascript
 > var pre = new Prefixer('Hi ');
 > pre.prefixArray(['Joe', 'Alex'])
 [ 'Hi Joe', 'Hi Alex' ]
 ```
-###13.2.2 해결책 2: this값 지정
+### 13.2.2 해결책 2: this값 지정
 일부 Array 메소드는 콜백을 호출 할 때 this 값을 지정하기 위한 추가 인자를 가지고 있습니다.
 아래 A라인의 마지막 인자와 같습니다.
 `A few Array methods have an extra parameter for specifying the value that this should have when invoking the callback. That’s the last parameter in line A, below.`
@@ -99,9 +93,9 @@ Prefixer.prototype.prefixArray = function (arr) {
     }, this); // (A)
 };
 ```
-###13.2.3 해결책 3: bind(this)
-호출하는 방식에 의해( call의한 함수 호출, 메소드 호출 등등 ) this가 결정되는 함수를 언제나 같은 this값으로 고정된 함수로 변환해주는 bind() 메소드를 사용할수 있습니다.
-즉, 아래 A라인에서 하는 일과 같습니다.
+### 13.2.3 해결책 3: bind(this)
+당신은 bind()메소드를 사용해 함수의 this가 호출된 방법에 따라 결정되는 것에서 함수의 this가 언제나 같은 값으로 고정 되도록
+변환할 수 있다. 즉, 아래 A라인에서 하는 일과 같습니다.
 `You can use the method bind() to convert a function whose this is determined by how it is called (via call(), a function call, a method call, etc.) to a function whose this is always the same fixed value. That’s what we are doing in line A, below.`
 ```javascript
 function Prefixer(prefix) {
@@ -113,8 +107,8 @@ Prefixer.prototype.prefixArray = function (arr) {
     }.bind(this)); // (A)
 };
 ```
-###13.2.4 ECMAScript 6 해결책: 애로우함수
-애로우함수는 보다 편한 문법으로 해결책 3을 가능하게 합니다. 애로우함수를 사용한 코드를 보시죠.
+### 13.2.4 ECMAScript 6 해결책: 화살표함수
+화살표함수는 보다 편한 문법으로 해결책 3을 가능하게 합니다. 화살표함수를 사용한 코드를 보시죠.
 `Arrow functions are basically solution 3, with a more convenient syntax. With an arrow function, the code looks as follows.`
 ```javascript
 function Prefixer(prefix) {
@@ -126,7 +120,7 @@ Prefixer.prototype.prefixArray = function (arr) {
     });
 };
 ```
-완전한 ES6코드, 클래스와 애로우 함수의 좀더 간결한 변화?를 사용하세요.
+완전한 ES6코드, 클래스와 화살표함수의 좀더 간결한 변화?를 사용했습니다:
 `To fully ES6-ify the code, you’d use a class and a more compact variant of arrow functions:`
 ```javascript
 class Prefixer {
@@ -138,14 +132,14 @@ class Prefixer {
     }
 }
 ````
-A라인에서 애로우함수 두 부분의 수정으로 약간의 문자를 줄일 수 있습니다.
+A라인에서 화살표함수의 두 부분을 수정해 약간의 문자를 줄일 수 있습니다.
 `In line A we save a few characters by tweaking two parts of the arrow function:`
 * 함수 인자가 하나이고 그 인자의 식별자가 하나이면 괄호는 생략 가능합니다.`If there is only one parameter and that parameter is an identifier then the parentheses can be omitted.`
-* 화살표 다음에 이어지는 하나의 식은 반환됩니다.`An expression following the arrow leads to that expression being returned.`
-코드에서, constructor 와 prefixArray 메소드가 object literals에서 동작하는 더 간결한 ES6문법을 새롭게 사용하여 정의된 것 또한 볼수 있습니다.`In the code, you can also see that the methods constructor and prefixArray are defined using new, more compact ES6 syntax that also works in object literals.`
+* 화살표 다음에 이어지는 하나의 표현식은 반환되어집니다.`An expression following the arrow leads to that expression being returned.`
+코드에서, constructor와 prefixArray 메소드가 오브젝트리터럴에서 동작하는 더 간결한 ES6문법을 새롭게 사용하여 정의된 것 또한 볼수 있습니다.`In the code, you can also see that the methods constructor and prefixArray are defined using new, more compact ES6 syntax that also works in object literals.`
 
-##13.3 애로우함수 문법
-굵은화살표 => ( 얇은 화살표의 반대 -> )는 CoffeeScript와 호환되도록 채용 되었습니다. 애로우 함수와 매우 유사 합니다.`The “fat” arrow => (as opposed to the thin arrow ->) was chosen to be compatible with CoffeeScript, whose fat arrow functions are very similar.`
+## 13.3 화살표함수 문법
+뚱뚱한화살표 => ( 얇은화살표의 반대 -> )는 CoffeeScript와 호환되도록 채용 되었습니다. 애로우 함수와 매우 유사 합니다.`The “fat” arrow => (as opposed to the thin arrow ->) was chosen to be compatible with CoffeeScript, whose fat arrow functions are very similar.`
 
 인자명시:`Specifying parameters:`
 ```javascript
@@ -275,8 +269,7 @@ y) => {
 };
 ...
 ```
-이런 제한의 근거는 장차 애로우함수의 “headless”에 대해 열려있는 옵션을 유지 한다는 것 입니다.( ?? )
-만약 인자가 없다면 당신은 괄호를 생략할 수 있습니다.
+이런 규제의 이론적 해석은 앞으로 화살표함수의 “headless”에 대한 옵션을 열어둔 것입니다: 만약 인자가 없다면 괄호 생략이 가능합니다.
 `The rationale for this restriction is that it keeps the options open w.r.t. to “headless” arrow functions in the future: if there are zero parameters, you’d be able to omit the parentheses.`
 
 ###13.5.3 식문 같은 문법을 사용할 수 없습니다.
