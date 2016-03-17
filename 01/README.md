@@ -48,35 +48,39 @@ ES6 설계에서 목표 와 요구사항의 충돌
 * 목표는 자바스크립트의 함정을 수정하고 새로운 기능을 추가
 * 요구 사항은 존재하는 코드의 깨짐이나 언어의 경량특성을 변경 없이 되는 것. 
 
-1.5 Goals for ES6
-The original project page for Harmony/ES6 includes several goals. In the following subsections, I’m taking a look at some of them.
+## 1.5 ES6의 목표
+하모니/ES6의 원래 프로젝트 페이지는 몇몇개의 목표를 가진다. 다음 소단원에서 나는 목표의 몇개를 설명하겠다.
 
-1.5.1 Goal: Be a better language
-The goal is: Be a better language for writing:
+### 1.5.1 목표: 더나은 언어
 
-complex applications;
-libraries (possibly including the DOM) shared by those applications;
-code generators targeting the new edition.
-Sub-goal (i) acknowledges that applications written in JavaScript have grown huge. A key ES6 feature fulfilling this goal is built-in modules.
+목표는 쓰기에 더 나은 언어:
 
-Modules are also an answer to goal (ii). As an aside, the DOM is notoriously difficult to implement in JavaScript. ES6 Proxies should help here (as described in a separate chapter).
+1. 복잡한 어플리케이션;
+2. 애플리케이션에 의해 공유된 라이브러리(아마도 DOM을 포함);
+3. 새 판을 겨냥한 코드 생성기.
 
-Several features were specifically added not to improve JavaScript, but to make it easier to compile to JavaScript. Two examples are:
+소 목적 (1) 자바스크립트로 쓰여진 애플리케이션 사례는 크게 증가되었다. 목표를 실현하는 ES6 기능의 키는 내장 모듈이다.
 
+모듈들은 또한 목표(2)의 해답이다. 반면에 DOM은 자바스크립트에서 구현하기 어렵기로 악명이 높다. ES6 프록시는 이것을 도와준다(이 쳅터에서 설명).
+
+몇몇의 기능들은 자바스크립트 개선이 아닌 특별하게 추가 되었다. 그러나 이 기능은 자바스크립트로 컴파일을 쉽게 해준다. 두가지 예를 보면:
+
+```
 Math.fround() – rounding Numbers to 32 bit floats
 Math.imul() – multiplying two 32 bit ints
-They are both useful for, e.g., compiling C/C++ to JavaScript via Emscripten.
+```
 
-1.5.2 Goal: Improve interoperation
-The goal is: Improve interoperation, adopting de facto standards where possible.
+이것들은 예를 들면 C/C++을 Emscripten을 통해 자바스크립트로 컴파일 할때 유용하다. 
 
-Examples are:
+### 1.5.2 목표: 상호 개선 
+이 목표는 상호 개선, 가능한 사실상의 표준을 채택이다.
+예를 들면:
 
-Classes: are based on how constructor functions are currently used.
-Modules: picked up design ideas from the CommonJS module format.
-Arrow functions: have syntax that is borrowed from CoffeeScript.
-Named function parameters: There is no built-in support for named parameters. Instead, the existing practice of naming parameters via object literals is supported via destructuring in parameter definitions.
-1.5.3 Goal: Versioning
+* Classes: 는 생성자 함수들이 현재 사용되는 방법을 기반한다.
+* Modules: 은 CommonJS 모델 포멧으로 부터 설계 아이디어를 가져왔다.
+* Arrow functions: 은 CoffeeScript로 부터 빌려온 문법을 가진다.
+* Named function parameters: 기명 파라미터에 대한 지원이 내장되어 있지 않다. 대신에 객체 리터럴를 통한 기명 파라미터의 기존 관행은 파라미터 정의 시 해체를 통해 제공된다.
+### 1.5.3 목표: 버져닝
 The goal is: Keep versioning as simple and linear as possible.
 
 As mentioned previously, ES6 avoids versioning via “One JavaScript”: In an ES6 code base, everything is ES6, there are no parts that are ES5-specific.
