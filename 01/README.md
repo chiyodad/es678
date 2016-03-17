@@ -80,6 +80,7 @@ Math.imul() – multiplying two 32 bit ints
 * Modules: 은 CommonJS 모델 포멧으로 부터 설계 아이디어를 가져왔다.
 * Arrow functions: 은 CoffeeScript로 부터 빌려온 문법을 가진다.
 * Named function parameters: 기명 파라미터에 대한 지원이 내장되어 있지 않다. 대신에 객체 리터럴를 통한 기명 파라미터의 기존 관행은 파라미터 정의 시 해체를 통해 제공된다.
+
 ### 1.5.3 목표: 버져닝
 The goal is: Keep versioning as simple and linear as possible.
 
