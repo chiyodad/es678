@@ -1,9 +1,10 @@
 # 28. Metaprogramming with proxies
+이 단원에선 ECMAScript 6의 특징 프록시를 설명합니다. 프록시는 object에 대한 작업 수행을 가로채 커스터마이즈를 할 수 있게 합니다.
+`This chapter explains the ECMAScript 6 feature proxies. Proxies enable you to intercept and customize operations performed on objects (such as getting properties). They are a metaprogramming feature.`
 
-This chapter explains the ECMAScript 6 feature proxies. Proxies enable you to intercept and customize operations performed on objects (such as getting properties). They are a metaprogramming feature.
-
-## 28.1 Overview
-In the following example, proxy is the object whose operations we are intercepting and handler is the object that handles the interceptions. In this case, we are only intercepting a single operation, get (getting properties).
+## 28.1 개요
+다음 예제에서, 프록시는 오브젝트의 작업을 가로챕니다. 그리고 핸들러는 가로채기를 처리하는 오브젝트입니다. 이때는 단지 get( 읽기속성 ) 하나의 작업을 가로챕니다.
+`In the following example, proxy is the object whose operations we are intercepting and handler is the object that handles the interceptions. In this case, we are only intercepting a single operation, get (getting properties).`
 ```javascript
 const target = {};
 const handler = {
@@ -14,40 +15,50 @@ const handler = {
 };
 const proxy = new Proxy(target, handler);
 ```
-When we get the property proxy.foo, the handler intercepts that operation:
+우리가 프록시의 속성을 얻을 때 핸들러는 foo작업을 가로챕니다.
+`When we get the property proxy.foo, the handler intercepts that operation:`
 ```javascript
 > proxy.foo
 get foo
 123
 ```
-A section at the end of this chapter serves as a reference to the complete API and lists what operations can be intercepted.
+(이 단원의 마지막 섹션)[http://exploringjs.com/es6/ch_proxies.html#sec_reference-proxy-api]에서 API와 가로챌 수 있는 작업 목록을 참조로 제공합니다.
+`A section at the end of this chapter serves as a reference to the complete API and lists what operations can be intercepted.`
 
-## 28.2 Programming versus metaprogramming
-Before we can get into what proxies are and why they are useful, we first need to understand what metaprogramming is.
+## 28.2 프로그래밍 vs 메타프로그래밍
+`## 28.2 Programming versus metaprogramming`
+프록시가 무엇인지 그리고 왜 유용한지를 알기 전에 우리는 첫째로 메타프로그래밍이 무엇인지 이해해야합니다.
+`Before we can get into what proxies are and why they are useful, we first need to understand what metaprogramming is.`
 
-In programming, there are levels:
+프로그래밍엔 단계가 있습니다.
+`In programming, there are levels:`
+* 기초단계 (애플리케이션 단계라고도 부름), 사용자 입력을 처리하는 코드.`At the base level (also called: application level), code processes user input.`
+* 메타단계, 기초단계 코드를 처리하는 코드.`At the meta level, code processes base level code.`
 
-At the base level (also called: application level), code processes user input.
-At the meta level, code processes base level code.
-Base and meta level can be different languages. In the following meta program, the metaprogramming language is JavaScript and the base programming language is Java.
-
+기초단계와 메타단계는 다른 언어라고 할 수 있습니다. 다음 메타프로그램에서, 메타프로그래밍 언어는 자바스크립트이고 기초프로그래밍 언어는 자바입니다.
+`Base and meta level can be different languages. In the following meta program, the metaprogramming language is JavaScript and the base programming language is Java.`
+```javascript
 const str = 'Hello' + '!'.repeat(3);
 console.log('System.out.println("'+str+'")');
-Metaprogramming can take different forms. In the previous example, we have printed Java code to the console. Let’s use JavaScript as both metaprogramming language and base programming language. The classic example for this is the eval() function, which lets you evaluate/compile JavaScript code on the fly. There are not that many actual use cases for eval(). In the interaction below, we use it to evaluate the expression 5 + 2.
+```
+메타프로그래밍은 다른 형태를 취할 수 있습니다. 이전 예제에서, 우리는 자바코드를 콘솔에 출력했습니다. 자, 메타프로그래밍 언어와 기초프로그래밍 언어 둘다 자바스크립트로 사용해봅시다. 이것은 eval()함수가 자바스크립트 코드를 그때그때 봐가며 평가/컴파일 하는 전형적인 예입니다. eval() 사용사례는 사실 많지 않습니다.
+아래의 interaction에서, 우리는 5 + 2표현식을 평가하는데 eval()을 사용했습니다.
+`Metaprogramming can take different forms. In the previous example, we have printed Java code to the console. Let’s use JavaScript as both metaprogramming language and base programming language. The classic example for this is the eval() function, which lets you evaluate/compile JavaScript code on the fly. There are not that many actual use cases for eval(). In the interaction below, we use it to evaluate the expression 5 + 2.`
 ```javascript
 > eval('5 + 2')
 7
 ```
-Other JavaScript operations may not look like metaprogramming, but actually are, if you look closer:
+다른 자바스크립트 작업들은 아마 메타프로그래밍처럼 보이지 않을 수도 있습니다. 하지만 실제로 자세히 보면:
+`Other JavaScript operations may not look like metaprogramming, but actually are, if you look closer:`
 ```javascript
-// Base level
+// 기초 단계
 const obj = {
     hello() {
         console.log('Hello!');
     }
 };
 
-// Meta level
+// 메타단계
 for (const key of Object.keys(obj)) {
     console.log(key);
 }
