@@ -82,16 +82,16 @@ Math.imul() – multiplying two 32 bit ints
 * Named function parameters: 기명 파라미터에 대한 지원이 내장되어 있지 않다. 대신에 객체 리터럴를 통한 기명 파라미터의 기존 관행은 파라미터 정의 시 해체를 통해 제공된다.
 
 ### 1.5.3 목표: 버져닝
-The goal is: Keep versioning as simple and linear as possible.
+목표는: 가능한 간단하고 선형적으로 버저닝을 유지 하는 것 이다.
 
-As mentioned previously, ES6 avoids versioning via “One JavaScript”: In an ES6 code base, everything is ES6, there are no parts that are ES5-specific.
+ES5에 대한 관련된 부분도 없으며, 모든것이 ES6이고, 이전에 언급했던것 처럼 ES6은 ES6코드 기반 안에서 "하나의 자바스크립트"를 통해 버저닝을 피한다.
 
-1.6 An overview of ES6 features
-Quoting the introduction of the ECMAScript 6 specification:
+## 1.6 ES6기능 개요
+ECMAScript 6 스팩의 도입을 인용:
 
-Some of [ECMAScript 6’s] major enhancements include modules, class declarations, lexical block scoping, iterators and generators, promises for asynchronous programming, destructuring patterns, and proper tail calls. The ECMAScript library of built-ins has been expanded to support additional data abstractions including maps, sets, and arrays of binary numeric values as well as additional support for Unicode supplemental characters in strings and regular expressions. The built-ins are now extensible via subclassing.
+모듈, 클래식 정의, 어휘적 블록 스코프, 반복자와 제너레이터, 비동기 프로그래밍을 위한 프로미스, 패턴 패체와 꼬리 재귀는 ECMAScript 6의 주요 개선의 일부로 포함된다. 내장된 ECMAScript 라이브러리는 맵, 셋, 문자열의 유니코드 보조문자, 정규표현식 표현식을 추가적으로 잘 제공하기 위한 바이너리 수형 배열을 포함한 추가적인 추상 데이터을 제공하기 위해서 확장되었다. 현재 내장 모듈은 서브클래스를 통해 확장 가능하다.
 
-There are three major groups of features:
+여기 세개의 주요 기능의 기능 그룹이 있다.:
 
 Better syntax for features that already exist (e.g. via libraries). For example:
 Classes
