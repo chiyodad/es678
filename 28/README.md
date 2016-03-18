@@ -15,7 +15,7 @@ const handler = {
 };
 const proxy = new Proxy(target, handler);
 ```
-우리가 프록시의 속성을 얻을 때 핸들러는 foo작업을 가로챕니다.
+우리가 프록시의 proxy.foo속성을 얻을 때 핸들러는 작업을 가로챕니다.
 `When we get the property proxy.foo, the handler intercepts that operation:`
 ```javascript
 > proxy.foo
@@ -26,7 +26,6 @@ get foo
 `A section at the end of this chapter serves as a reference to the complete API and lists what operations can be intercepted.`
 
 ## 28.2 프로그래밍 vs 메타프로그래밍
-`## 28.2 Programming versus metaprogramming`
 프록시가 무엇인지 그리고 왜 유용한지를 알기 전에 우리는 첫째로 메타프로그래밍이 무엇인지 이해해야합니다.
 `Before we can get into what proxies are and why they are useful, we first need to understand what metaprogramming is.`
 
