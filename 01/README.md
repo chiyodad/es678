@@ -93,19 +93,20 @@ ECMAScript 6 스팩의 도입을 인용:
 
 여기 세개의 주요 기능의 기능 그룹이 있다.:
 
-Better syntax for features that already exist (e.g. via libraries). For example:
-Classes
-Modules
-New functionality in the standard library. For example:
-New methods for strings and Arrays
-Promises
-Maps, Sets
-Completely new features. For example:
-Generators
-Proxies
-WeakMaps
-1.7 A brief history of ECMAScript
-This section describes what happened on the road to ECMAScript 6.
+* 이미 존재하는 기능을 위한 더 나은 문법 (예: 라이브러리를 통해). 예를 들면:
+   * Classes
+   * Modules
+* 표준 라이브러리의 새로운 기능. 예를 들면:
+   * 문자열, 배열을 위한 새로운 메소드
+   * 프로미스
+   * 맵, 셋
+* 완전한 새로운 기능. 예를 들면:
+   * 제너레이터
+   * 프록시
+   * 위크맵
+  
+## 1.7 ECMAScript 역사 요약
+이 섹션은 ECMAScript 6으로 가는길에서 무슨일이 있었는지 설명한다.
 
 1.7.1 The early years: ECMAScript 1–3
 ECMAScript 1 (June 1997) was the first version of the JavaScript language standard.
