@@ -22,7 +22,7 @@ const proxy = new Proxy(target, handler);
 get foo
 123
 ```
-(이 단원의 마지막 섹션)[http://exploringjs.com/es6/ch_proxies.html#sec_reference-proxy-api]에서 API와 가로챌 수 있는 작업 목록을 참조로 제공합니다.
+[이 단원의 마지막 섹션](http://exploringjs.com/es6/ch_proxies.html#sec_reference-proxy-api)에서 API와 가로챌 수 있는 작업 목록을 참조로 제공합니다.
 `A section at the end of this chapter serves as a reference to the complete API and lists what operations can be intercepted.`
 
 ## 28.2 프로그래밍 vs 메타프로그래밍
@@ -40,8 +40,7 @@ get foo
 const str = 'Hello' + '!'.repeat(3);
 console.log('System.out.println("'+str+'")');
 ```
-메타프로그래밍은 다른 형태를 취할 수 있습니다. 이전 예제에서, 우리는 자바코드를 콘솔에 출력했습니다. 자, 메타프로그래밍 언어와 기초프로그래밍 언어 둘다 자바스크립트로 사용해봅시다. 이것은 eval()함수가 자바스크립트 코드를 그때그때 봐가며 평가/컴파일 하는 전형적인 예입니다. eval() 사용사례는 사실 많지 않습니다.
-아래의 interaction에서, 우리는 5 + 2표현식을 평가하는데 eval()을 사용했습니다.
+메타프로그래밍은 다른 형태를 취할 수 있습니다. 이전 예제에서, 우리는 자바코드를 콘솔에 출력했습니다. 자, 메타프로그래밍 언어와 기초프로그래밍 언어 둘다 자바스크립트로 사용해봅시다. 이 eval()함수는 자바스크립트 코드를 그때그때 봐가며 평가/컴파일 하는 전형적인 예입니다. eval() 사용사례는 사실 많지 않습니다. 아래의 interaction에서, 우리는 5 + 2표현식을 평가하는데 eval()을 사용했습니다.
 `Metaprogramming can take different forms. In the previous example, we have printed Java code to the console. Let’s use JavaScript as both metaprogramming language and base programming language. The classic example for this is the eval() function, which lets you evaluate/compile JavaScript code on the fly. There are not that many actual use cases for eval(). In the interaction below, we use it to evaluate the expression 5 + 2.`
 ```javascript
 > eval('5 + 2')
@@ -62,26 +61,32 @@ for (const key of Object.keys(obj)) {
     console.log(key);
 }
 ```
-The program is examining its own structure while running. This doesn’t look like metaprogramming, because the separation between programming constructs and data structures is fuzzy in JavaScript. All of the Object.* methods can be considered metaprogramming functionality.
+프로그램은 실행 하는 동안 자신의 구조를 조사합니다. 이것은 메타프로그래밍처럼 보이지 않습니다. 왜냐하면 자바스크립트에선 프로그래밍 구조와 데이터 구조사이의 구분이 흐릿하기 때문입니다. 모든 Object.* 메소드들은 깊게 생각한 후에 함수형 메타프로그래밍을 할 수 있습니다.
+`The program is examining its own structure while running. This doesn’t look like metaprogramming, because the separation between programming constructs and data structures is fuzzy in JavaScript. All of the Object.* methods can be considered metaprogramming functionality.`
 
-### 28.2.1 Kinds of metaprogramming
-Reflective metaprogramming means that a program processes itself. Kiczales et al. [2] distinguish three kinds of reflective metaprogramming:
+### 28.2.1 메타프로그래밍의 유형들
+Reflective 메타프로그래밍은 프로그램 과정 그 자신을 의미합니다. [Kiczales외[2].](http://exploringjs.com/es6/ch_proxies.html) reflective 메타프로그래밍의 유형을 세가지로 구별합니다.
+`Reflective metaprogramming means that a program processes itself. Kiczales et al. [2] distinguish three kinds of reflective metaprogramming:`
 
-Introspection: you have read-only access to the structure of a program.
-Self-modification: you can change that structure.
-Intercession: you can redefine the semantics of some language operations.
-Let’s look at examples.
+* 자기성찰 : 당신은 프로그램의 구조에 읽기 속성을 가지고 있습니다.`Introspection: you have read-only access to the structure of a program.`
+* 자체수정 : 당신은 구조를 변경할 수 있습니다. `Self-modification: you can change that structure
+* 중재 : 당신은 어떤 언어 명령들의 의미를 재정의 할 수 있다`Intercession: you can redefine the semantics of some language operations.`
 
-Example: introspection. Object.keys() performs introspection (see previous example).
+자 예제를 봅시다.
+`Let’s look at examples.`
 
-Example: self-modification. The following function moveProperty moves a property from a source to a target. It performs self-modification via the bracket operator for property access, the assignment operator and the delete operator. (In production code, you’d probably use property descriptors for this task.)
+예: 자기성찰. Object.keys()는 자기성찰을 합니다.( 이전 예제를 보세요. )
+`Example: introspection. Object.keys() performs introspection (see previous example).`
+
+예: 자체수정. 다음 moveProperty함수는 source로부터 target으로 하나의 속성을 옮깁니다. moveProperty함수는 속성에 접근하는 대괄호 연산자, 할당연산자 그리고 삭제연산자를 통해 자체수정을 수행합니다.( 생산코드에서, 당신은 아마 이 일의 속성설명자를 사용해야합니다. )
+`Example: self-modification. The following function moveProperty moves a property from a source to a target. It performs self-modification via the bracket operator for property access, the assignment operator and the delete operator. (In production code, you’d probably use property descriptors for this task.)`
 ```javascript
 function moveProperty(source, propertyName, target) {
     target[propertyName] = source[propertyName];
     delete source[propertyName];
 }
 ```
-Using moveProperty():
+moveProperty() 사용: `Using moveProperty():`
 ```javascript
 > const obj1 = { prop: 'abc' };
 > const obj2 = {};
@@ -92,17 +97,24 @@ Using moveProperty():
 > obj2
 { prop: 'abc' }
 ```
-ECMAScript 5 doesn’t support intercession; proxies were created to fill that gap.
+ECMAScript 5는 중재를 지원하지 않습니다; 프록시는 그 공백을 채우기 위해 만들어졌습니다.
+`ECMAScript 5 doesn’t support intercession; proxies were created to fill that gap.`
 
-## 28.3 A first look at proxies
-ECMAScript 6 proxies bring intercession to JavaScript. They work as follows. There are many operations that you can perform on an object obj. For example:
+## 28.3 프록시 처음보기
+`## 28.3 A first look at proxies`
+ECMAScript 6 프록시는 자바스크립트에서 중재를 야기시킵니다. 프록시는 다음과 같이 동작합니다. 오브젝트 obj에서 동작하가는 많은 명령들이 있습니다. 예를들어:
+`ECMAScript 6 proxies bring intercession to JavaScript. They work as follows. There are many operations that you can perform on an object obj. For example:`
 
-Getting the property prop of an object obj (obj.prop)
-Checking whether an object obj has a property prop ('prop' in obj)
-Proxies are special objects that allow you customize some of these operations. A proxy is created with two parameters:
+* 오브젝트 obj에서 속성 prop가져오기 (obj.prop) `Getting the property prop of an object obj (obj.prop)`
+* 오브젝트 obj가 속성 prop을 가졌는지 확인하기 ('prop' in obj) `Checking whether an object obj has a property prop ('prop' in obj)`
 
-handler: For each operation, there is a corresponding handler method that – if present – performs that operation. Such a method intercepts the operation (on its way to the target) and is called a trap (a term borrowed from the domain of operating systems).
-target: If the handler doesn’t intercept an operation then it is performed on the target. That is, it acts as a fallback for the handler. In a way, the proxy wraps the target.
+프록시는 명령의 일부를 커스터마이즈하도록 허락하는 특별한 오브젝트입니다. 프록시는 두 인자로 만들어집니다:
+`Proxies are special objects that allow you customize some of these operations. A proxy is created with two parameters:`
+
+* 핸들러: `handler: For each operation, there is a corresponding handler method that – if present – performs that operation. Such a method intercepts the operation (on its way to the target) and is called a trap (a term borrowed from the domain of operating systems).`
+* 타겟: `target: If the handler doesn’t intercept an operation then it is performed on the target. That is, it acts as a fallback for the handler. In a way, the proxy wraps the target.`
+
+
 In the following example, the handler intercepts the operations get and has.
 ```javascript
 const target = {};
