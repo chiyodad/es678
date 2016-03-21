@@ -4,7 +4,7 @@
 
 ES6 코드를 실행하는 방법에 대한 자세한 내용 (모던 자바스크립트 엔진에서, 바벨 등을 통한 ES6으로 부터 ES5로 컴파일링), 이 책을 참고 해라 "Setting up ES6"(이 책을 온라인에서 읽는것은 공짜이다.)
 
-# 4.1 var를 let/const로
+# 4.1 var에서 let/const로
 ES5에서 당신은 변수를 var를 통해 선언했다. 이러한 변수는 함수 스코프이고, 그들의 스코프는 함수 가장 안쪽 둘러쌓인 함수 이다. var의  행동은 때때로 혼란스럽다. 예제를 보면:
 
 ```javascript
@@ -49,53 +49,61 @@ function func(randomize) {
 func(false); // 3
 ```
 
-That means that you can’t blindly replace var with let or const in existing code; you have to be careful during refactoring.
+이것은 당신이 존재하는 코드에서 var를 let이나 const로 맹목적으로 변경 할 수 없다는 것을 의미한다. 당신인 리팩토링동안 주의를 기울여야 한다.
 
-My advice is:
+내 조언은:
 
-Prefer const. You can use it for all variables whose values never change.
-Otherwise, use let – for variables whose values do change.
-Avoid var.
-More information: chapter “Variables and scoping”.
+* const를 선호해라. 당신은 변경되지 않는 모든 변수들은 const을 사용하라.
+* 반면에 let은 값이 변하는 변수를 위해 사용해라.
+* var를 피해라.
+ 
+더 자세한 정보: 챕터 "변수와 스코프".
 
-4.2 From IIFEs to blocks
-In ES5, you had to use a pattern called IIFE (Immediately-Invoked Function Expression) if you wanted to restrict the scope of a variable tmp to a block:
+## 4.2 IIFEs에서 Block으로
+ES5에서 만약 당신이 블럭에서 tmp의 제한된 스코프를 원한다면, 당신은 IIFE(즉시 호출된 함수 표현식)으로 불리는 패턴을 사용해야 한다.
 
+```javascript
 (function () {  // open IIFE
     var tmp = ···;
     ···
 }());  // close IIFE
 
 console.log(tmp); // ReferenceError
-In ECMAScript 6, you can simply use a block and a let declaration (or a const declaration):
-
+```
+ECMAScript 6에서, 당신은 블럭과 let선언(또는 const 선언)을 간단하게 사용할 수 있다.
+```javascript
 {  // open block
     let tmp = ···;
     ···
 }  // close block
 
 console.log(tmp); // ReferenceError
-More information: section “Avoid IIFEs in ES6”.
+```
+더 자세한 정보: 섹션 "ES6에서 IIFEs를 피해라"
 
-4.3 From concatenating strings to template literals
-With ES6, JavaScript finally gets literals for string interpolation and multi-line strings.
+## 4.3 문자열 결함에서 템플레이트 리터럴로
+ES6에서, 자바스크립트는 문자열 보간과 멀티라인 문자열을 위한 리터럴을 마침내 얻었다.
 
-4.3.1 String interpolation
-In ES5, you put values into strings by concatenating those values and string fragments:
+### 4.3.1 문자열 보간
+ES5에서 당신이 그 값과 문자열 조각을 결합을 통해 값을 문자열에 넣었다.
 
+```javascript
 function printCoord(x, y) {
     console.log('('+x+', '+y+')');
 }
-In ES6 you can use string interpolation via template literals:
-
+```
+ES6에서 당신은 템플릿 리터럴을 통해 문자 보간을 사용할 수 있다:
+```javascript
 function printCoord(x, y) {
     console.log(`(${x}, ${y})`);
 }
-4.3.2 Multi-line strings
-Template literals also help with representing multi-line strings.
+```
+### 4.3.2 멀티라인 문자열
+템플릿 리터럴은 멀티라인 문자열을 표현하는데 도움을 준다.
 
-For example, this is what you have to do to represent one in ES5:
+예를 들면, 이것은 ES5에서 당신이 하나를 표현하기 위해 해야하는 것 이다:
 
+```javascript
 var HTML5_SKELETON =
     '<!doctype html>\n' +
     '<html>\n' +
@@ -106,8 +114,10 @@ var HTML5_SKELETON =
     '<body>\n' +
     '</body>\n' +
     '</html>\n';
-If you escape the newlines via backslashes, things look a bit nicer (but you still have to explicitly add newlines):
+```
+만약 당신이 백슬래쉬를 통해 뉴라인을 이스케이프 한다면, 이것은 좀더 좋게 보여진다(그러나 당신은 여전히 명시적으로 뉴라인을 추가해야 한다.):
 
+```javascript
 var HTML5_SKELETON = '\
     <!doctype html>\n\
     <html>\n\
@@ -118,6 +128,7 @@ var HTML5_SKELETON = '\
     <body>\n\
     </body>\n\
     </html>';
+```
 ES6 template literals can span multiple lines:
 
 const HTML5_SKELETON = `
