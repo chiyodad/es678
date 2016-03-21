@@ -129,8 +129,9 @@ var HTML5_SKELETON = '\
     </body>\n\
     </html>';
 ```
-ES6 template literals can span multiple lines:
+ES6 템플릿 리터럴은 여러줄에 걸쳐 있을 수 있다.:
 
+```javascript
 const HTML5_SKELETON = `
     <!doctype html>
     <html>
@@ -141,13 +142,14 @@ const HTML5_SKELETON = `
     <body>
     </body>
     </html>`;
-(The examples differ in how much whitespace is included, but that doesn’t matter in this case.)
+```
+(이 예제는 얼마나 많은 공백이 포함하고 있는지 차이가 나지만 이 경우에는 별 문제가 없다.)
 
-More information: chapter “Template literals and tagged templates”.
+더 자세한 정보: 챕터 "템플릿 리터럴과 태그드 템플릿".
 
-4.4 From function expressions to arrow functions
-In current ES5 code, you have to be careful with this whenever you are using function expressions. In the following example, I create the helper variable _this (line A) so that the this of UiComponent can be accessed in line B.
-
+## 함수표현법에서 애로우 함수로
+현재 ES5 코드에서, 당신이 함수 표현식을 사용할 때 this를 주의해야 한다. 다음 예제에서 나는 헬퍼 변수 _this(A줄)를 생성하여 UiComponent의 this를 B줄에서 접근 할수 있다.
+```javascript
 function UiComponent() {
     var _this = this; // (A)
     var button = document.getElementById('myButton');
@@ -159,8 +161,9 @@ function UiComponent() {
 UiComponent.prototype.handleClick = function () {
     ···
 };
-In ES6, you can use arrow functions, which don’t shadow this (line A):
-
+```
+ES6에서 당신은 애로우 함수를 사용하여 this(A줄)를 덮지 않을 수 있다.:
+```javascript
 function UiComponent() {
     var button = document.getElementById('myButton');
     button.addEventListener('click', () => {
@@ -168,22 +171,29 @@ function UiComponent() {
         this.handleClick(); // (A)
     });
 }
-(In ES6, you also have the option of using a class instead of a constructor function. That is explored later.)
+```
+(ES6에서 당신은 또한 생성자 함수 대신에 클래스를 사용하는 홉션이 있다. 이것 나중에 살펴보자)
 
-Arrow functions are especially handy for short callbacks that only return results of expressions.
+애로우 함수는 단지 표현식의 값을 반환하는 짧은 콜백에 특히 편리하다.
 
-In ES5, such callbacks are relatively verbose:
+ES5에서, 이런 콜백은 비교적 장황하다:
 
+```javascript
 var arr = [1, 2, 3];
 var squares = arr.map(function (x) { return x * x });
-In ES6, arrow functions are much more concise:
+```
+ES6에서, 애로우 함수는 더욱더 간결하다.:
 
+```javascript
 const arr = [1, 2, 3];
 const squares = arr.map(x => x * x);
-When defining parameters, you can even omit parentheses if the parameters are just a single identifier. Thus: (x) => x * x and x => x * x are both allowed.
+```
 
-More information: chapter “Arrow functions”.
+파라미터를 정의시, 만약 파라미터가 단 하나라면, 당신은 심지어 괄호를 뺄 수 있다. 따라서: (x) => x * x 와 x => x * x 는 둘다 허용된다.
 
+더 자세한 내용은: 챕터 "애로우 함수".
+
+## 4.5 
 4.5 Handling multiple return values
 Some functions or methods return multiple values via arrays or objects. In ES5, you always need to create intermediate variables if you want to access those values. In ES6, you can avoid intermediate variables via destructuring.
 
