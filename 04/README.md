@@ -147,7 +147,7 @@ const HTML5_SKELETON = `
 
 더 자세한 정보: 챕터 "템플릿 리터럴과 태그드 템플릿".
 
-## 함수표현법에서 애로우 함수로
+## 4.4 함수표현법에서 애로우 함수로
 현재 ES5 코드에서, 당신이 함수 표현식을 사용할 때 this를 주의해야 한다. 다음 예제에서 나는 헬퍼 변수 _this(A줄)를 생성하여 UiComponent의 this를 B줄에서 접근 할수 있다.
 ```javascript
 function UiComponent() {
@@ -193,31 +193,33 @@ const squares = arr.map(x => x * x);
 
 더 자세한 내용은: 챕터 "애로우 함수".
 
-## 4.5 
-4.5 Handling multiple return values
-Some functions or methods return multiple values via arrays or objects. In ES5, you always need to create intermediate variables if you want to access those values. In ES6, you can avoid intermediate variables via destructuring.
+## 4.5 다중 리턴 값 다루기
+어떤 함수나 메소드는 다중 값을 배열이나 객체를 통해 반환한다. ES5에서 당신은 다중 값을 원할 때 항상 중간 값 생성이 필요하다. ES6에서는 해체(destructuring)를 통해 중간값 변수를 피할 수 있다.
 
-4.5.1 Multiple return values via arrays
-exec() returns captured groups via an Array-like object. In ES5, you need an intermediate variable (matchObj in the example below), even if you are only interested in the groups:
-
+### 4.5.1 배열을 통한 다중 리턴 값
+exec()는 유사배열을 통해 캡쳐된 그룹을 반환한다. ES5에서 당신은 심지어 그룹중에서 원하는 값이 있을때, 중간 변수 (아래 예제의 matchObj)가 필요하다.:
+```javascript
 var matchObj =
     /^(\d\d\d\d)-(\d\d)-(\d\d)$/
     .exec('2999-12-31');
 var year = matchObj[1];
 var month = matchObj[2];
 var day = matchObj[3];
-In ES6, destructuring makes this code simpler:
-
+```
+ES6에서는 해체는 이 코드를 단순하게 해준다.:
+```javascript
 const [, year, month, day] =
     /^(\d\d\d\d)-(\d\d)-(\d\d)$/
     .exec('2999-12-31');
-The empty slot at the beginning of the Array pattern skips the Array element at index zero.
+```
+배열 패턴의 시작부분의 빈 슬롯은 인덱스가 0인 요소를 건너뛴다.
 
-4.5.2 Multiple return values via objects
-The method Object.getOwnPropertyDescriptor() returns a property descriptor, an object that holds multiple values in its properties.
+### 객체를 통한 다중 값 반환
+메소드인 Object.getOwnPropertyDescriptor()는 프로퍼티 디스크립터를 반환한다. 디스크립터 객체는 그 프로퍼티의 다양한 값을 갖는다.
 
-In ES5, even if you are only interested in the properties of an object, you still need an intermediate variable (propDesc in the example below):
+ES5에서 심지어 당신이 이 객체 중 프로퍼티에 흥미가 있으면 여전히 중간 변수(아래의 예제 propDesc)가 필요하다.:
 
+```javascript
 var obj = { foo: 123 };
 
 var propDesc = Object.getOwnPropertyDescriptor(obj, 'foo');
@@ -225,18 +227,22 @@ var writable = propDesc.writable;
 var configurable = propDesc.configurable;
 
 console.log(writable, configurable); // true true
-In ES6, you can use destructuring:
+```
+ES6에서 당신은 해채를 사용할 수 있다.:
 
+```javascript
 const obj = { foo: 123 };
 
 const {writable, configurable} =
     Object.getOwnPropertyDescriptor(obj, 'foo');
 
 console.log(writable, configurable); // true true
-{writable, configurable} is an abbreviation for:
-
+```
+{writable, configurable} 는 아래의 축약이다.:
+```javascript
 { writable: writable, configurable: configurable }
-More information: chapter “Destructuring”.
+```
+더 자세한 정보는: 챕터 "해체".
 
 4.6 From for to forEach() to for-of
 Prior to ES5, you iterated over Arrays as follows:
