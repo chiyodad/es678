@@ -302,7 +302,7 @@ function logAllArguments(...args) {
 해체 결합과 해체 값에 접근
 
 One interesting feature of arguments is that you can have normal parameters and an Array of all parameters at the same time:
-arguments의 한 가지 재미있는 면은 동시에 일반적인 parameter와 모든 parameter의 배열을 동시에 가질 수 있다는 점이다.
+변수의 한 가지 재미있는 면은 동시에 일반적인 parameter와 모든 parameter의 배열을 동시에 가질 수 있다는 점이다.
 
 ```javascript
 function foo(x=0, y=0) {
@@ -312,7 +312,7 @@ function foo(x=0, y=0) {
 ```
 You can avoid arguments in such cases if you combine a rest parameter with Array destructuring. The resulting code is longer, but more explicit:
 
-나머지 인자와 배열 해체를 결합하는 경우 인자들을 피할 수 있다.  코드는 길어지지만 보다 명확하다.
+나머지 인자와 배열 해체를 결합하는 경우 변수들을 피할 수 있다.  코드는 길어지지만 보다 명확하다.
 
 ```javascript
 function foo(...args) {
@@ -335,12 +335,11 @@ function bar(options = {}) {
 }
 ```
 
-
 #### 11.4.1.2 arguments is iterable
-인자들은 이터러블하다.
+변수들은 이터러블하다.
 
 arguments is iterable1 in ECMAScript 6, which means that you can use for-of and the spread operator:
-ECMAScript 6에서는 인자들은 이터러블하다. 이는 당신이 for-of와 펼침 연산자를 이용할 수 있음을 의미한다.
+ECMAScript 6에서는 변수는 이터러블하다. 이는 for-of와 펼침 연산자를 이용할 수 있음을 의미한다.
 
 ```javascript
 > (function () { return typeof arguments[Symbol.iterator] }())
@@ -361,29 +360,28 @@ It does not matter in which order named parameters appear, as long as they are c
 함수(혹은 method)를 개발언어에서 호출할 때, 실제 인자-실제 인자(호출시에 정의되는거) 를 formal parameter-형식인자(function이 정의의)와 mapping해주어야 한다.(짝지어줘..)
 두 가지 일반적인 방법이 있는데:
 
-위치변수? 는 위치로 지정된다. 첫 번째 실제 인자는 첫번째 형식parameter와 짝지어지고, 두번째는 두번째 .. 계속 그렇게 됨.
+위치인자? 는 위치로 지정된다. 첫 번째 실제 인자는 첫번째 형식parameter와 짝지어지고, 두번째는 두번째 .. 계속 그렇게 됨.
 명명된 parameter는 mapping을 위해 이름(label)을 이용한다. name은 선언된 함수의 formal parameter, 호출된 함수의 실제 인자 label과 연관된다.
 
 이는 스펠링이 맞던지 명명된 파라미터가 나타난? 순서랑은 관계가 없다.
 
 
-
 Named parameters have two main benefits: they provide descriptions for arguments in function calls and they work well for optional parameters. 
 
-명명 인자는 두 가지 이점이 있는데: 함수 호출된 argument의 description을 제공하고 optional parameter를 위해 아주 잘 동작한다. ?????????????????
+명명 인자는 두 가지 이점이 있는데: 함수 호출된 변수의 정의를 해주고 옵션인자에서 잘 동작한다. ?????????????????
 
-???
 
 I’ll first explain the benefits and then show you how to simulate named parameters in JavaScript via object literals.
-이득을 보여주고 나서 javascript에서 named parameter어떻게 쓰는지 object literal로 시범을 보여줄게.
+장점을 보여주고 javascript에서 명명인자가 어떻게 쓰이는지 객체 리터럴을 이용해서 보여줄게.
 
-###11.5.1 Named Parameters as Descriptions
+### 11.5.1 Named Parameters as Descriptions
+정의된 명명 인자
 
 As soon as a function has more than one parameter, you might get confused about what each parameter is used for. 
 For example, let’s say you have a function, selectEntries(), that returns entries from a database. Given the function call:
 
-functions이 하나 이상의 parameter를 가짐에 따라, 각 파라미터가 어디에 이용되는지 혼란스러울 수 있다.
-예를 들어 너가 database로부터 entry를 반환하는 selectEntries()라는 functions을 가지고 있다고 치면, function 호출:
+함수가 하나 이상의 인자를 가짐에 따라, 각 인자가 어디에 이용되는지 혼란스러울 수 있다.
+예를 들어 데이터베이스로부터 entry를 반환하는 selectEntries()라는 함수 가지고 있다고 치면, function 호출:
 
 ```javascript
 selectEntries(3, 20, 2);
@@ -391,7 +389,7 @@ selectEntries(3, 20, 2);
 
 what do these three numbers mean? Python supports named parameters, and they make it easy to figure out what is going on:
 
-이 3 숫자들이 의미하는게 무엇일까? 파이썬은 네임드 파라미터를 지원하고, 또 무슨일이 벌어지는지 쉽게 알수 있게 해준다.
+이 3 숫자들이 의미하는게 무엇일까? 파이썬은 네임드 인자를 지원하고, 또 무슨일이 벌어지는지 쉽게 알수 있게 해준다.
 
 # Python syntax
 # 파이썬 문법
@@ -399,7 +397,7 @@ what do these three numbers mean? Python supports named parameters, and they mak
 selectEntries(start=3, end=20, step=2)
 ```
 
-###11.5.2 Optional Named Parameters
+### 11.5.2 Optional Named Parameters
 선택적 네임드 파라미터
 
 Optional positional parameters work well only if they are omitted at the end. Anywhere else, you have to insert placeholders such as null so that the remaining parameters have correct positions.
@@ -418,7 +416,7 @@ selectEntries(end=20, start=3)
 selectEntries()
 ```
 
-###11.5.3 Simulating Named Parameters in JavaScript
+### 11.5.3 Simulating Named Parameters in JavaScript
 자바스크립트에서 네임드 파라미터 써보기
 
 JavaScript does not have native support for named parameters like Python and many other languages. 
@@ -517,7 +515,7 @@ items.forEach(({word, count}) => {
 });
 ```
 
-###11.6.2 Transforming Maps
+### 11.6.2 Transforming Maps
 맵의 변형
 
 An ECMAScript 6 Map doesn’t have a method map() (like Arrays). Therefore, one has to:
@@ -547,7 +545,7 @@ const map1 = new Map( // step 3
 // Resulting Map: {2 -> '_a', 4 -> '_b', 6 -> '_c'}
 ```
 
-###11.6.3 Handling an Array returned via a Promise
+### 11.6.3 Handling an Array returned via a Promise
 Promise 를 통해 리턴되는 배열 핸들링
 
 The tool method Promise.all() works as follows:
@@ -586,7 +584,7 @@ fetch() is a Promise-based version of XMLHttpRequest. It is part of the Fetch st
 
 fetch()는 XMLHttpRequest의 Promise 베이스 버전이다. Fetch 표준의 한 부분이다
 
-##11.7 Coding style tips
+## 11.7 Coding style tips
 코딩 팁
 
 This section mentions a few tricks for descriptive parameter definitions. 
@@ -607,7 +605,7 @@ function foo(requiredParam, optionalParam = undefined) {
 }
 ```
 
-###11.7.2 Required parameters
+### 11.7.2 Required parameters
 필수 파라미터
 
 In ECMAScript 5, you have a few options for ensuring that a required parameter has been provided, which are all quite clumsy:
@@ -654,7 +652,7 @@ Error: Missing parameter
 123
 ```
 
-###11.7.3 Enforcing a maximum arity
+### 11.7.3 Enforcing a maximum arity
 최대의 인자 실행하기??
 
 This section presents three approaches to enforcing a maximum arity. 
@@ -709,7 +707,7 @@ function f(x, y) {
 }
 ```
 
-##11.8 The spread operator (...)
+## 11.8 The spread operator (...)
 스프래드 연산자
 
 The spread operator (...) looks exactly like the rest operator, but is its opposite:
@@ -720,7 +718,7 @@ The spread operator turns the items of an iterable value into arguments of a fun
 rest연산는 배열의 반복 가능한 값의 나머지 항목을 수집하고 rest parameter와 destructing에 이용한다.
 반복가능한 값의 항목들을 함수 호출 인자나, 배열의 요소로 전환시킨다.
 
-###11.8.1 Spreading into function and method calls
+### 11.8.1 Spreading into function and method calls
 함수와 매쏘드 호출에서의 스프레딩~~
 
 Math.max() is a good example for demonstrating how the spread operator works in method calls. 
@@ -759,7 +757,7 @@ arr1.push(...arr2);
 //arr1은 이제 ['a', 'b', 'c', 'd'] 임.
 ```
 
-###11.8.2 Spreading into constructors
+### 11.8.2 Spreading into constructors
 생성자에 스프래딩..
 
 In addition to function and method calls, the spread operator also works for constructor calls:
@@ -771,7 +769,7 @@ That is something that is difficult to achieve in ECMAScript 5.
 이는 ECMAScript 5 로 하기에는 정말 어려운 대단한거임.
 
 
-###11.8.3 Spreading into Arrays
+### 11.8.3 Spreading into Arrays
 Arrays에 스프래딩
 
 The spread operator can also be used inside Array literals:
@@ -793,7 +791,7 @@ const arr = [...x, ...y, ...z]; // ['a', 'b', 'c', 'd', 'e']
 One advantage of the spread operator is that its operand can be any iterable value (concat() does not support iteration).
 스프래드 연산자의 한가지 이점은 그것의 피 연산자는 그 어떤 iterable 값도 될 수 있따는 것(concat() 은 iteration을 지원하지 않음).
 
-####11.8.3.1 Converting iterable or Array-like objects to Arrays
+#### 11.8.3.1 Converting iterable or Array-like objects to Arrays
 iterable이나 배열스러운 객체를 Arrays로 전환.
 
 The spread operator lets you convert any iterable value to an Array:
