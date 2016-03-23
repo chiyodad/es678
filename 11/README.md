@@ -251,10 +251,11 @@ line A의 끝쪽에 중괄호로 시작된 scope 내에서, scope내부나, } �
 따라서 lineC에서 시작되는 scope에 정의된 변수들은 lineB의 정의식에서는 접근할 수 없다.
 
 
-##11.4 Rest parameters
+## 11.4 Rest parameters
+나머지 연산자
 Putting the rest operator (...) in front of the last formal parameter means that it will receive all remaining actual parameters in an Array.
 
-rest연산자(...)를 마지막 formal 파라미터 바로 앞에 둔다는 것은 배열의 모든 남은 실제 파라미터를 받아들이겠다는 것이다.
+나머지 연산자(...)를 마지막 정규 인자 바로 앞에 둔다는 것은 배열의 남은 실제 인자를 모두 받아들이겠다는 것이다.
 ```javascript
 function f(x, ...y) {
     ···
@@ -264,23 +265,21 @@ function f(x, ...y) {
 
 If there are no remaining parameters, the rest parameter will be set to the empty Array:
 
-만약 남아있는 parameter가 없으면, rest parameter는 빈 배열이 될 것이다.
+만약 남아있는 인자가 없으면, 나머지 인자는 빈 배열이 될 것이다.
 ```javascript
 > f(); // x = undefined; y = []
 ```
 The spread operator (...) looks exactly like the rest operator, but it is used inside function calls and Array literals (not inside destructuring patterns).
 
-spread operator (...)는 rest operator와 매우 유사하지만, 이는 내부 함수 호출과 배열 literal에서만 쓰인다.(destructuring pattern의 내부는 아님)
+펼침 연산자는 나머지 연산자와 매우 유사하지만, 이는 내부 함수 호출과 배열 리터럴에서만 쓰인다.(해체 패턴의 내부는 아님)
 
 
-###11.4.1 No more arguments!
-더이상의 argument는 음슴!
+### 11.4.1 No more arguments!
+더이상의 인자는 없다!
 
 Rest parameters can completely replace JavaScript’s infamous special variable arguments. They have the advantage of always being Arrays:
 
-Rest parameter는 완벽하게 javascript의 악명높은 가변인자(varargs)??를 대체할 수 있다. 언제나 배열로 존재한다는? 장점을 가지고 있다.
-
-
+나머지 인자는 완벽하게 javascript의 악명높은 가변인자(varargs)??를 대체할 수 있다. 언제나 배열로 존재한다는 장점을 가지고 있다.
 
 // ECMAScript 5: arguments
 ECMAScript 5의 argument
@@ -292,16 +291,15 @@ ECMAScript 5의 argument
 }
 
 // ECMAScript 6: rest parameter
-ECMAScript6의 rest parameter
+ECMAScript6의 나머지 인자
 function logAllArguments(...args) {
    for (const arg of args) {
          console.log(arg);
     }
 }
 ```
-####11.4.1.1 Combining destructuring and access to the destructured value
-destructing과의 결합과 destructed value로의 접근
-
+#### 11.4.1.1 Combining destructuring and access to the destructured value
+해체 결합과 해체 값에 접근
 
 One interesting feature of arguments is that you can have normal parameters and an Array of all parameters at the same time:
 arguments의 한 가지 재미있는 면은 동시에 일반적인 parameter와 모든 parameter의 배열을 동시에 가질 수 있다는 점이다.
@@ -314,7 +312,7 @@ function foo(x=0, y=0) {
 ```
 You can avoid arguments in such cases if you combine a rest parameter with Array destructuring. The resulting code is longer, but more explicit:
 
-만약 당신이 rest parameter와 Array destructing을 결합하는 경우 argument를 방지할 수 있다??.  code는 길어지지만 보다 명확하다.
+나머지 인자와 배열 해체를 결합하는 경우 인자들을 피할 수 있다.  코드는 길어지지만 보다 명확하다.
 
 ```javascript
 function foo(...args) {
@@ -325,7 +323,7 @@ function foo(...args) {
 ```
 The same technique works for named parameters (options objects):
 
-같은 기술이 named parameter에서 동작함:
+같은 기술이 명명 인자에서 동작함:
 
 ```javascript
 function bar(options = {}) {
@@ -338,11 +336,11 @@ function bar(options = {}) {
 ```
 
 
-####11.4.1.2 arguments is iterable
-argument가 iterable함.
+#### 11.4.1.2 arguments is iterable
+인자들은 이터러블하다.
 
 arguments is iterable1 in ECMAScript 6, which means that you can use for-of and the spread operator:
-ECMAScript 6에서는 argument는 iterable하다. 이는 당신이 for-of와 spread operator를 이용할 수 있음을 의미한다.
+ECMAScript 6에서는 인자들은 이터러블하다. 이는 당신이 for-of와 펼침 연산자를 이용할 수 있음을 의미한다.
 
 ```javascript
 > (function () { return typeof arguments[Symbol.iterator] }())
@@ -351,8 +349,8 @@ ECMAScript 6에서는 argument는 iterable하다. 이는 당신이 for-of와 spr
 true
 ```
 
-##11.5 Simulating named parameters
-named parameter simulate
+## 11.5 Simulating named parameters
+명명 인자 시뮬레이팅
 
 When calling a function (or method) in a programming language, you must map the actual parameters (specified by the caller) to the formal parameters (of a function definition). There are two common ways to do so:
 
@@ -360,7 +358,7 @@ Positional parameters are mapped by position. The first actual parameter is mapp
 Named parameters use names (labels) to perform the mapping. Names are associated with formal parameters in a function definition and label actual parameters in a function call.
 It does not matter in which order named parameters appear, as long as they are correctly labeled.
 
-function(혹은 method)를 개발언어에서 호출할 때, 실제 parameter-실제 인자(호출시에 정의되는거) 를 formal parameter-형식인자(function이 정의의)와 mapping해주어야 한다.(짝지어줘..)
+함수(혹은 method)를 개발언어에서 호출할 때, 실제 인자-실제 인자(호출시에 정의되는거) 를 formal parameter-형식인자(function이 정의의)와 mapping해주어야 한다.(짝지어줘..)
 두 가지 일반적인 방법이 있는데:
 
 위치변수? 는 위치로 지정된다. 첫 번째 실제 인자는 첫번째 형식parameter와 짝지어지고, 두번째는 두번째 .. 계속 그렇게 됨.
@@ -370,10 +368,9 @@ function(혹은 method)를 개발언어에서 호출할 때, 실제 parameter-�
 
 
 
-
 Named parameters have two main benefits: they provide descriptions for arguments in function calls and they work well for optional parameters. 
 
-named parameter는 두 가지 이점이 있는데: function 호출된 argument의 description을 제공하고 optional parameter를 위해 아주 잘 동작한다. ?????????????????
+명명 인자는 두 가지 이점이 있는데: 함수 호출된 argument의 description을 제공하고 optional parameter를 위해 아주 잘 동작한다. ?????????????????
 
 ???
 
