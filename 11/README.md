@@ -1,7 +1,7 @@
 ----
 
 
-#11. Parameter handling
+# 11. Parameter handling
 인자 다루기
 
 ECMAScript 6에서 인자 다루기는 크게 향상되었다. 이제 인자 기본값, 나머지인자(varargs : 가변인자?), 그리고 해체를 지원한다.
@@ -45,7 +45,7 @@ selectEntries({});
 selectEntries();
 ```
 
-###11.1.1 펼치기 연산자 (...)
+### 11.1.1 펼치기 연산자 (...)
 
 함수나 생성자에서 호출시, 펼치기 연산자는 이터러블 값을 인자로 전환시킨다:
 
@@ -109,7 +109,7 @@ logSum(7, 8);
 이제 좀더 상세히 살펴보도록 하겠다.
 
 
-##11.3 인자의 기본 값
+## 11.3 인자의 기본 값
 ECMAScript 6는 인자의 기본값을 특정할 수 있게 해준다.
 
 ```javascript
@@ -149,7 +149,7 @@ y
 'DONE'
 ```
 
-###11.3.1 왜 undefined가 기본값 발동시키는가?
+### 11.3.1 왜 undefined가 기본값 발동시키는가?
 
 왜 undefined가 없는 인자 혹은 객체나 배열의 없는 부분처럼 처리되는지 아주 명확하지는 않다.
 이에 대한 이론적인 근거는 기본값의 정의를 위임할 수 있다는 것이다. 아래의 두 예제를 보자.
@@ -179,13 +179,13 @@ function square(x) {
 ```
 기본값은 더 나아가 null이 빈 값을 가리키는 것으로, undefined는 존재하지 않는 것을 가리키는 역할로 자리잡게 한다.
 
-###11.3.2 Referring to other parameters in default values
+### 11.3.2 Referring to other parameters in default values
 
-default value에서 다른 파라미터 참조하기
+기본값에 다른 인자 참조
 
 Within a parameter default value, you can refer to any variable, including other parameters:
 
-default value parameter에서 당신은 다른 parameter를 포함한 어떤 변수든지 참조할 수 있다.
+인자 기본값 내에서, 다른 인자를 포함안 어떤 변수든 참조할 수 있다.
 
 ```javascript
 function foo(x=3, y=x) { ··· }
@@ -195,16 +195,17 @@ function foo(x=3, y=x) { ··· }
 ```
 
 However, order matters: parameters are declared from left to right and within a default value, you get a ReferenceError if you access a parameter that hasn’t been declared, yet.
-??
-그러나 order matter는 parameter는 왼쪽에서 오른쪽으로 정의되어야 하는데 default value내에서는 아직 정의되지 않은 parameter에 접근했다는 referenceError를 얻게된다.
 
-###11.3.3 Referring to “inner” variables in default values
-default value에서 내부에 있는 변수들을 참조하기
+순서의 문제 : 인자는 왼쪽에서 오른쪽으로 정의되고 기본값 내에 있어, 아직 정의되지 않은 인자에 접근하게 되면 참조에러(ReferenceError)를 얻게 된다.
+
+
+### 11.3.3 Referring to “inner” variables in default values
+기본값에서 "내부의" 변수를 참조하기
 
 Default values exist in their own scope, which is between the “outer” scope surrounding the function and the “inner” scope of the function body. Therefore, you can’t access “inner” variables from the default values:
-????
-default value는 그들의 고유한 scope에서 존재한다. 이 영역은 function으로 둘러싸인 외부 영역과 functions의 내부 영역 사이에 있다.
-따라서 당신은 default value로부터 내부 변수에 접근할 수 없는 것이다.
+
+기본값은 함수로 둘러쌓인 "외부" 영역 사이나 함수 바디의 "내부" 영역과 같은 고유한 영역에 존재한다. 고로 기본값으로부터 "내부"의
+변수에 접근할 수 없다.
 
 
 ```javascript
@@ -218,24 +219,24 @@ function foo(a = x) {
 If there were no outer x in the previous example, the default value x would produce a ReferenceError (if triggered).
 This restriction is probably most surprising if default values are closures:
 
-위 예시에서 만약에 외부의 x가 없었다면 default 값 x는 ReferenceError를 발생시킬 것이다.
-만약 default 값들이 닫혀있다면 이런 제약은 아마 아주 놀랍게도 :
+위 예제에 외부의 x가 없다면 기본값 x는 참조에러(ReferenceError)를 발생시킬 것이다. (만약 발생시킨다면)
+만약 기본 값들이 닫혀있다면 이런 제약은 아마 아주 놀랍게도 :
+
 ```javascript
 function bar(callback = () => QUX) {
-   const QUX = 3; // can’t be accessed from default value
+   const QUX = 3; // can’t be accessed from default value //기본값으로부터 접근할 수 없다.
     callback();
 }
 bar(); // ReferenceError
 ```
 To see why that is the case, consider the following implementation of bar() which is roughly equivalent to the previous one:
 
-??
-그런 이유를 확인하려면, 이 전의 것과 거의 유사한 다음의 bar() 구현을 고려하여 : 
+왜 저게 그렇게 되는지 보려면, 저것과 유사한 bar()의 구현으로 생각해볼 수 있음 : 
 ```javascript
 function bar(...args) { // (A)
     const [callback = () => QUX] = args; // (B)
      { // (C)
-   const QUX = 3; // can’t be accessed from default value
+   const QUX = 3; // can’t be accessed from default value // 기본값으로부터 접근할 수 없다.
       callback();
     }
 }
@@ -243,6 +244,8 @@ function bar(...args) { // (A)
 
 Within the scope started by the opening curly brace at the end of line A, you can only refer to variables that are declared either in that scope or in a scope surrounding it. 
 Therefore, variables declared in the scope starting in line C are out of reach for the statement in line B.
+
+라인 A 끝쪽의 중괄호로 시작되는 영역에서 같은 영역 내에 있거나 그것으로 둘러쌓인 영역에 있는 변수만을 참조할 수 있다.
 
 line A의 끝쪽에 중괄호로 시작된 scope 내에서, scope내부나, } 로 둘러쌓인 
 따라서 lineC에서 시작되는 scope에 정의된 변수들은 lineB의 정의식에서는 접근할 수 없다.
