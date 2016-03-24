@@ -244,47 +244,60 @@ console.log(writable, configurable); // true true
 ```
 더 자세한 정보는: 챕터 "해체".
 
-4.6 From for to forEach() to for-of
-Prior to ES5, you iterated over Arrays as follows:
+## 4.6 for에서 forEach()로 for-of로
+ES5이전에는, 당신은 배열을 아래 처럼 순환했다.::
 
+```javascript
 var arr = ['a', 'b', 'c'];
 for (var i=0; i<arr.length; i++) {
     var elem = arr[i];
     console.log(elem);
 }
-In ES5, you have the option of using the Array method forEach():
+```
+ES5에서는, 당신은 배열 메소드 forEach 사용에 대한 선택이 있다.:
 
+```javascript
 arr.forEach(function (elem) {
     console.log(elem);
 });
-A for loop has the advantage that you can break from it, forEach() has the advantage of conciseness.
+```
+for 루프는 당신이 정지 할 수 있는 이점이 있고, forEach는 간결하다는 이점이 있다.
 
-In ES6, the for-of loop combines both advantages:
+ES6에서는 for-fo 루프는 두 이점을 결합한다.:
 
+```javascript
 const arr = ['a', 'b', 'c'];
 for (const elem of arr) {
     console.log(elem);
 }
-If you want both index and value of each array element, for-of has got you covered, too, via the new Array method entries() and destructuring:
+```
+만약 당신이 각 배열의 원소의 인덱스나 값을 원한다면 새로운 배열 메소드 entires()와 해체를 통해 for-of는 당신에게 다루게 해 준다.:
 
+```javascript
 for (const [index, elem] of arr.entries()) {
     console.log(index+'. '+elem);
 }
-More information: Chap. “The for-of loop”.
+```
+더 자세한 내용: 챕터 "for-of 루프"
 
-4.7 Handling parameter default values
-In ES5, you specify default values for parameters like this:
+## 4.7 파라미터 기본값 다루기
+ES5에서 당신은 파라미터의 기본값을 아래 처럼 지정한다.:
 
+```javascript
 function foo(x, y) {
     x = x || 0;
     y = y || 0;
     ···
 }
-ES6 has nicer syntax:
+```
+ES6는 더 좋은 문법을 갖는다.:
 
+```javascript
 function foo(x=0, y=0) {
     ···
 }
+```
+ES6에서 추가적인 이득은 파라미터 기본값은 오직 undefined에 의해 유발되며 반면에 ES5에서는 어느 거짓인 값
 An added benefit is that in ES6, a parameter default value is only triggered by undefined, while it is triggered by any falsy value in the previous ES5 code.
 
 More information: section “Parameter default values”.
