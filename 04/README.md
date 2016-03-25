@@ -297,33 +297,39 @@ function foo(x=0, y=0) {
     ···
 }
 ```
-ES6에서 추가적인 이득은 파라미터 기본값은 오직 undefined에 의해 유발되며 반면에 ES5에서는 어느 거짓인 값
-An added benefit is that in ES6, a parameter default value is only triggered by undefined, while it is triggered by any falsy value in the previous ES5 code.
+ES6에서 추가적인 이득은 파라미터 기본값은 오직 undefined에 의해 유발되며 반면에 ES5이전에서는 어느 거짓인 값(falsy)에 의 해 유발된다.
 
-More information: section “Parameter default values”.
+더 자세한 내용: 섹션 "파라미터 기본값".
 
-4.8 Handling named parameters
-A common way of naming parameters in JavaScript is via object literals (the so-called options object pattern):
+## 4.8 기명 파라미터 다루기
+자바스크립트에서 파라미터에 이름을 붙이는 흔한 방법은 객체리터럴을 통한 것이다(옵션 객체 패턴으로 불리는).:
 
+```javascript
 selectEntries({ start: 0, end: -1 });
-Two advantages of this approach are: Code becomes more self-descriptive and it is easier to omit arbitrary parameters.
+```
+이 접근은 두가지 이점이 있다: 코드가 더 스스로를 설명하고 임의로 파라미터를 빼기 더 쉽다.
 
-In ES5, you can implement selectEntries() as follows:
+ES5에서 당신은 selectEntries()를 다음 처럼 구현할 수 있다.:
 
+```javascript
 function selectEntries(options) {
     var start = options.start || 0;
     var end = options.end || -1;
     var step = options.step || 1;
     ···
 }
-In ES6, you can use destructuring in parameter definitions and the code becomes simpler:
+```
+ES6에서 당신은 파라미터 정의에서 해체를 사용할 수 있고 코드는 더욱 간단해 진다.:
 
+```javascript
 function selectEntries({ start=0, end=-1, step=1 }) {
     ···
 }
-4.8.1 Making the parameter optional
-To make the parameter options optional in ES5, you’d add line A to the code:
+```
+### 4.8.1 선택적 파라미터 만들기
+ES5에서 파라미터 옵션을 선택적으로 만들기 위해서 당신은 코드의 A줄을 추가 해야 한다.:
 
+```javascript
 function selectEntries(options) {
     options = options || {}; // (A)
     var start = options.start || 0;
@@ -331,56 +337,68 @@ function selectEntries(options) {
     var step = options.step || 1;
     ···
 }
-In ES6 you can specify {} as a parameter default value:
+```
+es6에서는 당신은 파라미터 기본값을 {}로 지정 할 수 있다.:
 
+```javascript
 function selectEntries({ start=0, end=-1, step=1 } = {}) {
     ···
 }
-More information: section “Simulating named parameters”.
+```
+더 자세한 내용은: 섹션 "시뮬레이션 명명 파라미터"
 
-4.9 From arguments to rest parameters
-In ES5, if you want a function (or method) to accept an arbitrary number of arguments, you must use the special variable arguments:
+## 4.9 arguments에서 남은 파라미터로
+ES5에서 당신은 함수(또는 메소드) 인수를 임의의 수를 받게 한다면 당신은 반드시 특별 변수인 arguments를 사용해야 한다.:
 
+```javascript
 function logAllArguments() {
     for (var i=0; i < arguments.length; i++) {
         console.log(arguments[i]);
     }
 }
-In ES6, you can declare a rest parameter (args in the example below) via the ... operator:
+```
+ES6에서 당신은 남은 파라미터(아래 예제의 args) ...연산자를 통해 선언 할 수 있다.:
 
+```javascript
 function logAllArguments(...args) {
     for (const arg of args) {
         console.log(arg);
     }
 }
-Rest parameters are even nicer if you are only interested in trailing parameters:
-
+```
+만약 당신이 뒷 부분에만 흥미가 있다면 남은 파라미터는 심지어 더 좋다:
+```javascript
 function format(pattern, ...args) {
     ···
 }
-Handling this case in ES5 is clumsy:
+```
+ES5에서 이 케이스를 다루면 꼴사납다:
 
+```javascript
 function format() {
     var pattern = arguments[0];
     var args = [].slice.call(arguments, 1);
     ···
 }
-Rest parameters make code easier to read: You can tell that a function has a variable number of parameters just by looking at its parameter definitions.
+```
+남은 파라미터는 코드를 읽기에 쉽게 만들어 준다: 당신은 단지 그 파라미터가 정의를 보면 함수가 변할 수 있는 수의 파라미터를 갖는지 알 수 있다.
 
-More information: section “Rest parameters”.
+더 자세한 정보: 섹션 "남은 파라미터".
 
-4.10 From apply() to the spread operator (...)
-In ES5, you turn arrays into parameters via apply(). ES6 has the spread operator for this purpose.
+## 4.10 apply()에서 펼침 연산자 (...)
+ES5에서 당신은 배열을 apply()을 통해 파라미터로 변환한다. ES6은 이 목적을 위해 펼침 연산자를 갖는다.
 
-4.10.1 Math.max()
+### 4.10.1 Math.amx();
 ES5 – apply():
-
+```javascript
 > Math.max.apply(null, [-1, 5, 11, 3])
 11
-ES6 – spread operator:
-
+```
+ES6 – 펼침 연산자:
+```javascript
 > Math.max(...[-1, 5, 11, 3])
 11
+```
 4.10.2 Array.prototype.push()
 ES5 – apply():
 
