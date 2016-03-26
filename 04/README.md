@@ -399,49 +399,60 @@ ES6 – 펼침 연산자:
 > Math.max(...[-1, 5, 11, 3])
 11
 ```
-4.10.2 Array.prototype.push()
+### 4.10.2 Array.prototype.push()
 ES5 – apply():
 
+```javascript
 var arr1 = ['a', 'b'];
 var arr2 = ['c', 'd'];
 
 arr1.push.apply(arr1, arr2);
     // arr1 is now ['a', 'b', 'c', 'd']
-ES6 – spread operator:
+```
 
+ES6 – 펼침 연산자:
+
+```javascript
 const arr1 = ['a', 'b'];
 const arr2 = ['c', 'd'];
 
 arr1.push(...arr2);
     // arr1 is now ['a', 'b', 'c', 'd']
-More information: section “The spread operator (...)”.
+```
+더 자세한 내용: 섹션 "펼침 연산자 (...)".
 
-4.11 From concat() to the spread operator (...)
-The spread operator can also turn the contents of its operand into Array elements. That means that it becomes an alternative to the Array method concat().
+## 4.11 concat()에서 펼침 연산자 (...)로
+펼침 연산자는 그 피연산자의 내용을 배열 원소로 바꿀 수 있다. 그것은 배열 메소드 concat()의 대안이 되는 것을 의미한다..
 
 ES5 – concat():
 
+```javascript
 var arr1 = ['a', 'b'];
 var arr2 = ['c'];
 var arr3 = ['d', 'e'];
 
 console.log(arr1.concat(arr2, arr3));
     // [ 'a', 'b', 'c', 'd', 'e' ]
+```
+
 ES6 – spread operator:
 
+```javascript
 const arr1 = ['a', 'b'];
 const arr2 = ['c'];
 const arr3 = ['d', 'e'];
 
 console.log([...arr1, ...arr2, ...arr3]);
     // [ 'a', 'b', 'c', 'd', 'e' ]
-More information: section “The spread operator (...)”.
+```
+더 자세한 내용: 섹션 "펼침 연산자 (...)".
 
-4.12 From function expressions in object literals to method definitions
-In JavaScript, methods are properties whose values are functions.
+## 4.12 객체 리터럴에서의 함수표현식에서 메소드 정의로
+자바스크립트에서 메소드는 프로퍼티의 값이 함수인 것이다.
 
-In ES5 object literals, methods are created like other properties. The property values are provided via function expressions.
+ES5 객체 리터럴에서 메소드는 다른 프로퍼티 처럼 생성된다. 이 프로퍼티 값은 함수 표현식을 통해 제공된다.
 
+```javascript
 var obj = {
     foo: function () {
         ···
@@ -450,8 +461,10 @@ var obj = {
         this.foo();
     }, // trailing comma is legal in ES5
 }
-ES6 has method definitions, special syntax for creating methods:
+```
+ES6은 메소드 정의를 갖고, 메소드 생성에 대한 특별 문법을 갖는다.:
 
+```javascript
 const obj = {
     foo() {
         ···
@@ -460,22 +473,25 @@ const obj = {
         this.foo();
     },
 }
-More information: section “Method definitions”.
+```
+더 자세한 내용: 섹션 "메소드 정의"
 
-4.13 From constructors to classes
-ES6 classes are mostly just more convenient syntax for constructor functions.
+## 4.13 생성자로부터 클래스로
+ES6 클래스는 대부분 함수 생성자에 대한 문법보다 더 편리 하다.
 
-4.13.1 Base classes
-In ES5, you implement constructor functions directly:
+### 4.13.1 기본 클래스
+ES5에서 당신은 생성자 함수를 바로 구현한다.:
 
+```javascript
 function Person(name) {
     this.name = name;
 }
 Person.prototype.describe = function () {
     return 'Person called '+this.name;
 };
-In ES6, classes provide slightly more convenient syntax for constructor functions (note especially the compact syntax for method definitions – no keyword function needed):
-
+```
+ES6에서 클래스는 생성자 함수에 대한 약간 더 편리한 문법을 제공한다(특히 메소드 정의에 대한 간결한 문법을 주목하라 - function 키워드는 필요치 않다).:
+```javascript
 class Person {
     constructor(name) {
         this.name = name;
@@ -484,6 +500,8 @@ class Person {
         return 'Person called '+this.name;
     }
 }
+```
+
 4.13.2 Derived classes
 Subclassing is complicated in ES5, especially referring to super-constructors and super-properties. This is the canonical way of creating a sub-constructor of Person, Employee:
 
