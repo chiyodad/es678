@@ -18,7 +18,7 @@ function func(randomize) {
 }
 func(false); // undefined
 ```
-func()는 undefined를 반환은 놀라움을 준다. 당신이 만약 무슨일이 일어났는지 더 면밀하게 반영하기 위해 이 코드를 재작성 한다면 당신은 이유를 볼 수 있다.
+func()가 undefined 반환 하는것은 놀랍다. 만약 무슨일이 일어났는지 더 면밀하게 반영하기 위해 이 코드를 재작성 한다면 이유를 알 수 있다.
 
 ```javascript
 var x = 3;
