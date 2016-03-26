@@ -435,7 +435,7 @@ console.log(arr1.concat(arr2, arr3));
     // [ 'a', 'b', 'c', 'd', 'e' ]
 ```
 
-ES6 – spread operator:
+ES6 – 펼침 연산자:
 
 ```javascript
 const arr1 = ['a', 'b'];
@@ -502,9 +502,10 @@ class Person {
 }
 ```
 
-4.13.2 Derived classes
-Subclassing is complicated in ES5, especially referring to super-constructors and super-properties. This is the canonical way of creating a sub-constructor of Person, Employee:
+### 4.13.2 파생 클래스
+ES5에서 하위 클래스를 만드는 것은 복잡하고 그 중에서 특히 부모 생성자와 부모 프로퍼티를 참조 하는 것은 복잡하다. 여기 Person에 하위 생성자 Employee를 생성하는 인정받은 방법이 있다.:
 
+```javascript
 function Employee(name, title) {
     Person.call(this, name); // super(name)
     this.title = title;
@@ -515,8 +516,10 @@ Employee.prototype.describe = function () {
     return Person.prototype.describe.call(this) // super.describe()
            + ' (' + this.title + ')';
 };
-ES6 has built-in support for subclassing, via the extends clause:
+```
+ES6는 extends 절을 통한 서브클래스 생성을 내장으로 지원한다.:
 
+```javascript
 class Employee extends Person {
     constructor(name, title) {
         super(name);
@@ -526,11 +529,13 @@ class Employee extends Person {
         return super.describe() + ' (' + this.title + ')';
     }
 }
-More information: chapter “Classes”.
+```
+더 자세한 내용: 챕터 "클래스".
 
-4.14 From custom error constructors to subclasses of Error
-In ES5, it is impossible to subclass the built-in constructor for exceptions, Error (the chapter “Subclassing Built-ins” in “Speaking JavaScript” explains why). The following code shows a work-around that gives the constructor MyError important features such as a stack trace:
+## 4.14 커스톰 에러 생성자로 부터 에러의 하위 클래스로
+ES5에서 익셉션, 에러에 대한 내장 생성자를 하위 클래스를 만드는것은 불가능 했다(챕터 말하는 자바스크립트의 내장객체의 하위 클래스에서 이유를 설명한다.). 아래 코드는 생성자 MyError에게 스택 트래이스처럼 중요한 기능을 주는 해결 방법을 보여준다.:
 
+```javascript
 function MyError() {
     // Use Error as a function
     var superInstance = Error.apply(null, arguments);
@@ -538,17 +543,22 @@ function MyError() {
 }
 MyError.prototype = Object.create(Error.prototype);
 MyError.prototype.constructor = MyError;
-In ES6, all built-in constructors can be subclassed, which is why the following code achieves what the ES5 code can only simulate:
+```
 
+ES6에서 모든 내장 생성자는 서브클래스를 만들수 있고, 이것은 아래의 코드가 ES5코드를 흉내 내는 것을 할 수 있는 이유이다.:
+
+```javascript
 class MyError extends Error {
 }
-More information: section “Subclassing built-in constructors”.
+```
+더 자세한 정보: 섹션 "내장 생성자의 서브클래스 만들기"
 
-4.15 From objects to Maps
-Using the language construct object as a map from strings to arbitrary values (a data structure) has always been a makeshift solution in JavaScript. The safest way to do so is by creating an object whose prototype is null. Then you still have to ensure that no key is ever the string '__proto__', because that property key triggers special functionality in many JavaScript engines.
+## 4.15 객체에서 맵으로
+이 언어에서 문자열로 아무 값을 얻는 맵(자료 구조)처럼 객체 생성을 사용하는것은 자바스크립트에서 임시 방법이 였다. 이것의 더 안전한 방법은 프로퍼티가 null인 객체 생성을 통한 것 이다. 이 때 당신은 심지어 문자열 '__proto__' 가 없는지 확인해야 한다. 왜냐하면 그 프로퍼티 키는 많은 자바스크립트 엔진에서 특별한 기능을 유발하기 때문이다.
 
-The following ES5 code contains the function countWords that uses the object dict as a map:
+아래 ES5 코드는 맵과 같은 객체 dict을 사용한 함수 countWords를 포함한다.:
 
+```javascript
 var dict = Object.create(null);
 function countWords(word) {
     var escapedWord = escapeKey(word);
@@ -565,74 +575,103 @@ function escapeKey(key) {
         return key;
     }
 }
-In ES6, you can use the built-in data structure Map and don’t have to escape keys. As a downside, incrementing values inside Maps is less convenient.
+```
 
+ES6에서 당신은 내장 자료 구조 Mad을 사용할 수 있고 escapeKey는 없어도 된다. 단점은 맵안에서 값을 증가시키는 것은 덜 편리하다.
+
+```javascript
 const map = new Map();
 function countWords(word) {
     const count = map.get(word) || 0;
     map.set(word, count + 1);
 }
-Another benefit of Maps is that you can use arbitrary values as keys, not just strings.
+```
+맵에 대한 다른 장점은 키로 아무 문자열 뿐 아니라 아무 값이나 사용할 수 있다.
 
-More information:
+더 자세한 내용: :
 
-Section “The dict Pattern: Objects Without Prototypes Are Better Maps” in “Speaking JavaScript”
-Chapter “Maps and Sets”
-4.16 New string methods
-The ECMAScript 6 standard library provides several new methods for strings.
+자바스크립트 말하기에서 섹션 "사전 패턴: 프로토타입 없는 객체는 더 나은 맵 이다." 
+챕터 "맵과 셋"
 
-From indexOf to startsWith:
+## 4.16 새로운 문자열 메소드
+ECMAScript 6 표준 라이브러리는 몇개의 스트링에 관한 새로운 메소드를 제공한다.
 
+indexOf로 부터 startsWidth:
+
+```javascript
 if (str.indexOf('x') === 0) {} // ES5
 if (str.startsWith('x')) {} // ES6
-From indexOf to endsWith:
+```
 
+indexOf로 부터 endsWith:
+
+```javascript
 function endsWith(str, suffix) { // ES5
   var index = str.indexOf(suffix);
   return index >= 0
     && index === str.length-suffix.length;
 }
 str.endsWith(suffix); // ES6
-From indexOf to includes:
+```
 
+indexOf로 부터 includes:
+
+```javascript
 if (str.indexOf('x') >= 0) {} // ES5
 if (str.includes('x')) {} // ES6
-From join to repeat (the former way of repeating a string is more of a hack):
+```
+join으로 부터 repeat (문자열을 반복의 이전 방법 더 핵(hack)이다.):
 
+```javascript
 new Array(3+1).join('#') // ES5
 '#'.repeat(3) // ES6
-More information: Chapter “New string features”
+```
 
-4.17 New Array methods
-There are also several new Array methods in ES6.
+더 자세한 정보: 챕터 "새로운 문자열 기능"
 
-4.17.1 From Array.prototype.indexOf to Array.prototype.findIndex
-The latter can be used to find NaN, which the former can’t detect:
+## 4.17 새로운 배열 메소드
+ES6에서 몇 가지 새로운 배열 메소드가 있다.
 
+### 4.17.1 Array.prototype.indexOf에서 Array.prototype.findIndex
+후자는 NaN을 발견하는데 사용 할 수 있지만 전자는 발견하지 못한다.:
+
+```javascript
 const arr = ['a', NaN];
 
 console.log(arr.indexOf(NaN)); // -1
 console.log(arr.findIndex(x => Number.isNaN(x))); // 1
-As an aside, Number.isNaN() provides a safe way to detect NaN (because it doesn’t coerce non-numbers to numbers):
+```
 
+여담으로 Number.isNaN()은 NaN을 확인하는 안전한 방법을 제공한다. (왜냐하면 이것은 비 숫자를 숫자로 강제로 변환하지 않기 때문이다.):
+
+```javascript
 > isNaN('abc')
 true
 > Number.isNaN('abc')
 false
-4.17.2 From Array.prototype.slice() to Array.from()
-In ES5, the latter method was used to convert Array-like objects to Arrays. In ES6, you have Array.from():
+```
 
+### 4.17.2 Array.prototype.slice()에서 Array.from()으로
+ES5에서 후자 메소드는 유사 배열을 배열로 변경하는데 사용하였는다. ES6에서는 Array.from()을 사용한다.:
+
+```javascript
 var arr1 = Array.prototype.slice.call(arguments); // ES5
 const arr2 = Array.from(arguments); // ES6
-If a value is iterable, you can also use the spread operator (...) to convert it to an Array:
+```
 
+만약 값이 이터러블이면 또한 펼침 연산자를 사용하여 이것은 배열로 만들 수 있다.:
+
+```javascript
 const arr1 = [...'abc'];
     // ['a', 'b', 'c']
 const arr2 = [...new Set(['b', 'b', 'a', 'b'])];
     // ['b', 'a']
-4.17.3 From apply() to Array.prototype.fill()
-The former enables a hack for creating an Array of arbitrary length that is filled with values. The latter provides a cleaner way for doing so (it overwrites all existing elements and treats each hole as if it were the element undefined).
+```
 
+### 4.17.3 apply()에서 Array.ptototype.fill()로
+이전은 값으로 채워진 임의 수의 배열 크기를 갖는 배열 생성에 대한 꼼수(hack)를 할 수 있게 하였다. 후자는 이것에 대한(이것은 모든 존재하는 원소를 덥어쓰고 만약 이것이 element undefinded같은 구멍을 다룬다.) 명백한 방법을 제공한다.
+
+```javascript
 // ES5: same as Array(undefined, undefined)
 var arr1 = Array.apply(null, new Array(2));
     // [undefined, undefined]
@@ -644,16 +683,19 @@ var arr3 = Array.apply(null, new Array(2))
     // ['x', 'x']
 const arr3 = new Array(2).fill('x');
     // ['x', 'x']
-More information: Chapter “New Array features”
+```
+더 자세한 정보: 챕터 "새로운 배열 기능"
 
-4.18 From CommonJS modules to ES6 modules
-Even in ES5, module systems based on either AMD syntax or CommonJS syntax have mostly replaced hand-written solutions such as the revealing module pattern.
+## 4.18 CommonJS 모듈에서 ES6모듈로
+심지어 ES5에서 모듈 시스템은 AMD 문법 또는 CommonJS문법 기반으로 대부분 "the revealing module pattern"같은 수기로 변경하는 방법을 가졌다.
 
-ES6 has built-in support for modules. Alas, no JavaScript engine supports them natively, yet. But tools such as browserify, webpack or jspm let you use ES6 syntax to create modules, making the code you write future-proof.
+ES6는 모듈을 내장해서 지원한다. 유감스럽게도 네이티브로 제공하는 자바스크립트 엔진은 없었다. 그러나 브라우져파이, 웹팩 또는 jspm 같은 툴은 당신이 모듈 생성에 대한 ES6 문법을 사용하게 해 주고 당신의 쓴 코드를 미래지향적으로 만들어 준다.
 
-4.18.1 Multiple exports
-In CommonJS, you export multiple entities as follows:
+### Multiple export
 
+CommonJS에서 당신은 어려 개체를 익스포트는 다음과 같다.:
+
+```javascript
 //------ lib.js ------
 var sqrt = Math.sqrt;
 function square(x) {
@@ -674,14 +716,20 @@ var diag = require('lib').diag;
 
 console.log(square(11)); // 121
 console.log(diag(4, 3)); // 5
-Alternatively, you can import the whole module as an object and access square and diag via it:
+```
 
+그 대신에 당신은 객체로 전체 모듈을 임포트할 수 있고 그것을 통해 square나 diag에 접근할 수 있다.
+
+```javascript
 //------ main2.js ------
 var lib = require('lib');
 console.log(lib.square(11)); // 121
 console.log(lib.diag(4, 3)); // 5
-In ES6, multiple exports are called named exports and handled like this:
+```
 
+ES6에서 다중 익스포트는 기명된 익스포트로 불리고 이것 처럼 다룬다.:
+
+```javascript
 //------ lib.js ------
 export const sqrt = Math.sqrt;
 export function square(x) {
@@ -695,30 +743,39 @@ export function diag(x, y) {
 import { square, diag } from 'lib';
 console.log(square(11)); // 121
 console.log(diag(4, 3)); // 5
-The syntax for importing modules as objects looks as follows (line A):
+```
 
+객체 처럼 모듈 임포트하는것에 대한 문법은 아래 (줄 A) 처럼 보인다.:
+
+```javascript
 //------ main2.js ------
 import * as lib from 'lib'; // (A)
 console.log(lib.square(11)); // 121
 console.log(lib.diag(4, 3)); // 5
-4.18.2 Single exports
-Node.js extends CommonJS and lets you export single values from modules, via module.exports:
+```
 
+### 4.18.2 단일 익스포트
+Node.js는 CommonJS를 확장하였고 module.exports를 통해 당신을 모듈로 부터 단일 값으로 익스포트한다.:
+
+```javascript
 //------ myFunc.js ------
 module.exports = function () { ··· };
 
 //------ main1.js ------
 var myFunc = require('myFunc');
 myFunc();
-In ES6, the same thing is done via export default:
+```
+ES6에서 exprot default를 통해 같은 것을 한다.:
 
+```javascript
 //------ myFunc.js ------
 export default function () { ··· } // no semicolon!
 
 //------ main1.js ------
 import myFunc from 'myFunc';
 myFunc();
-More information: chapter “Modules”.
+```
+더 자세한 정보: 챕터 "모듈".
 
-4.19 What to do next
-Now that you got a first taste of ES6, you can continue your exploration by browsing the chapters: Each chapter covers a feature or a set of related features and starts with an overview.
+## 4.19 다음에는 무엇을 할까
+이제 당신은 ES6에 대해 처음으로 맛을 보았고, 당신은 챕터를 검색하여 탐험을 계속 할 수 있다. 각 챕터는 기능이나 관련된 기능의 집합을 다루고 개요와 함께 시작된다.
