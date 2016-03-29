@@ -180,7 +180,7 @@ const { prop: y } = null; // TypeError
 
 ({} = undefined); // TypeError
 ({} = null); // TypeError
-```javascript
+```
 자바스크립트에서 문(statements)은 중괄호로 시작되면 안되기 때문에 표현식을 둘러싸고 있는 소괄호가 필요하다.
 
 ##10.4.2 이터러블과 함께 동작하는 배열 패턴
