@@ -81,13 +81,13 @@ for (const {name, age} of arr2) {
 
 ##10.2 배경지식: 데이터 생성 vs 데이터 추출
 
-해체가 무엇인지 완벽히 이해하기 위해서 먼저 broader context를 알아보자. 자바스크립트는 데이터 생성을 위한 operations을 가진다 :
+해체가 무엇인지 완벽히 이해하기 위해서 먼저 broader context를 알아보자. 자바스크립트는 데이터 생성을 위한 연산을 가진다 :
 ```javascript
 const obj = {};
 obj.first = 'Jane';
 obj.last = 'Doe';
 ```
-그리고 데이터 추출을 위한 operations도 가진다:
+그리고 데이터 추출을 위한 연산도 가진다:
 ```javascript
 const f = obj.first;
 const l = obj.last;
@@ -115,9 +115,9 @@ const [x, y] = ['a', 'b']; // x = 'a'; y = 'b'
 
 다음은 해체에 관련된 용어를 설명한다.:
 
-Destructuring source: 해체될 데이터. 예를 들면, 해체 할당식의 우변.
+해체 소스: 해체될 데이터. 예를 들면, 해체 할당식의 우변.
 
-Destructuring target: 해체를 위해 사용되는 패턴. 해체 할당식의 좌변.
+해체 타겟: 해체를 위해 사용되는 패턴. 해체 할당식의 좌변.
 
 해체 대상은 다음중 하나이다.:
 
@@ -136,12 +136,12 @@ const obj = { a: [{ foo: 123, bar: 'abc' }, {}], b: true };
 const { a: [{foo: f}] } = obj; // f = 123
 ```
 
-##10.3.1 관심사 선택
-객체를 해체한다면 오직 프로퍼티만이 관심사이다 :
+##10.3.1 필요한 값 골라내기 
+객체를 해체하려 한다면 당신이 관심있는 그 프로퍼티만 언급하면 된다. :
 ```javascript
 const { x: x } = { x: 7, y: 3 }; // x = 7
 ```
-배열을 해체한다면 prefix추출만을 택할 수 있다.
+배열을 해체한다면 배열의 앞에서 부터 추출할 수 있다.
 ```javascript
 const [x,y] = ['a', 'b', 'c']; // x='a'; y='b';
 ```
