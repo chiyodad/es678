@@ -34,8 +34,8 @@ function UiComponent() {
  1. 메소드가 아닌 함수
  2. 메소드
  3. 생성자
-
-이들의 역할충돌 : 역할2, 3번 때문에 함수는 항상 그들의 this를 갖습니다.하지만 콜백( 역할1 ) 내부에서 감싸는 메소드의 this에 접근하는 것을 막습니다.
+//
+이들의 역할충돌 : 역할2, 3번 때문에 함수는 항상 그들의 this를 갖기 때문에 콜백( 역할1 ) 내부에서 감싸는 메소드의 this에 접근하는 것을 막습니다.
 `These roles clash: Due to roles 2 and 3, functions always have their own this. But that prevents you from accessing the this of, e.g., a surrounding method from inside a callback (role 1).`
 
 다음의 ES5코드에서 볼 수 있습니다.
@@ -124,7 +124,7 @@ Prefixer.prototype.prefixArray = function (arr) {
     });
 };
 ```
-완전한 ES6코드, 클래스와 화살표함수의 좀더 간결한 변화?를 사용했습니다:
+완전히 ES6스러운 코드애서는 클래스와 화살표함수의 좀더 간단한 변형 사용할 수 있습니다:
 `To fully ES6-ify the code, you’d use a class and a more compact variant of arrow functions:`
 ```javascript
 class Prefixer {
@@ -194,7 +194,7 @@ const squares = [1, 2, 3].map(x => x * x);
 변수가 값을 받는 두가지 방법은 다음과 같습니다.
 `The following are two ways in which a variable can receive its value.`
 
-첫째, 정적(lexically) : 변수의 값이 프로그램의 구조에 의해 결정됩니다; 변수의 값은 감싸는 스코프로 부터 받습니다. 
+첫째, 정적(어휘) : 변수의 값이 프로그램의 구조에 의해 결정됩니다; 변수의 값은 감싸는 스코프로 부터 받습니다. 
 예를들어:
 `First, statically (lexically): Its value is determined by the structure of the program; it receives its value from a surrounding scope. For example:`
 ```javascript
@@ -214,11 +214,11 @@ function bar(arg) {
 ```
 ### 13.4.2 화살표함수 lexical에 있는 변수들
 `13.4.2 Variables that are lexical in arrow functions`
-thisd의 출처는 다른것과 중요하게 구별되는 화살표 함수의 양상입니다.`The source of this is an important distinguishing aspect of arrow functions:`
-* 이전함수는 동적 this를 갖습니다; 변수의 값은 함수들이 호출되어진 방법에 의해 결정됩니다.`Traditional functions have a dynamic this; its value is determined by how they are called.`
-* 화살표함수는 lexical this를 갖습니다; 그건의 값은 감싸는 스코프에 의해 결정됩니다.`Arrow functions have a lexical this; its value is determined by the surrounding scope.`
+this의 출처는 다른것과 중요하게 구별되는 화살표 함수의 양상입니다.`The source of this is an important distinguishing aspect of arrow functions:`
+* 이전함수는 동적 this를 갖습니다; this의 값은 함수들이 호출되어진 방법에 의해 결정됩니다.`Traditional functions have a dynamic this; its value is determined by how they are called.`
+* 화살표함수는 lexical this를 갖습니다; 그것의 값은 감싸는 스코프에 의해 결정됩니다.`Arrow functions have a lexical this; its value is determined by the surrounding scope.`
 
-변수의 값이 사전적으로 결정되는 [전체목록](http://exploringjs.com/es6/ch_arrow-functions.html) 입니다.
+변수의 값이 lexically로 결정되는 [전체목록](http://exploringjs.com/es6/ch_arrow-functions.html) 입니다.
 `The complete list of variables whose values are determined lexically is:`
 * arguments
 * super
@@ -275,7 +275,7 @@ y) => {
 이런 규제의 이론적 해석은 미래의 화살표함수 “headless”에 대한 옵션을 열어둔 것입니다: 만약 인자가 없다면 괄호 생략이 가능합니다.
 `The rationale for this restriction is that it keeps the options open w.r.t. to “headless” arrow functions in the future: if there are zero parameters, you’d be able to omit the parentheses.`
 
-### 13.5.3 표현식본문 같은 문법을 사용할 수 없습니다.
+### 13.5.3 표현식의 본문으로 문을 사용할 수 없습니다.
 `13.5.3 You can’t use statements as expression bodies`
 #### 13.5.3.1 표현식 vs 문
 `13.5.3.1 Expressions versus statements`
