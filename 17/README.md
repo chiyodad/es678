@@ -96,8 +96,9 @@ for (const x of Array.from(arrayLike)) { // OK
 }
 ```
 
-###17.4 Iteration variables: let declarations versus var declarations
-If you let-declare the iteration variable, a fresh binding (storage space) will be created for each iteration. That can be seen in the following code snippet where we save the current binding of elem for later, via an arrow function. Afterwards, you can see that the arrow functions don’t share the same binding for elem, they each have a different one.
+###17.4 이터레이션 변수들: let 선언 vs var 선언
+만약 let으로 이터레이션 변수를 선언한다면, 각각의 이터레이션을 위한 새로운 바인딩(storage space)이 생성될 것이다.
+그것은 화살표 함수를 이용해서 나중을 위해 현재의 바인딩을 저장하는 다음의 코드 스니핏과 같이 생겼다. 이 화살표 함수는 elem 을 위한 똑같은 바인딩을 공유하지 않는다는 것을 알게 될 것이다. they each have a different one.
 ```javascript
 const arr = [];
 for (const elem of [0, 1, 2]) {
@@ -109,7 +110,8 @@ console.log(arr.map(f => f())); // [0, 1, 2]
 console.log(elem); // ReferenceError: elem is not defined
 ```
 
-A const declaration works the same way as a let declaration (but the bindings are immutable).
+const 선언은 let선언과 똑같은 방식으로 동작한다.(그러나 바인딩은 immutable 하다)
+
 
 It is instructive to see how things are different if you var-declare the iteration variable. Now all arrow functions refer to the same binding of elem.
 ```javascript
