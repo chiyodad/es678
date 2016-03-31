@@ -1,7 +1,7 @@
-##17. for-of 반복문
+##17. for-of 루프
 
 ###17.1 개요
-for-of 는 for-in 과 forEach()를 대체하고 새로운 이터레이션 프로토콜을 지원하는 ES6에 새롭게 추가된 반복문이다. 
+for-of 는 for-in 과 forEach()를 대체하고 새로운 이터레이션 프로토콜을 지원하는 ES6에 새롭게 추가된 루프이다. 
 이터러블 객체(배열, 문자열, Map, Set 등)의 반복을 위해 사용한다. (이터러블과 이터레이터 챕터를 참고하라)
 ```javascript
 const iterable = ['a', 'b'];
@@ -9,20 +9,21 @@ for (const x of iterable) {
     console.log(x);
 }
 
-// Output:
+// 출력:
 // a
 // b
 ```
-break and continue work inside for-of loops:
+break 와 continue 도 for-of 루프 안에서 사용가능하다 :
 ```javascript
 for (const x of ['a', '', 'b']) {
     if (x.length === 0) break;
     console.log(x);
 }
 
-// Output:
+// 출력:
 // a
 ```
+
 Access both elements and their indices while looping over an Array (the square brackets before of mean that we are using destructuring):
 ```javascript
 const arr = ['a', 'b'];
@@ -30,10 +31,11 @@ for (const [index, element] of arr.entries()) {
     console.log(`${index}. ${element}`);
 }
 
-// Output:
+// 출력:
 // 0. a
 // 1. b
 ```
+
 Looping over the [key, value] entries in a Map (the square brackets before of mean that we are using destructuring):
 ```javascript
 const map = new Map([
@@ -44,34 +46,35 @@ for (const [key, value] of map) {
     console.log(`${key} => ${value}`);
 }
 
-// Output:
+// 출력:
 // false => no
 // true => yes
 ```
-###17.2 Introducing the for-of loop
-for-of lets you loop over data structures that are iterable: Arrays, strings, Maps, Sets and others. How exactly iterability works is explained in Chap. “Iterables and iterators”. But you don’t have to know the details if you use the for-of loop:
+###17.2 for-of 루프의 소개
+for-of 는 배열, 문자열, Map, Set 과 같은 이터러블 데이터 구조의 루프에 사용 가능합니다. 어떻게 이것이 가능한지는 이터러블과 이터레이터 챕터를 참고하세요. 그러나 for-of 루프를 사용한다면 이 모든것을 다 알 필요는 없습니다.
 ```javascript
 const iterable = ['a', 'b'];
 for (const x of iterable) {
     console.log(x);
 }
 
-// Output:
+// 출력:
 // a
 // b
 ```
 for-of goes through the items of iterable and assigns them, one at a time, to the loop variable x, before it executes the body. The scope of x is the loop, it only exists inside it.
 
-You can use break and continue:
+break 와 continue 도 사용할 수 있습니다.:
 ```javascript
 for (const x of ['a', '', 'b']) {
     if (x.length === 0) break;
     console.log(x);
 }
 
-// Output:
+// 출력:
 // a
 ```
+
 for-of combines the advantages of:
 
 Normal for loops: break/continue; usable in generators
@@ -81,7 +84,7 @@ forEach() methods: concise syntax
 The operand of the of clause must be iterable. That means that you need a helper function if you want to iterate over plain objects (see “Plain objects are not iterable”). If a value is Array-like, you can convert it to an Array via Array.from():
 
 ```javascript
-// Array-like, but not iterable!
+// 유사배열, 그치만 이터러블은 아니다!
 const arrayLike = { length: 2, 0: 'a', 1: 'b' };
 
 for (const x of arrayLike) { // TypeError
@@ -126,21 +129,21 @@ You also get per-iteration bindings in for loops and for-in loops if you use let
 ###17.5 Iterating with existing variables, object properties and Array elements
 So far, we have only seen for-of with a declared iteration variable. But there are several other forms.
 
-You can iterate with an existing variable:
+이미 존재하는 변수로 이터레이트도 가능하다:
 ```javascript
 let x;
 for (x of ['a', 'b']) {
     console.log(x);
 }
 ```
-You can also iterate with an object property:
+객체 프로퍼티로 이터레이트하는 것 또한 가능하다:
 ```javascript
 const obj = {};
 for (obj.prop of ['a', 'b']) {
     console.log(obj.prop);
 }
 ```
-And you can iterate with an Array element:
+그리고 배열의 요소로 이터레이트 할 수 있다:
 ```javascript
 const arr = [];
 for (arr[0] of ['a', 'b']) {
@@ -148,32 +151,34 @@ for (arr[0] of ['a', 'b']) {
 }
 ```
 
-###17.6 Iterating with a destructuring pattern
+###17.6 해체 패턴과 사용되는 이터레이팅
+해체와 for-of 의 조합은 특별히 [key, value] 쌍(encoded ad Arrays)인 이터러블에 유용하다.
 Combining for-of with destructuring is especially useful for iterables over [key, value] pairs (encoded as Arrays). That’s what Maps are:
 ```javascript
 const map = new Map().set(false, 'no').set(true, 'yes');
 for (const [k,v] of map) {
     console.log(`key = ${k}, value = ${v}`);
 }
-// Output:
+// 출력:
 // key = false, value = no
 // key = true, value = yes
 ```
-Array.prototype.entries() also returns an iterable over [key, value] pairs:
+Array.prototype.entries() 또한 [key, value] 를 쌍으로 하는 이터러블을 반환한다:
 ```javascript
 const arr = ['a', 'b', 'c'];
 for (const [k,v] of arr.entries()) {
     console.log(`key = ${k}, value = ${v}`);
 }
-// Output:
+// 출력:
 // key = 0, value = a
 // key = 1, value = b
 // key = 2, value = c
 ```
+그러므로, entries() 는 enumerated items를 다루기 위한 다른 방법을 제공해준다. depending on their position:
 Therefore, entries() gives you a way to treat enumerated items differently, depending on their position:
 
 ```javascript
-/** Same as arr.join(', ') */
+/** arr.join(', ') 과 같다 */
 function toString(arr) {
     let result = '';
     for (const [i,elem] of arr.entries()) {
