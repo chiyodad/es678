@@ -23,8 +23,7 @@ for (const x of ['a', '', 'b']) {
 // 출력:
 // a
 ```
-
-Access both elements and their indices while looping over an Array (the square brackets before of mean that we are using destructuring):
+배열의 루프를 돌면서 요소(element)와 인덱스(index)의 접근(the square brackets before of mean that we are using destructuring):
 ```javascript
 const arr = ['a', 'b'];
 for (const [index, element] of arr.entries()) {
@@ -62,7 +61,7 @@ for (const x of iterable) {
 // a
 // b
 ```
-for-of goes through the items of iterable and assigns them, one at a time, to the loop variable x, before it executes the body. The scope of x is the loop, it only exists inside it.
+for-of는 본문을 실행하기 전에, 이터러블의 아이템들을 루프 한번에 하나씩 찾고 변수 x에 할당합니다. x의 스코프는 루프안이며 오직 이 루프 안에서만 존재합니다.
 
 break 와 continue 도 사용할 수 있습니다.:
 ```javascript
@@ -74,14 +73,13 @@ for (const x of ['a', '', 'b']) {
 // 출력:
 // a
 ```
+for-of 는 아래의 이점들을 결합한다:
 
-for-of combines the advantages of:
+일반적인 루프 : break/continue; 제러레이터에서 유용한
+forEach() 메소드 : 간결한 문법
 
-Normal for loops: break/continue; usable in generators
-forEach() methods: concise syntax
-
-###17.3 Pitfall: for-of only works with iterable values
-The operand of the of clause must be iterable. That means that you need a helper function if you want to iterate over plain objects (see “Plain objects are not iterable”). If a value is Array-like, you can convert it to an Array via Array.from():
+###17.3 위험: for-of는 오직 이터러블 값에만 동작한다.
+피연산의 주절은 이터러블이어야만 한다. 이 말인즉슨, plain 객체들을 이터레이트 하기 위해서는 helper 함수가 필요하다는 것이다.(Plain objects are not iterable 챕터를 참고하라) 만약 값이 유사 배열이라면 Array.from()을 통해 배열로 변환할 수 있다.
 
 ```javascript
 // 유사배열, 그치만 이터러블은 아니다!
@@ -98,7 +96,7 @@ for (const x of Array.from(arrayLike)) { // OK
 
 ###17.4 이터레이션 변수들: let 선언 vs var 선언
 만약 let으로 이터레이션 변수를 선언한다면, 각각의 이터레이션을 위한 새로운 바인딩(storage space)이 생성될 것이다.
-그것은 화살표 함수를 이용해서 나중을 위해 현재의 바인딩을 저장하는 다음의 코드 스니핏과 같이 생겼다. 이 화살표 함수는 elem 을 위한 똑같은 바인딩을 공유하지 않는다는 것을 알게 될 것이다. they each have a different one.
+그것은 화살표 함수를 이용해서 나중을 위해 현재의 바인딩을 저장하는 다음의 코드 스니핏과 같이 생겼다. 이 화살표 함수는 elem 을 위한 똑같은 바인딩을 공유하지 않는다는 것을 알게 될 것이다. 이 각각의 함수는 다른 elem을 갖는다.
 ```javascript
 const arr = [];
 for (const elem of [0, 1, 2]) {
@@ -112,8 +110,7 @@ console.log(elem); // ReferenceError: elem is not defined
 
 const 선언은 let선언과 똑같은 방식으로 동작한다.(그러나 바인딩은 immutable 하다)
 
-
-It is instructive to see how things are different if you var-declare the iteration variable. Now all arrow functions refer to the same binding of elem.
+당신이 이터레이션 변수를 var로 선언한다면 이것들이 어떻게 다른지 살펴보는 것은 유익하다. 이제 모든 화살표 함수는 똑같은 elem을 참조한다.
 ```javascript
 const arr = [];
 for (var elem of [0, 1, 2]) {
@@ -124,12 +121,11 @@ console.log(arr.map(f => f())); // [2, 2, 2]
 // `elem` exists in the surrounding function:
 console.log(elem); // 2
 ```
-Having one binding per iteration is very helpful whenever you create functions via a loop (e.g. to add event listeners).
+루프를 통해 함수를 만들때라면 각 이터레이션에 하나의 바인딩을 갖는것은 매우 유용하다. (예: 이벤트 리스너 추가)
+for또는 for-in 루프에서 let을 쓴다면 역시 매 이터레이션에 하나의 바인딩을 갖는다 variables 챕터에서 설명된다.
 
-You also get per-iteration bindings in for loops and for-in loops if you use let. Details are explained in the chapter on variables.
-
-###17.5 Iterating with existing variables, object properties and Array elements
-So far, we have only seen for-of with a declared iteration variable. But there are several other forms.
+###17.5 존재하는 변수의 이터레이팅, 객체 프로퍼티와 배열 요소들
+지금까지 선언된 이터레이션 변수의 for-of만 살펴봤다. 그러나 몇가지 다른 유형도 있다.
 
 이미 존재하는 변수로 이터레이트도 가능하다:
 ```javascript
@@ -154,8 +150,7 @@ for (arr[0] of ['a', 'b']) {
 ```
 
 ###17.6 해체 패턴과 사용되는 이터레이팅
-해체와 for-of 의 조합은 특별히 [key, value] 쌍(encoded ad Arrays)인 이터러블에 유용하다.
-Combining for-of with destructuring is especially useful for iterables over [key, value] pairs (encoded as Arrays). That’s what Maps are:
+해체와 for-of 를 조합하는 것은 특별히 [key, value] 쌍(encoded ad Arrays)인 이터러블에 유용하다. That’s what Maps are:
 ```javascript
 const map = new Map().set(false, 'no').set(true, 'yes');
 for (const [k,v] of map) {
