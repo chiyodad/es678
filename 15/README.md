@@ -1,10 +1,10 @@
-# 15. 클래스 `Classes`
+# 15. 클래스
 
-이 장에서는 ES6 클래스가 작동하는 방법에 대해 설명합니다. `This chapter explains how ES6 classes work.`
+이 장은 ES6 클래스가 작동하는 방법에 대해 설명합니다.
 
-## 15.1 개요 `Overview`
+## 15.1 개요
 
-클래스와 서브 클래스 `A class and a subclass:`
+클래스와 서브 클래스
 
 ```javascript
 class Point {
@@ -28,7 +28,7 @@ class ColorPoint extends Point {
 }
 ```
 
-클래스 사용: `Using the classes:`
+클래스 사용:
 
 ```javascript
 > const cp = new ColorPoint(25, 8, 'green');
@@ -42,18 +42,18 @@ true
 true
 ```
 
-그들은 주로 구식 생성자 함수를 만들 수있는 편리한 구문을 제공 : 후드, ES6 클래스는 근본적으로 새로운 무언가 없습니다. 당신은 당신의 typeof 사용하면 볼 수 있습니다 : `Under the hood, ES6 classes are not something that is radically new: They mainly provide more convenient syntax to create old-school constructor functions. You can see that if you use typeof:`
+ES6의 클래스는 근본적으로 새로운 것은 아닙니다.: 주로 이전 버전에서의 생성자 함수를 만들 수 있는 편리한 구문을 제공하는 것입니다. typeof를 사용하여 확인 가능합니다:
 
 ```javascript
 > typeof Point
 'function'
 ```
 
-## 15.2 필수 `The essentials`
+## 15.2 필수
 
-### 15.2.1 기본 클래스 `Base classes`
+### 15.2.1 기본 클래스
 
-클래스는 ECMAScript6에서 다음과 같이 정의된다 : `A class is defined like this in ECMAScript 6:`
+ECMAScript 6에서 클래스는 다음과 같이 정의합니다:
 
 ```javascript
 class Point {
@@ -67,7 +67,7 @@ class Point {
 }
 ```
 
-당신은 ES5 생성자 함수처럼이 클래스를 사용 : `You use this class just like an ES5 constructor function:`
+이것을 ES5의 생성자 함수처럼 사용합니다 :
 
 ```javascript
 > var p = new Point(25, 8);
@@ -75,28 +75,28 @@ class Point {
 '(25, 8)'
 ```
 
-사실, 클래스 정의의 결과는 함수이다 : `In fact, the result of a class definition is a function:`
+사실, 클래스 정의의 결과는 함수입니다 :
 
 ```javascript
 > typeof Point
 'function'
 ```
 
-그러나, 당신은뿐만 아니라 함수 호출 (이 뒤에있는 근거가 나중에 설명)를 통해, 새로운 통해 클래스를 호출 할 수 있습니다 : `However, you can only invoke a class via new, not via a function call (the rationale behind this is explained later):`
+하지만 함수 호출이 아닌 new를 통해서만 호출할 수 있습니다, ( 이론적인 근거는 뒤에 설명합니다. ) :
 
 ```javascript
 > Point()
 TypeError: Classes can’t be function-called
 ```
 
-> 스펙에서, 함수 호출 클래스가 내부 방법에 방지 함수 객체의 [[Call]]. `In the spec, function-calling classes is prevented in the internal method [[Call]] of function objects.`
+> 스펙에 따르면, 클래스를 함수처럼 호출하는 것은 함수 객체의 내부 메소드인 [[Call]]에서 저지됩니다.
 
-#### 15.2.1.1 클래스 선언은 호이스팅되지 않습니다 `Class declarations are not hoisted`
+#### 15.2.1.1 클래스 선언은 호이스팅되지 않습니다
 
-함수 선언이 호이스팅되어 범위를 입력 할 때, 그 안에 선언 된 함수는 즉시 사용할 수 있습니다 - 독립 선언 일 경우의. 즉, 나중에 선언 된 함수를 호출 할 수 있다는 것을 의미한다 : `Function declarations are hoisted: When entering a scope, the functions that are declared in it are immediately available – independently of where the declarations happen. That means that you can call a function that is declared later:`
+함수 선언은 호이스팅됩니다: 스코프 내에서 선언된 함수는 선언이 일어난 위치에 상관없이 즉시 사용이 가능합니다. 나중에 선언된 함수를 호출 할 수 있다는 의미입니다.
 
 ```javascript
-foo(); // works, because `foo` is hoisted
+foo(); // 'foo'는 호이스팅되기 때문에 정상 동작합니다.
 
 function foo() {}
 ```
