@@ -125,9 +125,9 @@ functionThatUsesBar(); // OK
 
 #### 15.2.1.2 클래스 표현식
 
-클래스 선언과 클래스 식 : 마찬가지로 함수, 클래스 정의 이가지, 두 개의 클래스를 정의하는 방법이 있습니다. `Similarly to functions, there are two kinds of class definitions, two ways to define a class: class declarations and class expressions.`
+함수처럼 선언식과 표현식, 두 가지의 클래스 정의 방식이 있습니다.
 
-유사 표현을 작동하려면, 클래스 표현식은 익명으로 할 수 있습니다 : `Similarly to function expressions, class expressions can be anonymous:`
+함수 표현식과 마찬가지로, 클래스 선언식은 익명으로 할 수 있습니다:
 
 ```javascript
 const MyClass = class {
@@ -136,7 +136,9 @@ const MyClass = class {
 const inst = new MyClass();
 ```
 
-또한 유사하게 표현 기능, 클래스 표현은 그들 내부에서만 볼 수 있습니다 이름을 가질 수 있습니다 : `Also similarly to function expressions, class expressions can have names that are only visible inside them:`
+또한 유사하게 표현 기능, 클래스 표현은 그들 내부에서만 볼 수 있습니다 이름을 가질 수 있습니다 :
+
+또한 함수 표현식과 유사하게, 클래스 표현식은 내부에서만 참조 가능한 이름을 가질 수 있습니다.:
 
 ```javascript
 const MyClass = class Me {
@@ -150,15 +152,16 @@ console.log(inst.getClassName()); // Me
 console.log(Me.name); // ReferenceError: Me is not defined
 ```
 
-마지막 두 라인 째는 클래스 변수 밖에되지 않지만, 내부에 사용될 수 있음을 보여준다. `The last two lines demonstrate that Me does not become a variable outside of the class, but can be used inside it.`
+예제의 마지막 두 라인에서 Me는 클래스의 외부 변수가 되지 않았지만 내부에서 사용될 수 있음을 보여줍니다.
 
-### 15.2.2 클래스 정의의 몸체 `Inside the body of a class definition`
+### 15.2.2 클래스 정의의 몸체
 
-클래스 본문은 데이터 속성은 포함할 수 없고 단지 메소드만 포함할 수 있습니다. 프로토 타입에 데이터 속성을 갖는 것은 일반적으로 안티 패턴이라 여겨지므로 클래스 본문이 메서드만 포함할 수 있는 것은 바른 사용을 강제합니다. `A class body can only contain methods, but not data properties. Prototypes having data properties is generally considered an anti-pattern, so this just enforces a best practice.`
+클래스 본문은 데이터 속성은 포함할 수 없고 단지 메소드만 포함할 수 있습니다. 프로토 타입에 데이터 속성을 갖는 것은 일반적으로 안티 패턴이라 여겨지므로 클래스 본문이 메서드만 포함할 수 있는 것은 바른 사용을 강제합니다.
 
-#### 15.2.2.1 생성자, 정적 메소드, 프로토 타입 메소드 `constructor, static methods, prototype methods`
 
-이제 클래스 정의에서 자주 발견하게 될 3가지 종류의 메서드를 살펴보자. `Let’s examine three kinds of methods that you often find in class definitions.`
+#### 15.2.2.1 생성자, 정적 메소드, 프로토 타입 메소드
+
+이제 클래스 정의에서 자주 발견하게 될 3가지 종류의 메서드를 살펴보겠습니다.
 
 ```javascript
 class Foo {
@@ -175,11 +178,11 @@ class Foo {
 const foo = new Foo(123);
 ```
 
-이 클래스 정의의 객체 다이어그램은 아래와 같다. 이해하기 위한 팁 : 프로토 타입 값이 목적은 일반 속성이있는 동안 [[Prototype]]은 객체 사이의 상속 관계다. 프로토타입은 객체를 값으로 가지고 있는 보통의 속성이다. 프로토타입 속성은 new 연산자가 생성할 인스턴스의 프로토타입으로 사용하기 때문에 특별하다. `The object diagram for this class declaration looks as follows. Tip for understanding it: [[Prototype]] is an inheritance relationship between objects, while prototype is a normal property whose value is an object. The property prototype is only special because the new operator uses its value as the prototype for instances it creates.`
+이 클래스 정의의 객체 다이어그램은 아래와 같다. 이해하기 위한 팁 : 프로토 타입 값이 목적은 일반 속성이있는 동안 [[Prototype]]은 객체 사이의 상속 관계다. 프로토타입은 객체를 값으로 가지고 있는 보통의 속성이다. 프로토타입 속성은 new 연산자가 생성할 인스턴스의 프로토타입으로 사용하기 때문에 특별하다.
 
 ![classes----methods.jpg](images/classes----methods.jpg)
 
-첫째, 의사 메소드 생성자입니다. 이 메소드는 클래스를 대표하는 함수를 정의하기 때문에 특별하다 : `First, the pseudo-method constructor. This method is special, as it defines the function that represents the class:`
+첫째, 의사 메소드 생성자입니다. 이 메소드는 클래스를 대표하는 함수를 정의하기 때문에 특별합니다 :
 
 ```javascript
 > Foo === Foo.prototype.constructor
