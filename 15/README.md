@@ -101,7 +101,7 @@ foo(); // 'foo'는 호이스팅되기 때문에 정상 동작합니다.
 function foo() {}
 ```
 
-반면, 클래스 선언은 게양되지 않습니다. 실행의 정의에 도달하고 평가 후 따라서, 클래스는 존재한다. 미리에 액세스하면 ReferenceError가 발생 : `In contrast, class declarations are not hoisted. Therefore, a class only exists after execution reached its definition and it was evaluated. Accessing it beforehand leads to a ReferenceError:`
+반면, 클래스 선언은 호이스팅되지 않습니다. 따라서, 클래스는 execution이 클래스 선언에 도달하고 평가된 이후에만 존재합니다. 그전에 접근하면 ReferenceError가 발생합니다. :
 
 ```javascript
 new Foo(); // ReferenceError
@@ -109,9 +109,9 @@ new Foo(); // ReferenceError
 class Foo {}
 ```
 
-이 제한에 대한 이유는 클래스가 값이 임의의 표현이다 절을 확장 할 수 있다는 것입니다. 그 표현이 적절한 "위치"에서 평가되어야하며, 그 평가는 호이스팅 할 수 없습니다. `The reason for this limitation is that classes can have an extends clause whose value is an arbitrary expression. That expression must be evaluated in the proper “location”, its evaluation can’t be hoisted.`
+이런 제약의 이유는 클래스가 extends라는 적절한 위치에서 평가되어야만 하는 표현을 가지기 때문입니다. 이 평가는 호이스팅 될 수 없습니다.
 
-호이스팅 되지 않는 것은 당신이 생각하는 것보다 제한 이하이다. 예를 들어, 클래스 선언 앞에 오는 기능은 여전히 클래스를 참조 할 수 있습니다,하지만 당신은 당신이 함수를 호출하기 전에 클래스 선언이 평가 될 때까지 기다려야합니다. `Not having hoisting is less limiting than you may think. For example, a function that comes before a class declaration can still refer to that class, but you have to wait until the class declaration has been evaluated before you can call the function.`
+호이스팅되지 않는 것은 생각보다 작은 제약입니다. 예를 들어, 클래스 선언 이전에 존재하는 함수는 여전히 클래스를 참조할 수 있습니다. 다만, 클래스 선언이 평가되기까지 기다렸다가 호출해야 합니다.
 
 ```javascript
 function functionThatUsesBar() {
@@ -123,7 +123,7 @@ class Bar {}
 functionThatUsesBar(); // OK
 ```
 
-#### 15.2.1.2 클래스 식 `Class expressions`
+#### 15.2.1.2 클래스 표현식
 
 클래스 선언과 클래스 식 : 마찬가지로 함수, 클래스 정의 이가지, 두 개의 클래스를 정의하는 방법이 있습니다. `Similarly to functions, there are two kinds of class definitions, two ways to define a class: class declarations and class expressions.`
 
