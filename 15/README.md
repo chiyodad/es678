@@ -191,9 +191,12 @@ true
 'function'
 ```
 
-그것은 때로는 클래스 생성자라고합니다. 정상 생성자 함수가없는 기능 (나중에 설명 슈퍼 통해 자사의 슈퍼 생성자 () - 전화 생성자에 주로 능력)을가집니다. `It is sometimes called a class constructor. It has features that normal constructor functions don’t have (mainly the ability to constructor-call its superconstructor via super(), which is explained later).`
+클래스 생성자로 불리기도 합니다. 일반 생성자 함수에게는 없는 기능을 가지고 있습니다. ( 생성자 호출에서 super()를 통해 superconstructor 에 접근가능한 것으로 뒤에 설명합니다. )
 
-둘째, 정적 방법. 정적 특성 (또는 클래스 속성은) Foo 자체의 속성입니다. 정적와 메소드 정의 앞에 경우에, 당신은 클래스 메소드를 만듭니다 `Second, static methods. Static properties (or class properties) are properties of Foo itself. If you prefix a method definition with static, you create a class method:`
+둘째, 정적 방법. 정적 특성 (또는 클래스 속성은) Foo 자체의 속성입니다. 정적와 메소드 정의 앞에 경우에, 당신은 클래스 메소드를 만듭니다
+
+두번째로, 정적 메소드입니다. 정적 속성 ( 또는 클래스 속성 )은 Foo 자신의 속성입니다. 
+`Second, static methods. Static properties (or class properties) are properties of Foo itself. If you prefix a method definition with static, you create a class method:`
 
 ```javascript
 > typeof Foo.staticMethod
