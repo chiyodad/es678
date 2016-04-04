@@ -3,7 +3,7 @@
 이 챕터는 ECMAScript6의 새로운 수와 Math 기능을 설명한다.
 
 ## 5.1 개요
-당신은 이제 수를 이진법과 팔진법으로 지정할 수 있다:
+당신은 이제 수를 2진수과 8진수으로 표기 할 수 있다:
 
 ```javascript
 > 0xFF // ES5: hexadecimal
@@ -14,6 +14,8 @@
 8
 ```
 
+### 5.1.2 새로운 Number 프로퍼티
+
 이 전역 객체 Number는 몇 가지 새로운 프로퍼티를 얻었다. 다른 것들 사이에서:
 
 * 반올림 오류에 대한 허용 오차와 부동 소수점 숫자와의 비교를 위한 Number.EPSILON.
@@ -21,11 +23,54 @@
   * Number.isSafeInteger(number)
   * Number.MIN_SAFE_INTEGER
   * Number.MAX_SAFE_INTEGER
-   
-  
-5.2 New integer literals
-ECMAScript 5 already has literals for hexadecimal integers:
+ 
+### 5.1.3 새로운 Math 메소드
+전역 객체 Math는 수치, 삼각 함수와 비트 연산에 대한 새로운 매소두를 가진다. 4가지 예제를 보자.
 
+Max.sign()는 수의 부호를 반환한다.:
+
+```javascript
+> Math.sign(-8)
+-1
+> Math.sign(0)
+0
+> Math.sign(3)
+1
+```
+
+Math.trunc() 는 수의 소수를 제거한다.:
+
+```javascript
+> Math.trunc(3.1)
+3
+> Math.trunc(3.9)
+3
+> Math.trunc(-3.1)
+-3
+> Math.trunc(-3.9)
+-3
+```
+
+Math.log10() 기수가 10인 로그를 계산한다.
+
+```javascript
+> Math.log10(100)
+2
+```
+
+Math.hypot() 인자값의 제곱의 합의 루트 값을 계산한다.
+
+```javascript
+> Math.hypot(3, 4)
+5   
+```
+
+
+## 5.2 새로운 정수 리터럴
+
+ECMAScript 5는 이미 16진수 정수에 대한 리터럴을 가진다.:
+
+```javascript
 > 0x9
 9
 > 0xA
@@ -34,37 +79,49 @@ ECMAScript 5 already has literals for hexadecimal integers:
 16
 > 0xFF
 255
-ECMAScript 6 brings two new kinds of integer literals:
+```
 
-Binary literals have the prefix 0b or 0B:
+ECMAScript 6 두개의 새로운 종류의 리터럴을 갖는다.:
+
+2진수 리터럴은 0b또는 0B의 접두사를 갖는다:
+
+```javascript
   > 0b11
   3
   > 0b100
   4
-Octal literals have the prefix 0o or 0O (yes, that’s a zero followed by the capital letter O; you’ll be fine if you use the first variant):
+```
+
+8진수 리터럴은 0o또는 0O의 접두사를 갖는다. (그래, 0뒤에 대문자 O이다. ; 처음 변형을 사용하는 경우에도 괜찬다.)
+
+```javascript
   > 0o7
   7
   > 0o10
   8
-Remember that the method Number.prototype.toString(radix) can be used to convert Numbers back:
+```
 
+Number.prototype.toString(기수)메소드가 수를 다시 변환하는데 사용될 수 있다는것을 기억하라.:
+
+```javascript
 > (255).toString(16)
 'ff'
 > (4).toString(2)
 '100'
 > (8).toString(8)
 '10'
-5.2.1 Use case for octal literals: Unix-style file permissions
-In the Node.js file system module, several functions have the parameter mode. Its value is used to specify file permissions, via an encoding that is a holdover from Unix:
+```
 
-Permissions are specified for three categories of users:
-User: the owner of the file
-Group: the members of the group associated with the file
-All: everyone
-Per category, the following permissions can be granted:
-r (read): the users in the category are allowed to read the file
-w (write): the users in the category are allowed to change the file
-x (execute): the users in the category are allowed to run the file
+### 5.2.1 8진법 리터럴 사용 예: 유닉스 스타일 파일 퍼미션
+Node.js 파일 시스템 모듈에서 몇몇 함수는 모드에 대한 파라미터를 갖는다. 유닉스로 부터 남은 인코딩을 통해 이 값은 파일 퍼미션을 지정하는데 사용된다.:
+* 퍼미션은 세가지 사용자 카테고리를 통해 지정된다.:
+  * User: 파일의 소유자
+  * Group: 파일에 연관된 그룹의 맴버
+  * All: 모든 사람
+* 각 카테고리는 아래의 퍼미션을 부여할 수 있다:
+  * r (read): 이 카테고리에 있는 사용자는 파일을 읽는 것을 허용한다.
+  * w (write): 이 카테고리에 있는 사용자는 파일을 변경하는 것을 허용한다.
+  * x (execute): 이 카테고리에 있는 사용자는 파일을 실행하는 것을 허용한다.
 That means that permissions can be represented by 9 bits (3 categories with 3 permissions each):
 
  	User	Group	All
