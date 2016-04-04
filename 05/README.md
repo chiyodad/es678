@@ -1,21 +1,28 @@
 # 5. 새로운 수 와 Math 기능
 
 이 챕터는 ECMAScript6의 새로운 수와 Math 기능을 설명한다.
-This chapter describes the new number and Math features of ECMAScript 6.
 
-5.1 Overview
-You can now specify integers in binary and octal notation:
+## 5.1 개요
+당신은 이제 수를 이진법과 팔진법으로 지정할 수 있다:
 
+```javascript
 > 0xFF // ES5: hexadecimal
 255
 > 0b11 // ES6: binary
 3
 > 0o10 // ES6: octal
 8
-The global object Number gained a few new properties. Among others:
+```
 
-Number.EPSILON for comparing floating point numbers with a tolerance for rounding errors.
-A method and constants for determining whether a JavaScript integer is safe (within the signed 53 bit range in which there is no loss of precision).
+이 전역 객체 Number는 몇 가지 새로운 프로퍼티를 얻었다. 다른 것들 사이에서:
+
+* 반올림 오류에 대한 허용 오차와 부동 소수점 숫자와의 비교를 위한 Number.EPSILON.
+* 자바스크립트 정수형이 안전한지 아닌지를 결정하는 메소드와 상수(정밀도 손실이 없는 부호를 포함한 53bit 범위):
+  * Number.isSafeInteger(number)
+  * Number.MIN_SAFE_INTEGER
+  * Number.MAX_SAFE_INTEGER
+   
+  
 5.2 New integer literals
 ECMAScript 5 already has literals for hexadecimal integers:
 
