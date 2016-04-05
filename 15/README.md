@@ -195,8 +195,7 @@ true
 
 둘째, 정적 방법. 정적 특성 (또는 클래스 속성은) Foo 자체의 속성입니다. 정적와 메소드 정의 앞에 경우에, 당신은 클래스 메소드를 만듭니다
 
-두번째로, 정적 메소드입니다. 정적 속성 ( 또는 클래스 속성 )은 Foo 자신의 속성입니다. 
-`Second, static methods. Static properties (or class properties) are properties of Foo itself. If you prefix a method definition with static, you create a class method:`
+두번째로, 정적 메소드입니다. 정적 속성 ( 또는 클래스 속성 )은 Foo 자신의 속성입니다. 메서드 정의를 static과 함께 prefix할 경우 클래스 메소드를 만들 수 있습니다.:
 
 ```javascript
 > typeof Foo.staticMethod
