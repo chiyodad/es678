@@ -125,21 +125,23 @@ Node.js 파일 시스템 모듈에서 몇몇 함수는 모드에 대한 파라�
 
 이것은 퍼미션이 9bits로 표현된다는것을 의미한다 (3 카테고리 마다 3개의 퍼미션).:
 
+| |User|Group|All|
+|---|---|---|---|
+|Permissions|r, w, x|r, w, x|r, w, x|
+|Bit|8, 7, 6|5, 4, 3|2, 1, 0|
 
- 	User	Group	All
-Permissions	r, w, x	r, w, x	r, w, x
-Bit	8, 7, 6	5, 4, 3	2, 1, 0
-The permissions of a single category of users are stored in 3 bits:
+사용자의 단일 카테고리의 퍼미션의 3비트로 저장된다.:
 
-Bits	Permissions	Octal digit
-000	–––	0
-001	––x	1
-010	–w–	2
-011	–wx	3
-100	r––	4
-101	r–x	5
-110	rw–	6
-111	rwx	7
+|Bits|Permissions|Octal digit|
+|000|–––|0|
+|001|––x|1|
+|010|–w–|2|
+|011|–wx|3|
+|100|r––|4|
+|101|r–x|5|
+|110|rw–|6|
+|111|rwx|7|
+
 That means that octal numbers are a compact representation of all permissions, you only need 3 digits, one digit per category of users. Two examples:
 
 755 = 111,101,101: I can change, read and execute; everyone else can only read and execute.
