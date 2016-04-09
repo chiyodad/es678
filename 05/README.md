@@ -143,34 +143,48 @@ Node.js 파일 시스템 모듈에서 몇몇 함수는 모드에 대한 파라�
 |110|rw–|6|
 |111|rwx|7|
 
-That means that octal numbers are a compact representation of all permissions, you only need 3 digits, one digit per category of users. Two examples:
+8진수 수가 모든 퍼미션을 간단하게 3자리 수, 하나당 사용하의 카테고리로 표현할수 있다는것을 의미한다. 두 예를 보면:
 
-755 = 111,101,101: I can change, read and execute; everyone else can only read and execute.
-640 = 110,100,000: I can read and write; group members can read; everyone can’t access at all.
-5.2.2 parseInt() and the new integer literals
-parseInt() has the following signature:
+* 755 = 111,101,101: 나는 바꾸고 읽고 실행하고 있다 모든 사람들은 오직 읽기와 실행만 할 수 있다.
+* 640 = 110,100,000: 나는 읽고 쓰는게 가능하고 그룹의 맴버는 읽을 수만 있다. 모든 사람은 접근할 수 없다.
 
+### 5.2.2 parseInt() 와 새로운 integer 리터럴
+
+parseInt()는 아래 같은 시그니쳐를 갖는다.:
+
+```javascript
 parseInt(string, radix?)
-It provides special support for the hexadecimal literal notation – the prefix 0x (or 0X) of string is removed if:
+```
 
-radix is missing or 0. Then radix is set to 16.
-radix is already 16.
-For example:
+이것은 16진수 리터럴 표기에 대한 특별한 지원을 제공한다. 
 
+- string의 접두사 0x (또는 0X)를 제거 하면: 
+* radix가 없거나 또는 0이면 16으로 설정한다.
+* radix가 이미 16이다.
+
+예를 들면:
+
+```javascript
 > parseInt('0xFF')
 255
 > parseInt('0xFF', 0)
 255
 > parseInt('0xFF', 16)
 255
-In all other cases, digits are only parsed until the first non-digit:
+```
 
+모든 경우에서 숫자는 숫자만 아닌 첫번째 자리까지 파싱되어 있다.:
+
+```javascript
 > parseInt('0xFF', 10)
 0
 > parseInt('0xFF', 17)
 0
-However, parseInt() does not have special support for binary or octal literals!
+```
 
+그러나 parseInt()는 2진수나 8진수에 대한 특별한 지원은 없다.
+
+```javascript
 > parseInt('0b111')
 0
 > parseInt('0b111', 2)
@@ -184,27 +198,40 @@ However, parseInt() does not have special support for binary or octal literals!
 0
 > parseInt('10', 8)
 8
-If you want to parse these kinds of literals, you need to use Number():
+```
 
+만약 이런 종류의 리터럴을 파싱하기 원한다면 Number()의 사용이 필요하다:
+
+```javascript
 > Number('0b111')
 7
 > Number('0o10')
 8
+```
+
+대안적으로 접두사를 제거하고 적당한 radix와 합께 parseInt()를 사용할 수 있다.
 Alternatively, you can also remove the prefix and use parseInt() with the appropriate radix:
 
+```javascript
 > parseInt('111', 2)
 7
 > parseInt('10', 8)
 8
-5.3 New static Number properties
-This section describes new properties that the constructor Number has picked up in ECMAScript 6.
+```
 
-5.3.1 Previously global functions
-Four number-related functions are already available as global functions and have been added to Number, as methods: isFinite and isNaN, parseFloat and parseInt. All of them work almost the same as their global counterparts, but isFinite and isNaN don’t coerce their arguments to numbers, anymore, which is especially important for isNaN. The following subsections explain all the details.
+## 5.3 새로운 Number 스태틱 프로퍼티
 
-5.3.1.1 Number.isFinite(number)
-Is number an actual number (neither Infinity nor -Infinity nor NaN)?
+이 섹션은 ECMAScript6에서 생성자 Number에 나온 새로운 프로퍼티를 설명한다.
 
+### 5.3.1 이전 전역 함수들
+
+수와 관련된 4개의 함수들은 여전히 전역 함수에 있고, Number에 메소드로 추가 되었다. :isFinite와 isNaN, parseFloat와 parseInt. 이 함수들은 모두 전역에 짝지어 진것과 같은 일을 하지만 isFinite와 isNaN은 그 함수의 인자값을 수로 더 이상 강제 변환 하지 않는다. 특히 isNaN이 중요하다. 이어진 절에서 자세한 설명을 한다.
+
+### 5.3.1.1 Number.isFinite(number)
+
+number가 정확한 수인지(또는 Infinity, -Infinity, NaN이 아닌지) 여부?
+
+```javascript
 > Number.isFinite(Infinity)
 false
 > Number.isFinite(-Infinity)
@@ -213,13 +240,19 @@ false
 false
 > Number.isFinite(123)
 true
-The advantage of this method is that it does not coerce its parameter to number (whereas the global function does):
+```
+이 메소드의 이점은 이것은 강제로 파라메터를 변환하지 않는다는 것이다(반면에 전역 함수를 변환한다.):
 
+```javascript
 > Number.isFinite('123')
 false
 > isFinite('123')
 true
-5.3.1.2 Number.isNaN(number)
+```
+
+#### 5.3.1.2 Number.isNaN(number)
+
+number
 Is number the value NaN? Making this check via === is hacky. NaN is the only value that is not equal to itself:
 
 > const x = NaN;
