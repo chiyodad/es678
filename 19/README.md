@@ -3,7 +3,7 @@
 ## 19.1 개요
 
 Among others, the following four data structures are new in ECMAScript 6: Map, WeakMap, Set and WeakSet.
-
+ㅇㅏㄴㅣㅇㅗㅐㅎㅏㄴㄱㅡㄹㅇㅣㅇㅣㄹㅡㅈㄷㄱ ㅇㅣㄹㅓㅎㄱㅔㅆㅓㅈㅣㄴㅡㄴㄴㄱㅓ
 
 ### 19.1.1 Maps
 
