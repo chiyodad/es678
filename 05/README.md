@@ -252,47 +252,71 @@ true
 
 #### 5.3.1.2 Number.isNaN(number)
 
-number
-Is number the value NaN? Making this check via === is hacky. NaN is the only value that is not equal to itself:
+number가 NaN값인지 여부. ===을 통한 확인을 하는것은 핵스럽다. NaN은 자기 자신과 같지 않는 유일한 값이다.:
 
+```javascript
 > const x = NaN;
 > x === NaN
 false
-Therefore, this expression is used to check for it
+```
 
+그러므로, 이 표현식은 이것을 확인하는데 사용된다.
+
+```javascript
 > x !== x
 true
-Using Number.isNaN() is more self-descriptive:
+```
 
+Number.isNaN()을 사용하는것은 더 자기 설명 적이다.:
+
+```javascript
 > Number.isNaN(x)
 true
-Number.isNaN() also has the advantage of not coercing its parameter to number (whereas the global function does):
+```
 
+Number.isNaN()은 파라메터를 수로 강제 변환하지 않는 것에 대한 장점(전역 함수 행동과 반하여)이 있다.:
+
+```javascript
 > Number.isNaN('???')
 false
 > isNaN('???')
 true
-5.3.1.3 Number.parseFloat and Number.parseInt
-The following two methods work exactly like the global functions with the same names. They were added to Number for completeness sake; now all number-related functions are available there.
+```
 
-Number.parseFloat(string)1
-Number.parseInt(string, radix)2
-5.3.2 Number.EPSILON
-Especially with decimal fractions, rounding errors can become a problem in JavaScript3. For example, 0.1 and 0.2 can’t be represented precisely, which you notice if you add them and compare them to 0.3 (which can’t be represented precisely, either).
+#### 5.3.1.3 Number.parseFloat와 Number.parseInt
 
+이 두 메소드는 이름이 같은 전역함수와 정확히 동작이 같다. 이것들은 완전성을 위하여 Number에 추가 되었다; 이제 모든 수와 관련된 함수는 Number로 사용가능 하다.
+
+```javascript
+Number.parseFloat(string)
+Number.parseInt(string, radix)
+```
+
+### 5.3.2 Number.EPSILON
+
+특히 분수에서 반올림 오류는 Javascript3에서 문제가 된다. 예를 들어 0.1와 0.2을 더하고 그것과 0.3(이것 또한 정확하게 표현되지 않는다.)을 비교 한다면 정확하게 표현되지 않을 수 있다는 것을 알아야 한다.
+
+```javascript
 > 0.1 + 0.2 === 0.3
 false
-Number.EPSILON specifies a reasonable margin of error when comparing floating point numbers. It provides a better way to compare floating point values, as demonstrated by the following function.
+```
 
+부동 소수점 수를 비교할 때 Number.EPSILON은 이유있는 오류 마진을 지정한다. 이것은 부동 소수점 수를 비교할때 더 나은 방법을 제공한다. 아래 함수로 보여주겠다.
+
+```javascript
 function epsEqu(x, y) {
     return Math.abs(x - y) < Number.EPSILON;
 }
 console.log(epsEqu(0.1+0.2, 0.3)); // true
-5.3.3 Number.isInteger(number)
-JavaScript has only floating point numbers (doubles). Accordingly, integers are simply floating point numbers without a decimal fraction.
+```
 
-Number.isInteger(number) returns true if number is a number and does not have a decimal fraction.
+### 5.3.3 Number.isInteger(number)
 
+Javascript는 오로지 부동소수점 수(doubles)만 가진다. 따라서 정수는 간단하게 소수 부분이 없는 부동 소수점 수 이다.
+
+만약 number에 소수가 없다면 Number.isInteger(number)는 true를 반환한다.
+
+```javascript
 > Number.isInteger(-17)
 true
 > Number.isInteger(33)
@@ -305,14 +329,18 @@ false
 false
 > Number.isInteger(Infinity)
 false
-5.3.4 Safe integers
-JavaScript numbers have only enough storage space to represent 53 bit signed integers. That is, integers i in the range −253 < i < 253 are safe. What exactly that means is explained momentarily. The following properties help determine whether a JavaScript integer is safe:
+```
 
-Number.isSafeInteger(number)
-Number.MIN_SAFE_INTEGER
-Number.MAX_SAFE_INTEGER
-The notion of safe integers centers on how mathematical integers are represented in JavaScript. In the range (−253, 253) (excluding the lower and upper bounds), JavaScript integers are safe: there is a one-to-one mapping between them and the mathematical integers they represent.
+### 5.3.4 안전 정수
 
+Javascript 수는 오직 53bit의 부호있는 정수를 표현하는 저장 공간이 있다. -2^53 < i < 2^53은 정수 i는 안전 하다. 정확히 무엇을 말하려는지 지금 설명 하겠다. 아래 프로퍼티는 자바스크립트 정수가 안전한지를 결정하는것을 돕는다.:
+* Number.isSafeInteger(number)
+* Number.MIN_SAFE_INTEGER
+* Number.MAX_SAFE_INTEGER
+
+안전 정수에 대한 개념은 자바스크립트에서 어떻게 정확한 정수를 표현하는가에 대해서 중점적으로 둔다. (-2^53, 2^53)범위에서 (경계면을 제외하고), 자바스크립트 정수는 안전하다: 이것들 사이에서 1대1 맴핑되고, 이것은 수학상의 정수로 표현된다.
+
+범위를 넘어서, 자바스크립트 정수는 안전하지 않다: 둘 또는 더 수학상 정수를 자바스크립트에서 같은 정수로 표현된다. 예를 들면 2^53
 Beyond this range, JavaScript integers are unsafe: two or more mathematical integers are represented as the same JavaScript integer. For example, starting at 253, JavaScript can represent only every second mathematical integer:
 
 > Math.pow(2, 53)
