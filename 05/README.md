@@ -340,9 +340,9 @@ Javascript 수는 오직 53bit의 부호있는 정수를 표현하는 저장 공
 
 안전 정수에 대한 개념은 자바스크립트에서 어떻게 정확한 정수를 표현하는가에 대해서 중점적으로 둔다. (-2^53, 2^53)범위에서 (경계면을 제외하고), 자바스크립트 정수는 안전하다: 이것들 사이에서 1대1 맴핑되고, 이것은 수학상의 정수로 표현된다.
 
-범위를 넘어서, 자바스크립트 정수는 안전하지 않다: 둘 또는 더 수학상 정수를 자바스크립트에서 같은 정수로 표현된다. 예를 들면 2^53
-Beyond this range, JavaScript integers are unsafe: two or more mathematical integers are represented as the same JavaScript integer. For example, starting at 253, JavaScript can represent only every second mathematical integer:
+범위를 넘는, 자바스크립트 정수는 안전하지 않다:  둘 이상 수학상 정수는 자바스크립트에서 같은 정수로 표현된다. 예를 들면 2^53이상부터는  자바스크립트에서 두번째 수학적 정수만 표현된다.:
 
+```javascript
 > Math.pow(2, 53)
 9007199254740992
 
@@ -358,63 +358,90 @@ Beyond this range, JavaScript integers are unsafe: two or more mathematical inte
 9007199254740996
 > 9007199254740997
 9007199254740996
-Therefore, a safe JavaScript integer is one that unambiguously represents a single mathematical integer.
+```
 
-5.3.4.1 Static Number properties related to safe integers
-The two static Number properties specifying the lower and upper bound of safe integers could be defined as follows:
+그러므로, 안전 자바스크립트 정수는 명백하게 하나의 수학적 정수의 하나이다.
 
+#### 5.3.4.1 안전 정수와 관련된 정적 Number 프로퍼티 
+
+안전 정수의 하계와 상계로 지정된 두개의 정적 Number 프로퍼티는 아래와 같이 정의되어 있다.:
+
+```javascript
 Number.MAX_SAFE_INTEGER = Math.pow(2, 53)-1;
 Number.MIN_SAFE_INTEGER = -Number.MAX_SAFE_INTEGER;
-Number.isSafeInteger() determines whether a JavaScript number is a safe integer and could be defined as follows:
+```
 
+Number.isSafeInteger()는 자바스크립트 수가 안전 정수 인지 결정하고 아래와 같이 정의 되어 있다.:
+
+```javascript
 Number.isSafeInteger = function (n) {
     return (typeof n === 'number' &&
         Math.round(n) === n &&
         Number.MIN_SAFE_INTEGER <= n &&
         n <= Number.MAX_SAFE_INTEGER);
 }
-For a given value n, this function first checks whether n is a number and an integer. If both checks succeed, n is safe if it is greater than or equal to MIN_SAFE_INTEGER and less than or equal to MAX_SAFE_INTEGER.
+```
 
-5.3.4.2 When are computations with integers correct?
-How can we make sure that results of computations with integers are correct? For example, the following result is clearly not correct:
+주어진 값 n에 대해 이 함수는 처음 이 수가 정수인지 검사한다. 만약 두 검사가 진행되고 만약 MIN_SAFE_INTEGER보다 이상이고 MAX_SAFE_INTEGER 이하이면 n은 안전한 정수이다.
 
+#### 5.3.4.2 언제 정수 계산이 정확한가?
+
+어떻게 우리는 정수 계산 결과가 정확한지 확증 할 수 있을까? 예를 들면 아래 결과를 올바르지 않다.:
+
+```javascript
 > 9007199254740990 + 3
 9007199254740992
-We have two safe operands, but an unsafe result:
+```
 
+우리는 안전한 피연산자를 사용했지만 결과는 안전하지 않다.:
+
+```javascript
 > Number.isSafeInteger(9007199254740990)
 true
 > Number.isSafeInteger(3)
 true
 > Number.isSafeInteger(9007199254740992)
 false
-The following result is also incorrect:
+```
+아래의 결과 또한 부정확하다.:
 
+```javascript
 > 9007199254740995 - 10
 9007199254740986
-This time, the result is safe, but one of the operands isn’t:
+```
 
+이 때 결과는 안전하지만 하나의 피 연산자는 그렇지 않다.:
+
+```javascript
 > Number.isSafeInteger(9007199254740995)
 false
 > Number.isSafeInteger(10)
 true
 > Number.isSafeInteger(9007199254740986)
 true
-Therefore, the result of applying an integer operator op is guaranteed to be correct only if all operands and the result are safe. More formally:
+```
 
+그러므로, 만약 모든 피연산자와 그 결과가 안전하다면 정수 연산자 op를 적용한 결과는 정확해 지는 것을 보장한다. 더 공식적으로:
+
+```javascript
 isSafeInteger(a) && isSafeInteger(b) && isSafeInteger(a op b)
-implies that a op b is a correct result.
+```
 
-Source of this section
-“Clarify integer and safe integer resolution”, email by Mark S. Miller to the es-discuss mailing list.
+a op b가 정확한 결과라는것을 의미한다.
 
-5.4 Math
-The global object Math has several new methods in ECMAScript 6.
+이 절의 참고
+"Clarify integer and safe integer resolution", email by Mark S. Miller to the es-discuss mailing list.
 
-5.4.1 Various numerical functionality
-5.4.1.1 Math.sign(x)
-Returns the sign of x as -1 or +1. Unless x is either NaN or zero; then x is returned4.
+## 5.4 Math
 
+이 전역 객체 Math는 ECMAScript 6에서 몇 개의 새로운 메소드를 갖는다.
+
+### 5.4.1 여러 수치적 기능
+#### 5.4.1.1 Math.sign(x)
+
+x의 부호 -1또는 +1을 반환한다. 만약 x가 NaN 또는 0이라면 x를 반환한다.
+
+```javascript
 > Math.sign(-8)
 -1
 > Math.sign(3)
@@ -429,9 +456,13 @@ NaN
 -1
 > Math.sign(Infinity)
 1
-5.4.1.2 Math.trunc(x)
-Removes the decimal fraction of x. Complements the other rounding methods Math.floor(), Math.ceil() and Math.round().
+```
 
+#### 5.4.1.2 Math.turnc(x)
+
+x의 소수부를 제거한다. 다른 반올림 함수 Math.floor(), Math.ceil(), Math.round()를 보완한다.
+
+```javascript
 > Math.trunc(3.1)
 3
 > Math.trunc(3.9)
@@ -440,16 +471,24 @@ Removes the decimal fraction of x. Complements the other rounding methods Math.f
 -3
 > Math.trunc(-3.9)
 -3
-You could implement Math.trunc() like this:
+```
 
+당신은 Math.trunc()를 아래처럼 구현할 수 있다.:
+
+```javascript
 function trunc(x) {
     return Math.sign(x) * Math.floor(Math.abs(x));
 }
-5.4.1.3 Math.cbrt(x)
-Returns the cube root of x (∛x).
+```
 
+#### 5.4.1.3 Math.cbrt(x)
+x의 세제곱근을 반환한다. (∛x).
+
+```javascript
 > Math.cbrt(8)
 2
+```
+
 5.4.2 Using 0 instead of 1 with exponentiation and logarithm
 A small fraction can be represented more precisely if it comes after zero. I’ll demonstrate this with decimal fractions (JavaScript’s numbers are internally stored with base 2, but the same reasoning applies).
 
