@@ -489,24 +489,29 @@ x의 세제곱근을 반환한다. (∛x).
 2
 ```
 
-5.4.2 Using 0 instead of 1 with exponentiation and logarithm
-A small fraction can be represented more precisely if it comes after zero. I’ll demonstrate this with decimal fractions (JavaScript’s numbers are internally stored with base 2, but the same reasoning applies).
+### 5.4.2 지수와 로그에서 0대신에 1사용
+만약 0뒤에 온다면 작은 수는 더 정확하게 표현된다. 나는 소수를 통해 이것을 증명해 보겠다.(자바스크립트의 수는 내부적으로 밑수가 2에 의해서 저장되지만, 동일한 논리가 적용된다.)
 
-Floating point numbers with base 10 are internally represented as mantissa × 10exponent. The mantissa has a single digit before the decimal dot and the exponent “moves” the dot as necessary. That means if you convert a small fraction to the internal representation, a zero before the dot leads to a smaller mantissa than a one before the dot. For example:
+밑수가 10인 부동 소수점 수는 내부적으로 가수 * 10^지수로 표현된다. 이 가수는 소수점과 지수 '이동' 필요에 따른 소수 점 이전에 하나의 수를 갖는다. 만약 내부적으로 표현된 작은 소수를 변환한다면, 소수점 이전의 0은 소수점 이전의 1보다 더 작은 가수를 이끈다는것을 의미한다. 예를 들면:
 
-(A) 0.000000234 = 2.34 × 10−7. Significant digits: 234
-(B) 1.000000234 = 1.000000234 × 100. Significant digits: 1000000234
-Precision-wise, the important quantity here is the capacity of the mantissa, as measured in significant digits. That’s why (A) gives you higher precision than (B).
+* (A) 0.000000234 = 2.34 × 10−7. 중요한 숫자: 234
+* (B) 1.000000234 = 1.000000234 × 100. 수용한 숫자: 1000000234 
 
-You can see this in the following interaction: The first number (1 × 10−16) registers as different from zero, while the same number added to 1 registers as 1.
+정확한 관점에서, 중요한 양은 가수의 측정된 숫자의 갯수 이다. (B)보다 (A)가 정밀한 이유 이다.
 
+다음 상호작용을 볼 수 있다: 같은 수에 1을 더하고에 따라 첫번째 숫자 (1 * 10^-16) 영으로 부터 다르게 저장된다. 
+
+```javascript
 > 1e-16 === 0
 false
 > 1 + 1e-16 === 1
 true
-5.4.2.1 Math.expm1(x)
-Returns Math.exp(x)-1. The inverse of Math.log1p().
+```
+#### 5.4.2.1 Math.expm1(x)
 
+Math.exp(x)-1을 반환한다. Math.log1p()의 역이다.
+
+그러므로, 이 메소드는 Math.exp()가 1과 근접할때 높은 정밀도를 제공한다. 다음 관계 안에서 두가지 다른
 Therefore, this method provides higher precision whenever Math.exp() has results close to 1. You can see the difference between the two in the following interaction:
 
 > Math.expm1(1e-10)
