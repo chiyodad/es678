@@ -511,65 +511,92 @@ true
 
 Math.exp(x)-1을 반환한다. Math.log1p()의 역이다.
 
-그러므로, 이 메소드는 Math.exp()가 1과 근접할때 높은 정밀도를 제공한다. 다음 관계 안에서 두가지 다른
-Therefore, this method provides higher precision whenever Math.exp() has results close to 1. You can see the difference between the two in the following interaction:
+그러므로, 이 메소드는 Math.exp()가 1과 근접할때 높은 정밀도를 제공한다. 다음 관계 안에서 두개의 차이를 볼 수 있다.
 
+```javascript
 > Math.expm1(1e-10)
 1.00000000005e-10
 > Math.exp(1e-10)-1
 1.000000082740371e-10
-The former is the better result, which you can verify by using a library (such as decimal.js) for floating point numbers with arbitrary precision (“bigfloats”):
+```
 
+이전의 결과가 더 낫고, 임의 정밀도에서 부동소수점 수를 라이브러리(decimal.js 같은)을 통해 확인 할 수 있다.
+
+```javascript
 > var Decimal = require('decimal.js').config({precision:50});
 > new Decimal(1e-10).exp().minus(1).toString()
 '1.000000000050000000001666666666708333333e-10'
-5.4.2.2 Math.log1p(x)
-Returns Math.log(1 + x). The inverse of Math.expm1().
+```
 
-Therefore, this method lets you specify parameters that are close to 1 with a higher precision.
+### 5.4.2.2 Math.log1p(x)
 
-We have already established that 1 + 1e-16 === 1. Therefore, it is no surprise that the following two calls of log() produce the same result:
+Math.log(1 + x)를 반환한다. Math.expm1()의 역이다.
 
+그러므로, 이 메소드는 인자값이 1에 근접할때 높은 정밀도를 지정할수 있게 해준다.
+
+우리는 이미 1 + 1e^-16 === 1이라는것을 확립했다. 그러므로, 아래의 log()에 대한 두가지 호출이 같은 값을 생성하는것 놀랄일이 아니다.
+
+```javascript
 > Math.log(1 + 1e-16)
 0
 > Math.log(1 + 0)
 0
-In contrast, log1p() produces different results:
+```
 
+이와 반대로 log1p()는 다른 결과를 생성한다.
+
+```javascript
 > Math.log1p(1e-16)
 1e-16
 > Math.log1p(0)
 0
-5.4.3 Logarithms to base 2 and 10
-5.4.3.1 Math.log2(x)
-Computes the logarithm to base 2.
+```
 
+### 5.4.3 밑이 2, 10인 로그
+
+#### 5.4.3.1 Math.log2(x)
+밑이 2인 로그를 계산한다.
+
+```javascript
 > Math.log2(8)
 3
-5.4.3.2 Math.log10(x)
-Computes the logarithm to base 10.
+```
 
+#### 5.4.3.2 Math.log10(x)
+밑이 10인 로그를 계산한다.
+
+```javascript
 > Math.log10(100)
 2
-5.4.4 Support for compiling to JavaScript
-Emscripten pioneered a coding style that was later picked up by asm.js: The operations of a virtual machine (think bytecode) are expressed in static subset of JavaScript. That subset can be executed efficiently by JavaScript engines: If it is the result of a compilation from C++, it runs at about 70% of native speed.
+```
 
-The following Math methods were mainly added to support asm.js and similar compilation strategies, they are not that useful for other applications.
+### 5.4.4 자바스크립트로 컴파일 지원
+Emscripten는 asm.js를 통해 나중에 선택된 코딩 스타일을 개척했다: 이 가상머신(bytetcode를 생각)의 동작은 자바스크립트에 정적 부분 집합으로 표현되었다. 이 부분 집합은 자바스크립트 엔진에 의해 효과적으로 실행된다: 만약 C++로 부터 컴파일된 결과라면 원래 속도의 70%도 정도 동작한다.
 
-5.4.4.1 Math.fround(x)
-Rounds x to a 32 bit floating point value (float). Used by asm.js to tell an engine to internally use a float value.
+다음 Math 메소드는 asm.js와 유사한 컴파일 전략을 지원하기 위해 주로 추가 되었고, 그것들은 다른 어플리케이션에서 유용하지 않다.
 
-5.4.4.2 Math.imul(x, y)
-Multiplies the two 32 bit integers x and y and returns the lower 32 bits of the result. This is the only 32 bit basic math operation that can’t be simulated by using a JavaScript operator and coercing the result back to 32 bits. For example, idiv could be implemented as follows:
+#### 5.4.4.1 Math.fround(x)
 
+x를 32bit 부동 소수점 값(float)이 되기 위해 반올림한다. asm.js를 통해 엔진에게 내부적으로 float값을 사용하라고 말할때 사용한다.
+
+#### 5.4.4.2 Math.imul(x, y)
+
+두 32bit 정수 x, y를 곱하고 결과의 하위 32비트를 반환한다. 이것은 오직 32비트 자바스크립트를 통해 비슷하고 결과를 다시 32비트로 강제 할 수 없는 기본 수학 연산자이다. 예를 들면 idiv는 아래 처럼 구현된다.:
+
+```javascript
 function idiv(x, y) {
     return (x / y) | 0;
 }
-In contrast, multiplying two large 32 bit integers may produce a double that is so large that lower bits are lost.
+```
 
-5.4.5 Bitwise operations
-Math.clz32(x)
-Counts the leading zero bits in the 32 bit integer x.
+반면에 32비트 정수 보다 큰 두 수의 곱은 아마도 하위 비트를 잃어버릴 정도로 큰 double을 생산한다.
+
+### 5.4.5 비트 단위 연산자
+
+* Math.clz32(x)
+
+32비트 정수 x에서 앞에서 이어진 0의 갯수
+```javascript
   > Math.clz32(0b01000000000000000000000000000000)
   1
   > Math.clz32(0b00100000000000000000000000000000)
@@ -578,29 +605,33 @@ Counts the leading zero bits in the 32 bit integer x.
   30
   > Math.clz32(1)
   31
-Why is this interesting? Quoting “Fast, Deterministic, and Portable Counting Leading Zeros” by Miro Samek:
+```
 
-Counting leading zeros in an integer number is a critical operation in many DSP algorithms, such as normalization of samples in sound or video processing, as well as in real-time schedulers to quickly find the highest-priority task ready-to-run.
+왜 이것이 흥미로운가? "Fast, Deterministic, and Portable Counting Leading Zeros" by Miro Samek 를 인용하면:
+정수에서 앞에 0의 갯수는 음악 또는 비디오 처리 샘플의 노말라이제이션등 많은 DSP과 실시간 스케줄러가 빠르게 높은 우선순위 업무를 발견하는 에서 중요한 연산이다.
 
-5.4.6 Trigonometric methods
-Math.sinh(x)
-Computes the hyperbolic sine of x.
-Math.cosh(x)
-Computes the hyperbolic cosine of x.
-Math.tanh(x)
-Computes the hyperbolic tangent of x.
-Math.asinh(x)
-Computes the inverse hyperbolic sine of x.
-Math.acosh(x)
-Computes the inverse hyperbolic cosine of x.
-Math.atanh(x)
-Computes the inverse hyperbolic tangent of x.
-Math.hypot(...values)
-Computes the square root of the sum of the squares of its arguments.
-5.5 FAQ: numbers
-5.5.1 How can I use integers beyond JavaScript’s 53 bit range?
-JavaScript’s integers have a range of 53 bits. That is a problem whenever 64 bit integers are needed. For example: In its JSON API, Twitter had to switch from integers to strings when tweet IDs became too large.
+### 5.4.6 삼각함수
 
-At the moment, the only way around that limitation is to use a library for higher-precision numbers (bigints or bigfloats). One such library is decimal.js.
+* Math.sinh(x)
+  x의 쌍곡선 싸인을 계산한다.
+* Math.cosh(x)
+  x의 쌍곡선 코사인을 계산한다.
+* Math.tanh(x)
+  x의 쌍곡선 탄젠트를 계산한다.
+* Math.asinh(x)
+  x의 쌍곡선 싸인의 역을 계산한다.
+* Math.acosh(x)
+  x의 쌍곡선 코싸인의 역을 계산한다.
+* Math.atanh(x)
+  x의 쌍곡선 탄젠트의 역을 계산한다.
+* Math.hypot(...values)
+  인자값의 제곱으이 합의 제곱근을 계산한다.
 
-Plans to support larger integers in JavaScript exist, but may take a while to come to fruition.
+## 5.5 FAQ: numbers
+
+### 5.5.1 어떻게 자바스크립트에서 53비트 넘는 범위를 사용 할 수 있는가?
+자바스크립트 정수는 53비트의 범워를 갖는다. 이것은 64비트의 정수가 필요할때 문제가 된다. 예를 들어: JSON API에서 트위터는 트위터 ID가 길때 문자열을 정수로 변환을 갖는다.
+
+그 때에 높은 정밀도 수(bigints 나 bigfloats)를 위한 라이브러리를 사용하여 제한하는 방법이 유일하다. 하나의 라이브러리는 decimal.js이다.
+
+자바스크립트에서 큰 정수를 지원할 계획이 있지만 시간이 걸릴 수도 있다.
