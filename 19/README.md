@@ -3,13 +3,15 @@
 ## 19.1 개요
 
 Among others, the following four data structures are new in ECMAScript 6: Map, WeakMap, Set and WeakSet.
-ㅇㅏㄴㅣㅇㅗㅐㅎㅏㄴㄱㅡㄹㅇㅣㅇㅣㄹㅡㅈㄷㄱ ㅇㅣㄹㅓㅎㄱㅔㅆㅓㅈㅣㄴㅡㄴㄴㄱㅓ
+다음의 네가지 데이터 구조가 Ecma6에서 새로 추가됨 : Map, WeakMap, Set, WeakSet
 
 ### 19.1.1 Maps
 
 The keys of a Map can be arbitrary values:
+Map의 키값은 임의의 값일 수 있는데:
 
-> const map = new Map(); // create an empty Map
+```
+> const map = new Map(); // 빈 Map을 생성
 > const KEY = {};
 
 > map.set(KEY, 123);
@@ -21,27 +23,38 @@ true
 true
 > map.has(KEY)
 false
+```
 
 You can use an Array (or any iterable) with [key, value] pairs to set up the initial data in the Map:
+Array(나 iterable) 를 [key, value] 로 짝지어 Map의 초기 데이터로 셋팅할 수 있다.
 
+```
 const map = new Map([
     [ 1, 'one' ],
     [ 2, 'two' ],
     [ 3, 'three' ], // trailing comma is ignored
 ]);
-
-19.1.2 Sets
+```
+### 19.1.2 Sets
 
 A Set is a collection of unique elements:
+Set는 유니크한 요소들의 콜렉션이다 :
 
+```
 const arr = [5, 1, 5, 7, 7, 5];
 const unique = [...new Set(arr)]; // [ 5, 1, 7 ]
+```
 
 As you can see, you can initialize a Set with elements if you hand the constructor an iterable (arr in the example) over those elements.
-19.1.3 WeakMaps
+요소(값)가 있는 Set를 초기화할 수 있다. 생성자 iterable을 넘길 수 있음 요소들에 넘겨주면.??????????
+
+### 19.1.3 WeakMaps
 
 A WeakMap is a Map that doesn’t prevent its keys from being garbage-collected. That means that you can associate private data with objects without having to worry about memory leaks:
 
+WeakMap은 Map이지만 key가 가비지 콜렉션이 되는것을 막을 수 없다. 이는 메모리 누수 걱정이 없는 객체의 private 데이터를 참조할 수 있다는 것이다.
+
+```
 const _counter = new WeakMap();
 const _action = new WeakMap();
 class Countdown {
@@ -59,16 +72,18 @@ class Countdown {
         }
     }
 }
+```
 
-19.2 Map
+## 19.2 Map
 
 JavaScript has always had a very spartan standard library. Sorely missing was a data structure for mapping values to values. The best you can get in ECMAScript 5 is a Map from strings to arbitrary values, by abusing objects. Even then there are several pitfalls that can trip you up.
 
 The Map data structure in ECMAScript 6 lets you use arbitrary values as keys and is highly welcome.
-19.2.1 Basic operations
+
+### 19.2.1 Basic operations
 
 Working with single entries:
-
+```
 > const map = new Map();
 
 > map.set('foo', 123);
@@ -81,9 +96,9 @@ true
 true
 > map.has('foo')
 false
-
+```
 Determining the size of a Map and clearing it:
-
+```
 > const map = new Map();
 > map.set('foo', true);
 > map.set('bar', false);
@@ -93,17 +108,17 @@ Determining the size of a Map and clearing it:
 > map.clear();
 > map.size
 0
-
-19.2.2 Setting up a Map
+```
+### 19.2.2 Setting up a Map
 
 You can set up a Map via an iterable over key-value “pairs” (Arrays with 2 elements). One possibility is to use an Array (which is iterable):
-
+```
 const map = new Map([
     [ 1, 'one' ],
     [ 2, 'two' ],
     [ 3, 'three' ], // trailing comma is ignored
 ]);
-
+```
 Alternatively, the set() method is chainable:
 
 const map = new Map()
@@ -158,37 +173,38 @@ Getting an unknown key produces undefined:
 > new Map().get('asfddfsasadf')
 undefined
 
-19.2.4 Iterating over Maps
+### 19.2.4 Iterating over Maps
 
 Let’s set up a Map to demonstrate how one can iterate over it.
-
+```
 const map = new Map([
     [false, 'no'],
     [true,  'yes'],
 ]);
-
+```
 Maps record the order in which elements are inserted and honor that order when iterating over keys, values or entries.
-19.2.4.1 Iterables for keys and values
+
+#### 19.2.4.1 Iterables for keys and values
 
 keys() returns an iterable over the keys in the Map:
-
+```
 for (const key of map.keys()) {
     console.log(key);
 }
 // Output:
 // false
 // true
-
+```
 values() returns an iterable over the values in the Map:
-
+```
 for (const value of map.values()) {
     console.log(value);
 }
 // Output:
 // no
 // yes
-
-19.2.4.2 Iterables for entries
+```
+#### 19.2.4.2 Iterables for entries
 
 entries() returns the entries of the Map as an iterable over [key,value] pairs (Arrays).
 
@@ -200,45 +216,45 @@ for (const entry of map.entries()) {
 // true yes
 
 Destructuring enables you to access the keys and values directly:
-
+```
 for (const [key, value] of map.entries()) {
     console.log(key, value);
 }
-
+```
 The default way of iterating over a Map is entries():
-
+```
 > map[Symbol.iterator] === map.entries
 true
-
+```
 Thus, you can make the previous code snippet even shorter:
-
+```
 for (const [key, value] of map) {
     console.log(key, value);
 }
-
-19.2.4.3 Converting iterables (incl. Maps) to Arrays
+```
+#### 19.2.4.3 Converting iterables (incl. Maps) to Arrays
 
 The spread operator (...) can turn an iterable into an Array. That lets us convert the result of Map.prototype.keys() (an iterable) into an Array:
-
+```
 > const map = new Map().set(false, 'no').set(true, 'yes');
 > [...map.keys()]
 [ false, true ]
-
+```
 Maps are also iterable, which means that the spread operator can turn Maps into Arrays:
-
+```
 > const map = new Map().set(false, 'no').set(true, 'yes');
 > [...map]
 [ [ false, 'no' ],
   [ true, 'yes' ] ]
-
-19.2.5 Looping over Map entries
+```
+### 19.2.5 Looping over Map entries
 
 The Map method forEach has the following signature:
 
 Map.prototype.forEach((value, key, map) => void, thisArg?) : void
 
 The signature of the first parameter mirrors the signature of the callback of Array.prototype.forEach, which is why the value comes first.
-
+```
 const map = new Map([
     [false, 'no'],
     [true,  'yes'],
@@ -249,8 +265,9 @@ map.forEach((value, key) => {
 // Output:
 // false no
 // true yes
+```
 
-19.2.6 Mapping and filtering Maps
+### 19.2.6 Mapping and filtering Maps
 
 You can map() and filter() Arrays, but there are no such operations for Maps. The solution is:
 
