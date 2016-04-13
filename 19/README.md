@@ -10,7 +10,7 @@ Among others, the following four data structures are new in ECMAScript 6: Map, W
 The keys of a Map can be arbitrary values:
 Map의 키값은 임의의 값일 수 있는데:
 
-```
+```javascript
 > const map = new Map(); // 빈 Map을 생성
 > const KEY = {};
 
@@ -28,7 +28,7 @@ false
 You can use an Array (or any iterable) with [key, value] pairs to set up the initial data in the Map:
 Array(나 iterable) 를 [key, value] 로 짝지어 Map의 초기 데이터로 셋팅할 수 있다.
 
-```
+```javascript
 const map = new Map([
     [ 1, 'one' ],
     [ 2, 'two' ],
@@ -40,7 +40,7 @@ const map = new Map([
 A Set is a collection of unique elements:
 Set는 유니크한 요소들의 콜렉션이다 :
 
-```
+```javascript
 const arr = [5, 1, 5, 7, 7, 5];
 const unique = [...new Set(arr)]; // [ 5, 1, 7 ]
 ```
@@ -54,7 +54,7 @@ A WeakMap is a Map that doesn’t prevent its keys from being garbage-collected.
 
 WeakMap은 Map이지만 key가 가비지 콜렉션이 되는것을 막을 수 없다. 이는 메모리 누수 걱정이 없는 객체의 private 데이터를 참조할 수 있다는 것이다.
 
-```
+```javascript
 const _counter = new WeakMap();
 const _action = new WeakMap();
 class Countdown {
@@ -83,7 +83,7 @@ The Map data structure in ECMAScript 6 lets you use arbitrary values as keys and
 ### 19.2.1 Basic operations
 
 Working with single entries:
-```
+```javascript
 > const map = new Map();
 
 > map.set('foo', 123);
@@ -98,7 +98,7 @@ true
 false
 ```
 Determining the size of a Map and clearing it:
-```
+```javascript
 > const map = new Map();
 > map.set('foo', true);
 > map.set('bar', false);
@@ -112,7 +112,7 @@ Determining the size of a Map and clearing it:
 ### 19.2.2 Setting up a Map
 
 You can set up a Map via an iterable over key-value “pairs” (Arrays with 2 elements). One possibility is to use an Array (which is iterable):
-```
+```javascript
 const map = new Map([
     [ 1, 'one' ],
     [ 2, 'two' ],
@@ -120,16 +120,16 @@ const map = new Map([
 ]);
 ```
 Alternatively, the set() method is chainable:
-
+```javascript
 const map = new Map()
 .set(1, 'one')
 .set(2, 'two')
 .set(3, 'three');
-
-19.2.3 Keys
+```
+### 19.2.3 Keys
 
 Any value can be a key, even an object:
-
+```javascript
 const map = new Map();
 
 const KEY1 = {};
@@ -139,44 +139,44 @@ console.log(map.get(KEY1)); // hello
 const KEY2 = {};
 map.set(KEY2, 'world');
 console.log(map.get(KEY2)); // world
-
-19.2.3.1 What keys are considered equal?
+```
+#### 19.2.3.1 What keys are considered equal?
 
 Most Map operations need to check whether a value is equal to one of the keys. They do so via the internal operation SameValueZero, which works like ===, but considers NaN to be equal to itself.
 
 Let’s first see how === handles NaN:
-
+```javascript
 > NaN === NaN
 false
-
+```
 Conversely, you can use NaN as a key in Maps, just like any other value:
-
+```javascript
 > const map = new Map();
 
 > map.set(NaN, 123);
 > map.get(NaN)
 123
-
+```
 Like ===, -0 and +0 are considered the same value. That is normally the best way to handle the two zeros (details are explained in “Speaking JavaScript”).
-
+```javascript
 > map.set(-0, 123);
 > map.get(+0)
 123
-
+```
 Different objects are always considered different. That is something that can’t be configured (yet), as explained later, in the FAQ.
-
+```javascript
 > new Map().set({}, 1).set({}, 2).size
 2
-
+```
 Getting an unknown key produces undefined:
-
+```javascript
 > new Map().get('asfddfsasadf')
 undefined
-
+```
 ### 19.2.4 Iterating over Maps
 
 Let’s set up a Map to demonstrate how one can iterate over it.
-```
+```javascript
 const map = new Map([
     [false, 'no'],
     [true,  'yes'],
@@ -187,7 +187,7 @@ Maps record the order in which elements are inserted and honor that order when i
 #### 19.2.4.1 Iterables for keys and values
 
 keys() returns an iterable over the keys in the Map:
-```
+```javascript
 for (const key of map.keys()) {
     console.log(key);
 }
@@ -196,7 +196,7 @@ for (const key of map.keys()) {
 // true
 ```
 values() returns an iterable over the values in the Map:
-```
+```javascript
 for (const value of map.values()) {
     console.log(value);
 }
@@ -207,27 +207,27 @@ for (const value of map.values()) {
 #### 19.2.4.2 Iterables for entries
 
 entries() returns the entries of the Map as an iterable over [key,value] pairs (Arrays).
-
+```javascript
 for (const entry of map.entries()) {
     console.log(entry[0], entry[1]);
 }
 // Output:
 // false no
 // true yes
-
-Destructuring enables you to access the keys and values directly:
 ```
+Destructuring enables you to access the keys and values directly:
+```javascript
 for (const [key, value] of map.entries()) {
     console.log(key, value);
 }
 ```
 The default way of iterating over a Map is entries():
-```
+```javascript
 > map[Symbol.iterator] === map.entries
 true
 ```
 Thus, you can make the previous code snippet even shorter:
-```
+```javascript
 for (const [key, value] of map) {
     console.log(key, value);
 }
@@ -235,13 +235,13 @@ for (const [key, value] of map) {
 #### 19.2.4.3 Converting iterables (incl. Maps) to Arrays
 
 The spread operator (...) can turn an iterable into an Array. That lets us convert the result of Map.prototype.keys() (an iterable) into an Array:
-```
+```javascript
 > const map = new Map().set(false, 'no').set(true, 'yes');
 > [...map.keys()]
 [ false, true ]
 ```
 Maps are also iterable, which means that the spread operator can turn Maps into Arrays:
-```
+```javascript
 > const map = new Map().set(false, 'no').set(true, 'yes');
 > [...map]
 [ [ false, 'no' ],
@@ -254,7 +254,7 @@ The Map method forEach has the following signature:
 Map.prototype.forEach((value, key, map) => void, thisArg?) : void
 
 The signature of the first parameter mirrors the signature of the callback of Array.prototype.forEach, which is why the value comes first.
-```
+```javascript
 const map = new Map([
     [false, 'no'],
     [true,  'yes'],
@@ -276,35 +276,35 @@ You can map() and filter() Arrays, but there are no such operations for Maps. Th
     Convert the result back to a Map.
 
 I’ll use the following Map to demonstrate how that works.
-
+```javascript
 const originalMap = new Map()
 .set(1, 'a')
 .set(2, 'b')
 .set(3, 'c');
-
+```
 Mapping originalMap:
-
+```javascript
 const mappedMap = new Map( // step 3
     [...originalMap] // step 1
     .map(([k, v]) => [k * 2, '_' + v]) // step 2
 );
 // Resulting Map: {2 => '_a', 4 => '_b', 6 => '_c'}
-
+```
 Filtering originalMap:
-
+```javascript
 const filteredMap = new Map( // step 3
     [...originalMap] // step 1
     .filter(([k, v]) => k < 3) // step 2
 );
 // Resulting Map: {1 => 'a', 2 => 'b'}
-
+```
 Step 1 is performed by the spread operator (...) which I have explained previously.
-19.2.7 Combining Maps
+### 19.2.7 Combining Maps
 
 There are no methods for combining Maps, which is why the approach from the previous section must be used to do so.
 
 Let’s combine the following two Maps:
-
+```javascript
 const map1 = new Map()
 .set(1, 'a1')
 .set(2, 'b1')
@@ -314,45 +314,45 @@ const map2 = new Map()
 .set(2, 'b2')
 .set(3, 'c2')
 .set(4, 'd2');
-
+```
 To combine map1 and map2, I turn them into Arrays via the spread operator (...) and concatenate those Arrays. Afterwards, I convert the result back to a Map. All of that is done in the first line.
-
+```javascript
 > const combinedMap = new Map([...map1, ...map2])
 > [...combinedMap] // convert to Array to display
 [ [ 1, 'a1' ],
   [ 2, 'b2' ],
   [ 3, 'c2' ],
   [ 4, 'd2' ] ]
-
-19.2.8 Arbitrary Maps as JSON via Arrays of pairs
+```
+### 19.2.8 Arbitrary Maps as JSON via Arrays of pairs
 
 If a Map contains arbitrary (JSON-compatible) data, we can convert it to JSON by encoding it as an Array of key-value pairs (2-element Arrays). Let’s examine first how to achieve that encoding.
-19.2.8.1 Converting Maps to and from Arrays of pairs
+#### 19.2.8.1 Converting Maps to and from Arrays of pairs
 
 The spread operator lets you convert a Map to an Array of pairs:
-
+```javascript
 > const myMap = new Map().set(true, 7).set({foo: 3}, ['abc']);
 > [...myMap]
 [ [ true, 7 ], [ { foo: 3 }, [ 'abc' ] ] ]
-
+```
 The Map constructor lets you convert an Array of pairs to a Map:
-
+```javascript
 > new Map([[true, 7], [{foo: 3}, ['abc']]])
 Map {true => 7, Object {foo: 3} => ['abc']}
-
-19.2.8.2 The conversion to and from JSON
+```
+#### 19.2.8.2 The conversion to and from JSON
 
 Let’s use this knowledge to convert any Map with JSON-compatible data to JSON and back:
-
+```javascript
 function mapToJson(map) {
     return JSON.stringify([...map]);
 }
 function jsonToMap(jsonStr) {
     return new Map(JSON.parse(jsonStr));
 }
-
+```
 The following interaction demonstrates how these functions are used:
-
+```javascript
 > const myMap = new Map().set(true, 7).set({foo: 3}, ['abc']);
 
 > mapToJson(myMap)
@@ -360,14 +360,14 @@ The following interaction demonstrates how these functions are used:
 
 > jsonToMap('[[true,7],[{"foo":3},["abc"]]]')
 Map {true => 7, Object {foo: 3} => ['abc']}
-
-19.2.9 String Maps as JSON via objects
+```
+### 19.2.9 String Maps as JSON via objects
 
 Whenever a Map only has strings as keys, you can convert it to JSON by encoding it as an object. Let’s examine first how to achieve that encoding.
-19.2.9.1 Converting a string Map to and from an object
+#### 19.2.9.1 Converting a string Map to and from an object
 
 The following two function convert string Maps to and from objects:
-
+```javascript
 function strMapToObj(strMap) {
     const obj = Object.create(null);
     for (const [k,v] of strMap) {
@@ -384,9 +384,9 @@ function objToStrMap(obj) {
     }
     return strMap;
 }
-
+```
 Let’s use these two functions:
-
+```javascript
 > const myMap = new Map().set('yes', true).set('no', false);
 
 > strMapToObj(myMap)
@@ -394,20 +394,20 @@ Let’s use these two functions:
 
 > objToStrMap({yes: true, no: false})
 [ [ 'yes', true ], [ 'no', false ] ]
-
-19.2.9.2 The conversion to and from JSON
+```
+#### 19.2.9.2 The conversion to and from JSON
 
 With these helper functions, the conversion to JSON works as follows:
-
+```javascript
 function strMapToJson(strMap) {
     return JSON.stringify(strMapToObj(strMap));
 }
 function jsonToStrMap(jsonStr) {
     return objToStrMap(JSON.parse(jsonStr));
 }
-
+```
 This is an example of using these functions:
-
+```javascript
 > const myMap = new Map().set('yes', true).set('no', false);
 
 > strMapToJson(myMap)
@@ -415,20 +415,20 @@ This is an example of using these functions:
 
 > jsonToStrMap('{"yes":true,"no":false}');
 Map {'yes' => true, 'no' => false}
-
-19.2.10 Map API
+```
+### 19.2.10 Map API
 
 Constructor:
 
     new Map(entries? : Iterable<[any,any]>)
     If you don’t provide the parameter iterable then an empty Map is created. If you do provide an iterable over [key, value] pairs then those pairs are used to add entries to the Map. For example:
-
+```javascript
       const map = new Map([
           [ 1, 'one' ],
           [ 2, 'two' ],
           [ 3, 'three' ], // trailing comma is ignored
       ]);
-
+```
 Handling single entries:
 
     Map.prototype.get(key) : any
@@ -460,7 +460,7 @@ Iterating and looping: happens in the order in which entries were added to a Map
     Map.prototype[Symbol.iterator]() : Iterable<[any,any]>
     The default way of iterating over Maps. Refers to Map.prototype.entries.
 
-19.3 WeakMap
+## 19.3 WeakMap
 
 WeakMaps work mostly like Maps, with the following differences:
 
@@ -470,28 +470,28 @@ WeakMaps work mostly like Maps, with the following differences:
     You can’t clear a WeakMap
 
 The following sections explain each of these differences.
-19.3.1 WeakMap keys are objects
+### 19.3.1 WeakMap keys are objects
 
 If you add an entry to a WeakMap then the key must be an object:
-
+```javascript
 const wm = new WeakMap()
 
 wm.set('abc', 123); // TypeError
 wm.set({}, 123); // ok
-
-19.3.2 WeakMap keys are weakly held
+```
+### 19.3.2 WeakMap keys are weakly held
 
 The keys in a WeakMap are weakly held: Normally, an object that isn’t referred to by any storage location (variable, property, etc.) can be garbage-collected. WeakMap keys do not count as storage locations in that sense. In other words: an object being a key in a WeakMap does not prevent the object being garbage-collected.
 
 Additionally, once a key is gone, its entry will also disappear (eventually, but there is no way to detect when, anyway).
-19.3.3 You can’t get an overview of a WeakMap or clear it
+### 19.3.3 You can’t get an overview of a WeakMap or clear it
 
 It is impossible to inspect the innards of a WeakMap, to get an overview of them. That includes not being able to iterate over keys, values or entries. Put differently: to get content out of a WeakMap, you need a key. There is no way to clear a WeakMap, either (as a work-around, you can create a completely new instance).
 
 These restrictions enable a security property. Quoting Mark Miller: “The mapping from weakmap/key pair value can only be observed or affected by someone who has both the weakmap and the key. With clear(), someone with only the WeakMap would’ve been able to affect the WeakMap-and-key-to-value mapping.”
 
 Additionally, iteration would be difficult to implement, because you’d have to guarantee that keys remain weakly held.
-19.3.4 Use cases for WeakMaps
+### 19.3.4 Use cases for WeakMaps
 
 WeakMaps are useful for associating data with objects whose life cycle you can’t (or don’t want to) control. In this section, we look at two examples:
 
@@ -499,10 +499,10 @@ WeakMaps are useful for associating data with objects whose life cycle you can�
     Managing listeners
     Keeping private data
 
-19.3.4.1 Caching computed results via WeakMaps
+#### 19.3.4.1 Caching computed results via WeakMaps
 
 With WeakMaps, you can associate previously computed results with objects, without having to worry about memory management. The following function countOwnKeys is an example: it caches previous results in the WeakMap cache.
-
+```javascript
 const cache = new WeakMap();
 function countOwnKeys(obj) {
     if (cache.has(obj)) {
@@ -515,9 +515,9 @@ function countOwnKeys(obj) {
         return count;
     }
 }
-
+```
 If we use this function with an object obj, you can see that the result is only computed for the first invocation, while a cached value is used for the second invocation:
-
+```javascript
 > const obj = { foo: 1, bar: 2};
 > countOwnKeys(obj)
 Computed
@@ -525,13 +525,13 @@ Computed
 > countOwnKeys(obj)
 Cached
 2
-
-19.3.4.2 Managing listeners
+```
+#### 19.3.4.2 Managing listeners
 
 Let’s say we want to register listeners for objects without changing the objects. That way, we can even register listeners for immutable objects.
 
 This is how to do that:
-
+```javascript
 const _objToListeners = new WeakMap();
 
 function addListener(obj, listener) {
@@ -549,9 +549,9 @@ function triggerListeners(obj) {
         }
     }
 }
-
+```
 This is how you use these functions:
-
+```javascript
 const obj = {};
 addListener(obj, () => console.log('hello'));
 addListener(obj, () => console.log('world'));
@@ -560,12 +560,12 @@ triggerListeners(obj);
 // Output:
 // hello
 // world
-
+```
 The advantage of using a WeakMap here is that, once an object is garbage-collected, its listeners will be garbage-collected, too. In other words: there won’t be any memory leaks.
-19.3.4.3 Keeping private data via WeakMaps
+#### 19.3.4.3 Keeping private data via WeakMaps
 
 In the following code, the WeakMaps _counter and _action are used to store the data of virtual properties of instances of Countdown:
-
+```javascript
 const _counter = new WeakMap();
 const _action = new WeakMap();
 class Countdown {
@@ -583,20 +583,20 @@ class Countdown {
         }
     }
 }
-
+```
 More information on this technique is given in the chapter on classes.
-19.3.5 WeakMap API
+### 19.3.5 WeakMap API
 
 The constructor and the four methods of WeakMap work the same as their Map equivalents:
-
+```javascript
 new WeakMap(entries? : Iterable<[any,any]>)
 
 WeakMap.prototype.get(key) : any
 WeakMap.prototype.set(key, value) : this
 WeakMap.prototype.has(key) : boolean
 WeakMap.prototype.delete(key) : boolean
-
-19.4 Set
+```
+## 19.4 Set
 
 ECMAScript 5 doesn’t have a Set data structure, either. There are two possible work-arounds:
 
@@ -604,10 +604,10 @@ ECMAScript 5 doesn’t have a Set data structure, either. There are two possible
     Store (arbitrary) set elements in an Array: Check whether it contains an element via indexOf(), remove elements via filter(), etc. This is not a very fast solution, but it’s easy to implement. One issue to be aware of is that indexOf() can’t find the value NaN.
 
 ECMAScript 6 has the data structure Set which works for arbitrary values, is fast and handles NaN correctly.
-19.4.1 Basic operations
+### 19.4.1 Basic operations
 
 Managing single elements:
-
+```javascript
 > const set = new Set();
 > set.add('red')
 
@@ -617,9 +617,9 @@ true
 true
 > set.has('red')
 false
-
+```
 Determining the size of a Set and clearing it:
-
+```javascript
 > const set = new Set();
 > set.add('red')
 > set.add('green')
@@ -629,18 +629,18 @@ Determining the size of a Set and clearing it:
 > set.clear();
 > set.size
 0
-
-19.4.2 Setting up a Set
+```
+### 19.4.2 Setting up a Set
 
 You can set up a Set via an iterable over the elements that make up the Set. For example, via an Array:
-
+```javascript
 const set = new Set(['red', 'green', 'blue']);
-
+```
 Alternatively, the add method is chainable:
-
+```javascript
 const set = new Set().add('red').add('green').add('blue');
-
-19.4.2.1 Pitfall: new Set() has at most one argument
+```
+#### 19.4.2.1 Pitfall: new Set() has at most one argument
 
 The Set constructor has zero or one arguments:
 
@@ -648,25 +648,25 @@ The Set constructor has zero or one arguments:
     One argument: the argument needs to be iterable; the iterated items define the elements of the Set.
 
 Further arguments are ignored, which may lead to unexpected results:
-
+```javascript
 > Array.from(new Set(['foo', 'bar']))
 [ 'foo', 'bar' ]
 > Array.from(new Set('foo', 'bar'))
 [ 'f', 'o' ]
-
+```
 For the second Set, only 'foo' is used (which is iterable) to define the Set.
-19.4.3 Comparing Set elements
+### 19.4.3 Comparing Set elements
 
 As with Maps, elements are compared similarly to ===, with the exception of NaN being like any other value.
-
+```javascript
 > const set = new Set([NaN]);
 > set.size
 1
 > set.has(NaN)
 true
-
+```
 Adding an element a second time has no effect:
-
+```javascript
 > const set = new Set();
 
 > set.add('foo');
@@ -676,9 +676,9 @@ Adding an element a second time has no effect:
 > set.add('foo');
 > set.size
 1
-
+```
 Similarly to ===, two different objects are never considered equal (which can’t currently be customized, as explained later, in the FAQ, later):
-
+```javascript
 > const set = new Set();
 
 > set.add({});
@@ -688,11 +688,11 @@ Similarly to ===, two different objects are never considered equal (which can’
 > set.add({});
 > set.size
 2
-
-19.4.4 Iterating
+```
+### 19.4.4 Iterating
 
 Sets are iterable and the for-of loop works as you’d expect:
-
+```javascript
 const set = new Set(['red', 'green', 'blue']);
 for (const x of set) {
     console.log(x);
@@ -701,47 +701,47 @@ for (const x of set) {
 // red
 // green
 // blue
-
+```
 As you can see, Sets preserve iteration order. That is, elements are always iterated over in the order in which they were inserted.
 
 The previously explained spread operator (...) works with iterables and thus lets you convert a Set to an Array:
-
+```javascript
 const set = new Set(['red', 'green', 'blue']);
 const arr = [...set]; // ['red', 'green', 'blue']
-
+```
 We now have a concise way to convert an Array to a Set and back, which has the effect of eliminating duplicates from the Array:
-
+```javascript
 const arr = [3, 5, 2, 2, 5, 5];
 const unique = [...new Set(arr)]; // [3, 5, 2]
-
-19.4.5 Mapping and filtering
+```
+### 19.4.5 Mapping and filtering
 
 In contrast to Arrays, Sets don’t have the methods map() and filter(). A work-around is to convert them to Arrays and back.
 
 Mapping:
-
+```javascript
 const set = new Set([1, 2, 3]);
 set = new Set([...set].map(x => x * 2));
 // Resulting Set: {2, 4, 6}
-
+```
 Filtering:
-
+```javascript
 const set = new Set([1, 2, 3, 4, 5]);
 set = new Set([...set].filter(x => (x % 2) == 0));
 // Resulting Set: {2, 4}
-
-19.4.6 Union, intersection, difference
+```
+### 19.4.6 Union, intersection, difference
 
 ECMAScript 6 Sets have no methods for computing the union (e.g. addAll), intersection (e.g. retainAll) or difference (e.g. removeAll). This section explains how to work around that limitation.
-19.4.6.1 Union
+#### 19.4.6.1 Union
 
 Union (a ∪ b): create a Set that contains the elements of both Set a and Set b.
-
+```javascript
 const a = new Set([1,2,3]);
 const b = new Set([4,3,2]);
 const union = new Set([...a, ...b]);
     // {1,2,3,4}
-
+```
 The pattern is always the same:
 
     Convert one or both Sets to Arrays.
@@ -749,36 +749,36 @@ The pattern is always the same:
     Convert the result back to a Set.
 
 The spread operator (...) inserts the elements of something iterable (such as a Set) into an Array. Therefore, [...a, ...b] means that a and b are converted to Arrays and concatenated. It is equivalent to [...a].concat([...b]).
-19.4.6.2 Intersection
+#### 19.4.6.2 Intersection
 
 Intersection (a ∩ b): create a Set that contains those elements of Set a that are also in Set b.
-
+```javascript
 const a = new Set([1,2,3]);
 const b = new Set([4,3,2]);
 const intersection = new Set(
     [...a].filter(x => b.has(x)));
     // {2,3}
-
+```
 Steps: Convert a to an Array, filter the elements, convert the result to a Set.
-19.4.6.3 Difference
+#### 19.4.6.3 Difference
 
 Difference (a \ b): create a Set that contains those elements of Set a that are not in Set b. This operation is also sometimes called minus (-).
-
+```javascript
 const a = new Set([1,2,3]);
 const b = new Set([4,3,2]);
 const difference = new Set(
     [...a].filter(x => !b.has(x)));
     // {1}
-
-19.4.7 Set API
+```
+### 19.4.7 Set API
 
 Constructor:
 
     new Set(elements? : Iterable<any>)
     If you don’t provide the parameter iterable then an empty Set is created. If you do then the iterated values are added as elements to the Set. For example:
-
+```javascript
       const set = new Set(['red', 'green', 'blue']);
-
+```
 Single Set elements:
 
     Set.prototype.add(value) : this
@@ -805,25 +805,25 @@ Iterating and looping:
     Loops over the elements of this Set and invokes the callback (first parameter) for each one. value and key are both set to the element, so that this method works similarly to Map.prototype.forEach. If thisArg is provided, this is set to it for each call. Otherwise, this is set to undefined.
 
 Symmetry with Map: The following two methods only exist so that the interface of Sets is similar to the interface of Maps. Each Set element is handled as if it were a Map entry whose key and value are the element.
-
+```javascript
     Set.prototype.entries() : Iterable<[any,any]>
     Set.prototype.keys() : Iterable<any>
-
+```
 entries() allows you to convert a Set to a Map:
-
+```javascript
 const set = new Set(['a', 'b', 'c']);
 const map = new Map(set.entries());
     // Map { 'a' => 'a', 'b' => 'b', 'c' => 'c' }
-
-19.5 WeakSet
+```
+## 19.5 WeakSet
 
 A WeakSet is a Set that doesn’t prevent its elements from being garbage-collected. Consult the section on WeakMap for an explanation of why WeakSets don’t allow iteration, looping and clearing.
-19.5.1 Use cases for WeakSets
+### 19.5.1 Use cases for WeakSets
 
 Given that you can’t iterate over their elements, there are not that many use cases for WeakSets. They do enable you to mark objects.
 
 For example, if you have a factory function for proxies, you can use a WeakSet to record which objects were created by that factory:
-
+```javascript
 const proxies = new WeakSet();
 
 function createProxy(obj) {
@@ -835,31 +835,31 @@ function createProxy(obj) {
 function isProxy(obj) {
     return proxies.has(obj);
 }
-
+```
 The complete example is shown in the chapter on proxies.
-19.5.2 WeakSet API
+### 19.5.2 WeakSet API
 
 The constructor and the three methods of WeakSet work the same as their Set equivalents:
-
+```javascript
 new WeakSet(elements? : Iterable<any>)
 
 WeakSet.prototype.add(value)
 WeakSet.prototype.has(value)
 WeakSet.prototype.delete(value)
-
-19.6 FAQ: Maps and Sets
-19.6.1 Why do Maps and Sets have the property size and not length?
+```
+## 19.6 FAQ: Maps and Sets
+### 19.6.1 Why do Maps and Sets have the property size and not length?
 
 Arrays have the property length to count the number of entries. Maps and Sets have a different property, size.
 
 The reason for this difference is that length is for sequences, data structures that are indexable – like Arrays. size is for collections that are primarily unordered – like Maps and Sets.
-19.6.2 Why can’t I configure how Maps and Sets compare keys and values?
+### 19.6.2 Why can’t I configure how Maps and Sets compare keys and values?
 
 It would be nice if there were a way to configure what Map keys and what Set elements are considered equal. But that feature has been postponed, as it is difficult to implement properly and efficiently.
-19.6.3 Is there a way to specify a default value when getting something out of a Map?
+### 19.6.3 Is there a way to specify a default value when getting something out of a Map?
 
 If you use a key to get something out of a Map, you’d occasionally like to specify a default value that is returned if the key is not in the Map. ES6 Maps don’t let you do this directly. But you can use the Or operator (||), as demonstrated in the following code. countChars returns a Map that maps characters to numbers of occurrences.
-
+```javascript
 function countChars(chars) {
     const charCounts = new Map();
     for (const ch of chars) {
@@ -869,9 +869,9 @@ function countChars(chars) {
     }
     return charCounts;
 }
-
+```
 In line A, the default 0 is used if ch is not in the charCounts and get() returns undefined.
-19.6.4 When should I use a Map, when an object?
+### 19.6.4 When should I use a Map, when an object?
 
 If you map anything other than strings to any kind of data, you have no choice: you must use a Map.
 
@@ -882,6 +882,6 @@ If, however, you are mapping strings to arbitrary data, you must decide whether 
     Can the set of keys change at runtime?
     Then use a Map and access the values via keys stored in variables: map.get(theKey)
 
-19.6.5 When would I use an object as a key in a Map?
+### 19.6.5 When would I use an object as a key in a Map?
 
 Map keys mainly make sense if they are compared by value (the same “content” means that two values are considered equal, not the same identity). That excludes objects. There is one use case – externally attaching data to objects, but that use case is better served by WeakMaps where an entry goes away when the key disappears.
