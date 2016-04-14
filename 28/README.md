@@ -1,9 +1,9 @@
 # 28. Metaprogramming with proxies
-이 단원에선 ECMAScript 6의 특징 프록시를 설명합니다. 프록시는 object에 대한 작업 수행을 가로채 커스터마이즈를 할 수 있게 합니다.
+이 단원에선 ECMAScript 6의 특징 프록시를 설명합니다. 프록시는 object에 대한 연산 수행을 가로채 사용자정의 할 수 있게 합니다.
 `This chapter explains the ECMAScript 6 feature proxies. Proxies enable you to intercept and customize operations performed on objects (such as getting properties). They are a metaprogramming feature.`
 
 ## 28.1 개요
-다음 예제에서, 프록시는 오브젝트의 작업을 가로챕니다. 그리고 핸들러는 가로채기를 처리하는 오브젝트입니다. 이때는 단지 get( 읽기속성 ) 하나의 작업을 가로챕니다.
+다음 예제에서, 프록시는 오브젝트의 연산을 가로채기 하며 핸들러는 가로채기를 처리하는 오브젝트입니다. 이때는 단지 get( 읽기속성 ) 하나의 연산을 가로챕니다.
 `In the following example, proxy is the object whose operations we are intercepting and handler is the object that handles the interceptions. In this case, we are only intercepting a single operation, get (getting properties).`
 ```javascript
 const target = {};
@@ -15,70 +15,70 @@ const handler = {
 };
 const proxy = new Proxy(target, handler);
 ```
-우리가 프록시의 proxy.foo속성을 얻을 때 핸들러는 작업을 가로챕니다.
+우리가 프록시의 proxy.foo속성을 얻을 때 핸들러는 연산을 가로챕니다.
 `When we get the property proxy.foo, the handler intercepts that operation:`
 ```javascript
 > proxy.foo
 get foo
 123
 ```
-[이 단원의 마지막 섹션](http://exploringjs.com/es6/ch_proxies.html#sec_reference-proxy-api)에서 API와 가로챌 수 있는 작업 목록을 참조로 제공합니다.
+[이 단원의 마지막 섹션](http://exploringjs.com/es6/ch_proxies.html#sec_reference-proxy-api)에서 API와 가로챌 수 있는 연산들 목록을 참조로 제공합니다.
 `A section at the end of this chapter serves as a reference to the complete API and lists what operations can be intercepted.`
 
 ## 28.2 프로그래밍 vs 메타프로그래밍
 프록시가 무엇인지 그리고 왜 유용한지를 알기 전에 우리는 첫째로 메타프로그래밍이 무엇인지 이해해야합니다.
 `Before we can get into what proxies are and why they are useful, we first need to understand what metaprogramming is.`
 
-프로그래밍에는 단계가 있습니다.
+프로그래밍에는 수준이 있습니다.
 `In programming, there are levels:`
-* 기초단계 (애플리케이션 단계라고도 부름), 사용자 입력을 처리하는 코드.`At the base level (also called: application level), code processes user input.`
-* 메타단계, 기초단계 코드를 처리하는 코드.`At the meta level, code processes base level code.`
+* 기초수준 (애플리케이션 수준), 사용자 입력 처리 코드.`At the base level (also called: application level), code processes user input.`
+* 메타수준, 기초단계 처리 코드.`At the meta level, code processes base level code.`
 
-기초단계와 메타단계는 다른 언어라고 할 수 있습니다. 다음 메타프로그램에서, 메타프로그래밍 언어는 자바스크립트이고 기초프로그래밍 언어는 자바입니다.
+기초와 메타수준은 다른 언어가 될 수 있습니다. 다음 메타프로그램에서, 메타프로그래밍 언어는 자바스크립트이고 기초프로그래밍 언어는 자바입니다.
 `Base and meta level can be different languages. In the following meta program, the metaprogramming language is JavaScript and the base programming language is Java.`
 ```javascript
 const str = 'Hello' + '!'.repeat(3);
 console.log('System.out.println("'+str+'")');
 ```
-메타프로그래밍은 다른 형태를 취할 수 있습니다. 이전 예제에서, 우리는 자바코드를 콘솔에 출력했습니다. 자, 메타프로그래밍 언어와 기초프로그래밍 언어 둘다 자바스크립트로 사용해봅시다. eval()함수는 자바스크립트 코드를 즉석에서 평가/컴파일 하는 전형적인 예입니다. 사실 eval() 사용사례가 많지는 않습니다. 아래의 interaction에서, 우리는 5 + 2표현식을 평가하는데 eval()을 사용했습니다.
+메타프로그래밍은 다른 형태를 취할 수 있습니다. 이전 예제에서, 우리는 자바코드를 콘솔에 출력했습니다. 자, 메타프로그래밍 언어와 기초프로그래밍 언어 둘다 자바스크립트로 사용해봅시다. eval()함수는 자바스크립트 코드를 즉석에서 평가/컴파일 하는 전형적인 예입니다. eval() 실제 사용사례가 많지는 않습니다. 아래의 interaction에서, 우리는 5 + 2 표현식을 평가하는데 eval()을 사용했습니다.
 `Metaprogramming can take different forms. In the previous example, we have printed Java code to the console. Let’s use JavaScript as both metaprogramming language and base programming language. The classic example for this is the eval() function, which lets you evaluate/compile JavaScript code on the fly. There are not that many actual use cases for eval(). In the interaction below, we use it to evaluate the expression 5 + 2.`
 ```javascript
 > eval('5 + 2')
 7
 ```
-다른 자바스크립트 작업들은 아마 메타프로그래밍처럼 보이지 않을 수도 있습니다. 하지만 실제로 자세히 보면:
+다른 자바스크립트 연산들은 아마 메타프로그래밍처럼 보이지 않을 수 있습니다. 하지만 실제로 자세히 보면:
 `Other JavaScript operations may not look like metaprogramming, but actually are, if you look closer:`
 ```javascript
-// 기초 단계
+// 기초수준
 const obj = {
     hello() {
         console.log('Hello!');
     }
 };
 
-// 메타단계
+// 메타수준
 for (const key of Object.keys(obj)) {
     console.log(key);
 }
 ```
-프로그램은 실행 하는 동안 자신의 구조를 조사합니다. 이것은 메타프로그래밍처럼 보이지 않습니다. 왜냐하면 자바스크립트에서는 프로그래밍 구조와 데이터 구조 사이의 구분이 흐릿하기 때문입니다. 모든 Object.* 메소드들은 중요한 메타프로그래밍 기능입니다.
+프로그램은 실행 하는 동안 자신의 구조를 조사합니다. 이것은 메타프로그래밍처럼 보이지 않습니다. 왜냐하면 자바스크립트에서는 프로그래밍 구조와 데이터 구조 사이의 구분이 흐릿(불분명? 모호?)하기 때문입니다. 모든 Object.* 메소드들은 메타프로그래밍 기능으로 고려될 수 있습니다.
 `The program is examining its own structure while running. This doesn’t look like metaprogramming, because the separation between programming constructs and data structures is fuzzy in JavaScript. All of the Object.* methods can be considered metaprogramming functionality.`
 
 ### 28.2.1 메타프로그래밍의 유형들
-Reflective 메타프로그래밍은 프로그램 과정 그 자신을 의미합니다. [Kiczales외[2].](http://exploringjs.com/es6/ch_proxies.html) reflective 메타프로그래밍의 유형을 세가지로 구별합니다.
+반영 메타프로그래밍은 프로그램 자체를 처리하는 것을 의미합니다. [Kiczales외[2].](http://exploringjs.com/es6/ch_proxies.html) 반영 메타프로그래밍의 유형을 세가지로 구별합니다.
 `Reflective metaprogramming means that a program processes itself. Kiczales et al. [2] distinguish three kinds of reflective metaprogramming:`
 
 * 자기관찰 : 프로그램의 구조에 읽기속성으로 접근합니다.`Introspection: you have read-only access to the structure of a program.`
 * 자체수정 : 구조를 변경할 수 있습니다. `Self-modification: you can change that structure`
-* 중재 : 어떤 언어 명령들의 의미를 재정의 할 수 있다`Intercession: you can redefine the semantics of some language operations.`
+* 중재 : 어떤 언어 연산들의 의미를 재정의 할 수 있다`Intercession: you can redefine the semantics of some language operations.`
 
 자 예제를 봅시다.
 `Let’s look at examples.`
 
-예: 자기관찰. Object.keys()는 자기관찰을 수행 합니다.( 이전 예제를 보세요. )
+예: 자기관찰. Object.keys()는 자기관찰을 수행 합니다.(이전 예제를 보세요.)
 `Example: introspection. Object.keys() performs introspection (see previous example).`
 
-예: 자체수정. 다음 moveProperty함수는 source에서 target으로 하나의 속성을 옮깁니다. moveProperty함수는 속성에 접근하는 대괄호 연산자, 할당연산자 그리고 삭제연산자를 통해 자체수정을 수행합니다.( 생산코드에서, 당신은 아마 이 일의 속성설명자를 사용해야합니다. )
+예: 자체수정. 다음 moveProperty함수는 source에서 target으로 하나의 속성을 옮깁니다. moveProperty함수는 속성에 접근하는 대괄호 연산자, 할당연산자 그리고 삭제연산자를 통해 자체수정을 수행합니다.(생산코드에서, 당신은 아마 이 작업에 대한 속성 설명자를 사용해야합니다.)
 `Example: self-modification. The following function moveProperty moves a property from a source to a target. It performs self-modification via the bracket operator for property access, the assignment operator and the delete operator. (In production code, you’d probably use property descriptors for this task.)`
 ```javascript
 function moveProperty(source, propertyName, target) {
@@ -102,7 +102,7 @@ ECMAScript 5는 중재를 지원하지 않습니다; 프록시는 그 공백을 
 
 ## 28.3 프록시 처음보기
 `## 28.3 A first look at proxies`
-ECMAScript 6 프록시는 자바스크립트에서 중재를 하게합니다. 프록시는 다음과 같이 동작합니다. 오브젝트 obj에서 수행할 수 있는 많은 명령들이 있습니다. 예를들어:
+ECMAScript 6 프록시는 자바스크립트에서 중재를 하게합니다. 프록시는 다음과 같이 동작합니다. 오브젝트 obj에서 수행할 수 있는 많은 연산들이 있습니다. 예를들어:
 `ECMAScript 6 proxies bring intercession to JavaScript. They work as follows. There are many operations that you can perform on an object obj. For example:`
 
 * 오브젝트 obj에서 속성 prop가져오기 (obj.prop) `Getting the property prop of an object obj (obj.prop)`
