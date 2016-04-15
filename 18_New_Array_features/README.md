@@ -2,35 +2,30 @@
 
 ##18.1 개요
 New static Array methods:
-```js
-Array.from(arrayLike, mapFunc?, thisArg?)
-Array.of(...items)
+- `Array.from(arrayLike, mapFunc?, thisArg?)`
+- `Array.of(...items)`
+
 New Array.prototype methods:
-```
+- Iterating:
+  - `Array.prototype.entries()`
+  - `Array.prototype.keys()`
+  - `Array.prototype.values()`
 
-Iterating:
-```js
-Array.prototype.entries()
-Array.prototype.keys()
-Array.prototype.values()
-```
+- Searching for elements:
+  - `Array.prototype.find(predicate, thisArg?)`
+  - `Array.prototype.findIndex(predicate, thisArg?)`
 
-Searching for elements:
-```js
-Array.prototype.find(predicate, thisArg?)
-Array.prototype.findIndex(predicate, thisArg?)
-Array.prototype.copyWithin(target, start, end=this.length)
-Array.prototype.fill(value, start=0, end=this.length)
-```
+- `Array.prototype.copyWithin(target, start, end=this.length)`
+- `Array.prototype.fill(value, start=0, end=this.length)`
+
 
 ##18.2 New static Array methods
 The object Array has new methods.
 
 ###18.2.1 Array.from(arrayLike, mapFunc?, thisArg?)
 Array.from()’s basic functionality is to convert two kinds of values to Arrays:
-
-Array-like values, which have a property length and indexed elements. Examples include the results of DOM operations such as document.getElementsByClassName().
-Iterable values, whose contents can be retrieved one element at a time. Strings and Arrays are iterable, as are ECMAScript’s new data structures Map and Set.
+- [Array-like values](http://speakingjs.com/es5/ch18.html#_pitfall_array_like_objects), which have a property length and indexed elements. Examples include the results of DOM operations such as document.getElementsByClassName().
+- [Iterable values](http://exploringjs.com/es6/ch_iteration.html#ch_iteration), whose contents can be retrieved one element at a time. Strings and Arrays are iterable, as are ECMAScript’s new data structures Map and Set.
 The following is an example of converting an Array-like object to an Array:
 
 ```js
@@ -110,14 +105,11 @@ Several new methods are available for Array instances.
 
 ###18.3.1 Iterating over Arrays
 The following methods help with iterating over Arrays:
+- Array.prototype.entries()
+- Array.prototype.keys()
+- Array.prototype.values()
 
-```js
-Array.prototype.entries()
-Array.prototype.keys()
-Array.prototype.values()
-```
 The result of each of the aforementioned methods is a sequence of values, but they are not returned as an Array; they are revealed one by one, via an iterator. Let’s look at an example. I’m using Array.from() to put the iterators’ contents into Arrays:
-
 ```js
 Array.from(['a', 'b'].keys())
 [ 0, 1 ]
@@ -212,10 +204,8 @@ Optionally, you can restrict where the filling starts and ends:
 
 ##18.4 ES6 and holes in Arrays
 Holes are indices “inside” an Array that have no associated element. In other words: An Array arr is said to have a hole at index i if:
-```js
-0 ≤ i < arr.length
-!(i in arr)
-```
+- 0 ≤ i < arr.length
+- !(i in arr)
 
 For example: The following Array has a hole at index 1.
 ```js
@@ -229,7 +219,8 @@ arr[1]      // undefined
 
 You’ll see lots of examples involving holes in this section. Should anything ever be unclear, you can consult Sect. “Holes in Arrays” in “Speaking JavaScript” for more information.
 
-ES6 pretends that holes don’t exist (as much as it can while being backward-compatible). And so should you – especially if you consider that holes can also affect performance negatively. Then you don’t have to burden your brain with the numerous and inconsistent rules around holes.
+> ES6 pretends that holes don’t exist (as much as it can while being backward-compatible). And so should you – especially if you consider that holes can also affect performance negatively. Then you don’t have to burden your brain with the numerous and inconsistent rules around holes.
+
 
 ###18.4.1 ECMAScript 6 treats holes like undefined elements
 The general rule for Array methods that are new in ES6 is: each hole is treated as if it were the element undefined. Examples:
@@ -302,17 +293,18 @@ Array.prototype.map() skips them, but preserves them:
 ####18.4.2.3 Array.prototype methods
 In ECMAScript 5, behavior already varied slightly. For example:
 
-forEach(), filter(), every() and some() ignore holes.
-map() skips but preserves holes.
-join() and toString() treat holes as if they were undefined elements, but interprets both null and undefined as empty strings.
+- forEach(), filter(), every() and some() ignore holes.
+- map() skips but preserves holes.
+- join() and toString() treat holes as if they were undefined elements, but interprets both null and undefined as empty strings.
+
 ECMAScript 6 adds new kinds of behaviors:
+- copyWithin() creates holes when copying holes (i.e., it deletes elements if necessary).
+- entries(), keys(), values() treat each hole as if it was the element undefined.
+- find() and findIndex() do the same.
+- fill() doesn’t care whether there are elements at indices or not.
 
-copyWithin() creates holes when copying holes (i.e., it deletes elements if necessary).
-entries(), keys(), values() treat each hole as if it was the element undefined.
-find() and findIndex() do the same.
-fill() doesn’t care whether there are elements at indices or not.
+
 The following table describes how Array.prototype methods handle holes.
-
 
 Method | Holes are | input | result |
 :---: | :---: | --- | ---
@@ -443,14 +435,14 @@ Array.isArray(arr)     // true
 No object in the ES6 standard library has a property with the key Symbol.isConcatSpreadable. This mechanism therefore exists purely for browser APIs and user code.
 
 Consequences:
+- Subclasses of Array are spread by default (because their instances are Array objects).
+- A subclass of Array can prevent its instances from being spread by setting a property to false whose key is Symbol.isConcatSpreadable. That property can be a prototype property or an instance property.
+- Other Array-like objects are spread by concat() if property [Symbol.isConcatSpreadable] is true. That would enable one, for example, to turn on spreading for some Array-like DOM collections.
+- Typed Arrays are not spread. They don’t have a method concat(), either.
 
-Subclasses of Array are spread by default (because their instances are Array objects).
-A subclass of Array can prevent its instances from being spread by setting a property to false whose key is Symbol.isConcatSpreadable. That property can be a prototype property or an instance property.
-Other Array-like objects are spread by concat() if property [Symbol.isConcatSpreadable] is true. That would enable one, for example, to turn on spreading for some Array-like DOM collections.
-Typed Arrays are not spread. They don’t have a method concat(), either.
-Symbol.isConcatSpreadable in the ES6 spec
-In the description of Array.prototype.concat(), you can see that spreading requires an object to be Array-like (property length plus indexed elements).
-Whether or not to spread an object is determined via the spec operation IsConcatSpreadable(). The last step is the default (equivalent to Array.isArray()) and the property [Symbol.isConcatSpreadable] is retrieved via a normal Get() operation, meaning that it doesn’t matter whether it is own or inherited.
+> Symbol.isConcatSpreadable in the ES6 spec
+> In the description of Array.prototype.concat(), you can see that spreading requires an object to be Array-like (property length plus indexed elements).
+> Whether or not to spread an object is determined via the spec operation IsConcatSpreadable(). The last step is the default (equivalent to Array.isArray()) and the property [Symbol.isConcatSpreadable] is retrieved via a normal Get() operation, meaning that it doesn’t matter whether it is own or inherited.
 
 ##18.6 The numeric range of Array indices
 For Arrays, ES6 still has the same rules as ES5:
