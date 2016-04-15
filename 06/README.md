@@ -42,7 +42,7 @@ Unicode 챕터에서 escape에 관해 더 자세히 살펴볼 것이다.
 Template literal은 세 가지 흥미로운 기능을 제공한다. 각 챕터에서 더 깊이있게 다룰 예정이다.
 
 #####1) template literal은 문자열 보간(interpolation)을 지원한다.
-_보간 : 사이에 무언가를 끼워넣는 행위. '내삽'이라고도 한다._
+_보간 : 사이에 무언가를 끼워넣는 행위._
 ```js
 const first = 'Jane';
 const last = 'Doe';
@@ -174,7 +174,7 @@ String.prototype.search(regexp) calls regexp[Symbol.search](this).
 String.prototype.split(separator, limit) calls separator[Symbol.split](this, limit).
 The parameters don’t have to be regular expressions, anymore. Any objects with appropriate methods will do.
 
-6.9 Cheat sheet: the new string methods
+6.9 Cheat sheet: the new string methods (요약)
 Tagged templates:
 
 String.raw(callSite, ...substitutions) : string
