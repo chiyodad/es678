@@ -577,23 +577,28 @@ Math.log(1+x)를 반환한다. Math.expm1의 역이다.
 
 Emscripten은 asm.js에 의해 나중에 선택된 코딩 스타일을 개척했다. 가상머신(생각하기론 바이트코드)의 동작은 자바스크립트의 정적 부분집합으로 표현된다. 이 부분집합은 자바스크립트 엔진에서 효과적으로 실행된다. c++로 부터 컴파일된 결과는 원래 속도에 대략 70% 로 실행된다.
 
-다음 Math 메소드는 asm.js와 컴파일 전략에 의해 
-The following Math methods were mainly added to support asm.js and similar compilation strategies, they are not that useful for other applications.
+다음 Math 메소드는 asm.js와 컴파일 전략의 지원을 위해 주로 추가 되었고, 다른 애플리케이션을 위해 유용하진 않다.
 
-5.4.4.1 Math.fround(x)
-Rounds x to a 32 bit floating point value (float). Used by asm.js to tell an engine to internally use a float value.
+#### 5.4.4.1 Math.fround(x)
 
-5.4.4.2 Math.imul(x, y)
-Multiplies the two 32 bit integers x and y and returns the lower 32 bits of the result. This is the only 32 bit basic math operation that can’t be simulated by using a JavaScript operator and coercing the result back to 32 bits. For example, idiv could be implemented as follows:
+x를 32 비트 부동소수점 값(float)으로 반환한다. asm.js를 통해 엔진에게 내부적으로 float 값으로 사용한다고 말하기 위해 사용된다.
 
+#### 5.4.4.2 Math.imul(x, y)
+
+두 32비트 정수 x, y를 곱하고 결과의 하위 32비트를 반환한다. 이것은 자바스크립트 연산자를 사용해서 따라 할 수 없고, 결과값을 32비트로 강제 변환 할 수 없는 오직 32 비트 기본 수학 연산이다. 예를들면 idiv는 아래처럼 구현될 수 있다.:
+
+```javascript
 function idiv(x, y) {
     return (x / y) | 0;
 }
-In contrast, multiplying two large 32 bit integers may produce a double that is so large that lower bits are lost.
+```
+반면에 두 32비트 정수 이상의 곱셉은 값이 커서 하위 비트 잃어버린 double을 생성한다.
 
-5.4.5 Bitwise operations
-Math.clz32(x)
-Counts the leading zero bits in the 32 bit integer x.
+### 5.4.5 비트 연산자
+
+* Math.clz32(x)
+  32비트 정수 x에서 앞에 0의 갯수
+```javascript
   > Math.clz32(0b01000000000000000000000000000000)
   1
   > Math.clz32(0b00100000000000000000000000000000)
@@ -602,29 +607,35 @@ Counts the leading zero bits in the 32 bit integer x.
   30
   > Math.clz32(1)
   31
-Why is this interesting? Quoting “Fast, Deterministic, and Portable Counting Leading Zeros” by Miro Samek:
+```
 
-Counting leading zeros in an integer number is a critical operation in many DSP algorithms, such as normalization of samples in sound or video processing, as well as in real-time schedulers to quickly find the highest-priority task ready-to-run.
+왜 이것이 흥미로운가? "Fast, Deterministic, and Portable Counting Leading Zeros" by Miro Samek을 인용하면:
 
-5.4.6 Trigonometric methods
-Math.sinh(x)
-Computes the hyperbolic sine of x.
-Math.cosh(x)
-Computes the hyperbolic cosine of x.
-Math.tanh(x)
-Computes the hyperbolic tangent of x.
-Math.asinh(x)
-Computes the inverse hyperbolic sine of x.
-Math.acosh(x)
-Computes the inverse hyperbolic cosine of x.
-Math.atanh(x)
-Computes the inverse hyperbolic tangent of x.
-Math.hypot(...values)
-Computes the square root of the sum of the squares of its arguments.
-5.5 FAQ: numbers
-5.5.1 How can I use integers beyond JavaScript’s 53 bit range?
-JavaScript’s integers have a range of 53 bits. That is a problem whenever 64 bit integers are needed. For example: In its JSON API, Twitter had to switch from integers to strings when tweet IDs became too large.
+정수의 앞에 0의 갯수는 소리나 비디오 프로세싱에서 샘플의 노말리제이션과 같은 많은 DSP 알고리즘의 중요한 연산이고 또한 실시간 스케줄러에서 빠르게 높은 우선순위 테스크를 발견하는데 좋다.
 
-At the moment, the only way around that limitation is to use a library for higher-precision numbers (bigints or bigfloats). One such library is decimal.js.
+### 5.4.6 삼각 함수
 
-Plans to support larger integers in JavaScript exist, but may take a while to come to fruition.
+* Math.sinh(x)
+  x의 쌍곡선 싸인을 계산한다.
+* Math.cosh(x)
+  x의 쌍곡선 코싸인을 계산한다.
+* Math.tanh(x)
+  x의 쌍곡선 탄젠트를 계산한다.
+* Math.asinh(x)
+  x의 쌍곡선 싸인의 역을 계산한다.
+* Math.acosh(x)
+  x의 쌍곡선 코사인의 역을 계산한다.
+* Math.atanh(x)
+  x의 쌍곡선 탄젠트의 역을 계산한다.
+* Math.hypot(...values)
+  인자들의 제곱의 덧셈의 제곱근을 계산한다.
+
+##5.5 FAQ: numbers
+
+### 5.5.1 어떻게 내가 53bit 범위 넘는 정수를 사용할 수 있는가?
+
+자바스크립트의 정수는 53비트의 범위를 갖는다. 이것은 64 비트 정수가 필요할때 문제가 된다. 예를 들면: JSON API에서 트위터는 트위터 ID가 매우 큰 경우 정수를 문자열로 변환을 갖는다.
+
+그때에 제한하는 한가지 방법은 높은 정밀도 수를 위한 라이브러리(bigints 또는 bitfloats)를 사용하는 것이다. 이 라이브러리중 하나는 decimal.js이다.
+
+자바스크립트에서 큰 정수를 지원하는 계획은 존재하나 시간이 걸릴 수 있다.
