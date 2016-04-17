@@ -510,51 +510,74 @@ false
 true
 ```
 
-5.4.2.1 Math.expm1(x)
-Returns Math.exp(x)-1. The inverse of Math.log1p().
+#### 5.4.2.1 Math.expm1(x)
 
-Therefore, this method provides higher precision whenever Math.exp() has results close to 1. You can see the difference between the two in the following interaction:
+Math.exp(x)-1을 반환한다. Math.log1p()의 역이다.
 
+그러므로, 이 메소드는 Math.exp()의 결과가 1과 근접하게 될때 높은 정밀도를 제공한다. 아래 상호작용에 대해서 둘에 대한 차이를 볼 수 있다.:
+
+```javascript
 > Math.expm1(1e-10)
 1.00000000005e-10
 > Math.exp(1e-10)-1
 1.000000082740371e-10
-The former is the better result, which you can verify by using a library (such as decimal.js) for floating point numbers with arbitrary precision (“bigfloats”):
+```
 
+전자가 더 좋은 결과이다. 임의 정밀도("bigfloats")와 함께 부동 소수점 수에 대한 라이브러리(decimal.js같은)을 사용하여 증명할 수 있다.:
+
+```javascript
 > var Decimal = require('decimal.js').config({precision:50});
 > new Decimal(1e-10).exp().minus(1).toString()
 '1.000000000050000000001666666666708333333e-10'
-5.4.2.2 Math.log1p(x)
-Returns Math.log(1 + x). The inverse of Math.expm1().
+```
 
-Therefore, this method lets you specify parameters that are close to 1 with a higher precision.
+#### 5.4.2.2 Math.log1p(x)
 
-We have already established that 1 + 1e-16 === 1. Therefore, it is no surprise that the following two calls of log() produce the same result:
+Math.log(1+x)를 반환한다. Math.expm1의 역이다.
 
+그러므로 이 메소드는 높은 정밀도를 1근처의 파라미터에 대해 지정 할 수 있다.
+
+우리는 이미 1 + 1e-16 === 1을 확인했다. 그러므로, 다음 두개의 log() 호출이 같은 결과를 내는것은 놀랄일이 아니다.:
+
+```javascript
 > Math.log(1 + 1e-16)
 0
 > Math.log(1 + 0)
 0
-In contrast, log1p() produces different results:
+```
+반면에, log1p()는 다른 결과를 생산한다:
 
+```javascript
 > Math.log1p(1e-16)
 1e-16
 > Math.log1p(0)
 0
-5.4.3 Logarithms to base 2 and 10
-5.4.3.1 Math.log2(x)
-Computes the logarithm to base 2.
+```
 
+### 5.4.3 밑수가 2와 10인 로그
+#### 5.4.3.1 Math.log2(x)
+
+밑수가 2인 로그를 계산한다.
+
+```javascript
 > Math.log2(8)
 3
-5.4.3.2 Math.log10(x)
-Computes the logarithm to base 10.
+```
 
+#### 5.4.3.2 Math.log10(x)
+
+밑수가 10인 로그를 계산한다.
+
+```javascript
 > Math.log10(100)
 2
-5.4.4 Support for compiling to JavaScript
-Emscripten pioneered a coding style that was later picked up by asm.js: The operations of a virtual machine (think bytecode) are expressed in static subset of JavaScript. That subset can be executed efficiently by JavaScript engines: If it is the result of a compilation from C++, it runs at about 70% of native speed.
+```
 
+### 5.4.4 자바스크립트로의 컴파일링 제공
+
+Emscripten은 asm.js에 의해 나중에 선택된 코딩 스타일을 개척했다. 가상머신(생각하기론 바이트코드)의 동작은 자바스크립트의 정적 부분집합으로 표현된다. 이 부분집합은 자바스크립트 엔진에서 효과적으로 실행된다. c++로 부터 컴파일된 결과는 원래 속도에 대략 70% 로 실행된다.
+
+다음 Math 메소드는 asm.js와 컴파일 전략에 의해 
 The following Math methods were mainly added to support asm.js and similar compilation strategies, they are not that useful for other applications.
 
 5.4.4.1 Math.fround(x)
