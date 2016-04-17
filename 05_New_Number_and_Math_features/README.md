@@ -490,21 +490,26 @@ x의 세제곱근을 반환한다. (∛x).
 2
 ```
 
-5.4.2 Using 0 instead of 1 with exponentiation and logarithm
-A small fraction can be represented more precisely if it comes after zero. I’ll demonstrate this with decimal fractions (JavaScript’s numbers are internally stored with base 2, but the same reasoning applies).
+### 5.4.2 지수와 로그에서 0대신 1을 사용
 
-Floating point numbers with base 10 are internally represented as mantissa × 10exponent. The mantissa has a single digit before the decimal dot and the exponent “moves” the dot as necessary. That means if you convert a small fraction to the internal representation, a zero before the dot leads to a smaller mantissa than a one before the dot. For example:
+0뒤로 부터 오는 작은 소수는 더 정확하게 표현될 수 있다. 나는 이것을 작은 소수와 함께 증명하겠다. (자바스크립트의 수는 내부적으로 밑수가 2로 저장되지만 동일한 이유가 적용된다.).
 
-(A) 0.000000234 = 2.34 × 10−7. Significant digits: 234
-(B) 1.000000234 = 1.000000234 × 100. Significant digits: 1000000234
-Precision-wise, the important quantity here is the capacity of the mantissa, as measured in significant digits. That’s why (A) gives you higher precision than (B).
+밑수가 10인 부동소수점수는 내부적으로 가수 * 10^지수로 표현된다. 이 가수는 소수점 이전 하나의 숫자를 갖고 지수는 필요에 따라 점을 "이동" 한다. 만약 작은 정수를 내부적 표현으로 변환한다면 소수점 이전의 0은 소수점 이전의 1보다 더 작은 가수로 이끈다. 예를 들면:
 
-You can see this in the following interaction: The first number (1 × 10−16) registers as different from zero, while the same number added to 1 registers as 1.
+* (A) 0.000000234 = 2.34 * 10^−7. 유효숫자: 234
+* (b) 1.000000234 = 1.000000234 * 10^0. 유효숫자: 1000000234
 
+정밀하게 보자면, 여기에서 중요한 양은 유효 숫자가 측정된 가수의 용량이다. 이것이 A가 B보다 높은 정밀도를 제공하는 이유이다.
+
+다음과 같은 상호작용을 볼수 있다: 처음 수는 (1 * 10^-16) 0과 다르게 저장되지만 같은 수에 1을 더하면 1로 저장된다.
+
+```javascript
 > 1e-16 === 0
 false
 > 1 + 1e-16 === 1
 true
+```
+
 5.4.2.1 Math.expm1(x)
 Returns Math.exp(x)-1. The inverse of Math.log1p().
 
