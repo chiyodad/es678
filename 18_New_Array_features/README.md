@@ -1,17 +1,17 @@
 #18. New Array features
 
 ##18.1 개요
-새로운 배열 메서드 :
+New static Array methods:
 - `Array.from(arrayLike, mapFunc?, thisArg?)`
 - `Array.of(...items)`
 
-새로운 Array.prototype 메서드 :
+New Array.prototype methods:
 - Iterating:
   - `Array.prototype.entries()`
   - `Array.prototype.keys()`
   - `Array.prototype.values()`
 
-- 요소 검색:
+- Searching for elements:
   - `Array.prototype.find(predicate, thisArg?)`
   - `Array.prototype.findIndex(predicate, thisArg?)`
 
@@ -19,21 +19,19 @@
 - `Array.prototype.fill(value, start=0, end=this.length)`
 
 
-##18.2 새로운 배열 메서드들
+##18.2 New static Array methods
+The object Array has new methods.
 
 ###18.2.1 Array.from(arrayLike, mapFunc?, thisArg?)
-`Array.from()`의 기본 기능은 다음의 두 경우에 대해 새로운 배열을 반환해주는 역할이다.
-- [유사배열객체](http://speakingjs.com/es5/ch18.html#_pitfall_array_like_objects) : length 프로퍼티와 인덱스 처리된 엘리먼트를 지닌 객체. `document.getElementsByClassName()` 등을 통해 얻을 수 있는 DOM 객체가 그 예에 해당한다.
-- [이터러블객체](http://exploringjs.com/es6/ch_iteration.html#ch_iteration) : 매 호출시마다 한 개의 엘리먼트를 인출할 수 있는 객체. 문자열과 배열 및 Map, Set 등이 이터러블객체에 해당한다.
+Array.from()’s basic functionality is to convert two kinds of values to Arrays:
+- [Array-like values](http://speakingjs.com/es5/ch18.html#_pitfall_array_like_objects), which have a property length and indexed elements. Examples include the results of DOM operations such as document.getElementsByClassName().
+- [Iterable values](http://exploringjs.com/es6/ch_iteration.html#ch_iteration), whose contents can be retrieved one element at a time. Strings and Arrays are iterable, as are ECMAScript’s new data structures Map and Set.
+The following is an example of converting an Array-like object to an Array:
 
-다음은 유사배열객체를 배열로 컨버팅하는 예제이다.
 ```js
-const arrayLike = {
-  length: 2,
-  0: 'a',
-  1: 'b'
-};
-// for-of는 오직 이터러블객체에 대해서만 동작한다.
+const arrayLike = { length: 2, 0: 'a', 1: 'b' };
+
+// for-of only works with iterable values
 for (const x of arrayLike) { // TypeError
     console.log(x);
 }
@@ -46,50 +44,53 @@ for (const x of arr) { // OK, iterable
 // b
 ```
 
-
-####18.2.1.1 Array.from()으로 매핑하기
-`Array.from()`의 두 번째 매개변수로 매핑함수를 입력하면 `map()`을 대체할 수 있다.
+####18.2.1.1 Mapping via Array.from()
+Array.from() is also a convenient alternative to using map() generically:
 ```js
 const spans = document.querySelectorAll('span.name');
+```
+
+// map(), generically:
+```js
 const names1 = Array.prototype.map.call(spans, s => s.textContent);
+```
+
+// Array.from():
+```js
 const names2 = Array.from(spans, s => s.textContent);
 ```
-위 예제에서 `document.querySelectorAll()`의 결과 반환된 값은 배열이 아닌 유사배열객체이므로, `map()` 메서드를 바로 적용할 수 없다. 따라서 기존까지는 forEach()메서드 등을 적용하기 위해 유사배열객체를 배열로 전환하거나, call, apply 등을 활용하곤 했다. 이제는 Array.from() 메서드를 통해 이와 같은 중간 과정을 생략할 수 있게 되었다.
+In this example, the result of document.querySelectorAll() is again an Array-like object, not an Array, which is why we couldn’t invoke map() on it. Previously, we converted the Array-like object to an Array in order to call forEach(). Here, we skipped that intermediate step via a generic method call and via the two-parameter version of Array.from().
 
-####18.2.1.2 Array의 서브클래스에서 호출하는 from()
-`Array.from()`의 또다른 사용법은 유사배열객체나 이터러블객체를 Array의 서브클래스의 인스턴스로 설정하는 것이다. 예를 들어 Array에 서브클래스 'MyArray'를 생성하고 어떤 객체를 'MyArray'의 인스턴스로 설정하고자 한다면, 단순히 `MyArray.from()`을 사용하면 된다. 이 방식이 동작하는 이유는 ES6에서 생성자 사이의 상속관계 때문이다(상위 생성자는 하위 생성자의 프로토타입이다).
+####18.2.1.2 from() in subclasses of Array
+Another use case for Array.from() is to convert an Array-like or iterable value to an instance of a subclass of Array. For example, if you create a subclass MyArray of Array and want to convert such an object to an instance of MyArray, you simply use MyArray.from(). The reason that that works is because constructors inherit from each other in ECMAScript 6 (a super-constructor is the prototype of its sub-constructors).
 ```js
 class MyArray extends Array {
     ···
 }
 const instanceOfMyArray = MyArray.from(anIterable);
 ```
-
 You can also combine this functionality with mapping, to get a map operation where you control the result’s constructor:
-```js
-// from() – receiver를 통해 결과값의 생성자를 결정한다.
-// 아래의 경우 'MyArray'
+
+// from() – determine the result’s constructor via the receiver
+// (in this case, MyArray)
 const instanceOfMyArray = MyArray.from([1, 2, 3], x => x * x);
 
-// map(): 결과는 언제나 Array의 인스턴스이다.
+// map(): the result is always an instance of Array
 const instanceOfArray   = [1, 2, 3].map(x => x * x);
-```
-
-어떤 패턴들은 배열의 non-static한 내장메서드들을 설정할 수 있게 한다(slice, filter, map 등에 대해 그렇다). 더 자세한 내용은 'Classes' 챕터의 'The species pattern' 섹션에서 확인할 수 있다.
-
+The species pattern lets you configure what instances non-static built-in methods (such as slice(), filter() and map()) return. It is explained in Sect. “The species pattern” in Chap. “Classes”.
 
 ###18.2.2 Array.of(...items)
-`Array.of(item_0, item_1, ···)`는 item_0, item_1,···을 인스턴스로 하는 배열을 생성한다.
+Array.of(item_0, item_1, ···) creates an Array whose elements are item_0, item_1, etc.
 
-####18.2.2.1 Array의 서브클래스에서 호출하는 of()
-Array 생성자함수는 숫자형 값 하나만 넘길 경우 제대로 동작하지 않는 문제(정수를 넘기면 배열의 length값을 할당하고, 소수를 넘기면 오류를 발생시킴)가 있기 때문에, 배열을 생성할 때는 늘 배열 리터럴로 선언할 필요가 있다.
+####18.2.2.1 Array.of() as an Array literal for subclasses of Array
+If you want to turn several values into an Array, you should always use an Array literal, especially since the Array constructor doesn’t work properly if there is a single value that is a number (more information on this quirk):
 ```js
 new Array(3, 11, 8) // [ 3, 11, 8 ]
 new Array(3)        // [ , ,  ,]
 new Array(3.1)      // RangeError: Invalid array length
 ```
 
-그렇다면 Array의 서브클래스의 인스턴스에 값을 할당하려면 어떻게 해야 할까? 바로 이 때 Array.of() 메서드가 도움이 된다(Array의 하위 생성자는 Array의 모든 메서드를 상속받는다는 것을 기억하자).
+But how are you supposed to turn values into an instance of a sub-constructor of Array then? This is where Array.of() helps (remember that sub-constructors of Array inherit all of Array’s methods, including of()).
 
 ```js
 class MyArray extends Array {
@@ -99,16 +100,16 @@ console.log(MyArray.of(3, 11, 8) instanceof MyArray); // true
 console.log(MyArray.of(3).length === 1); // true
 ```
 
-
 ##18.3 New Array.prototype methods
+Several new methods are available for Array instances.
 
 ###18.3.1 Iterating over Arrays
-배열을 이터레이트하는 데에 도움을 주는 메서드들은 다음과 같다 :
+The following methods help with iterating over Arrays:
 - Array.prototype.entries()
 - Array.prototype.keys()
 - Array.prototype.values()
 
-위 각 메서드들의 결과는 '배열이 아닌' 일련의 값이다. 이들은 이터레이터를 통해 값을 하나씩 반환한다. 예제를 살펴보자. 이터레이터의 컨텐츠를 배열에 담기 위해 Array.from() 메서드를 이용했다.
+The result of each of the aforementioned methods is a sequence of values, but they are not returned as an Array; they are revealed one by one, via an iterator. Let’s look at an example. I’m using Array.from() to put the iterators’ contents into Arrays:
 ```js
 Array.from(['a', 'b'].keys())
 [ 0, 1 ]
@@ -119,14 +120,12 @@ Array.from(['a', 'b'].keys())
   [ 1, 'b' ] ]
 ```
 
-펼침연산자`...`를 이용할 수도 있다.
+I could also have used the spread operator (...) to convert iterators to Arrays:
 ```js
 [...['a', 'b'].keys()]    // [ 0, 1 ]
 ```
 
-
-####18.3.1.1 [index, element]쌍에 대한 이터레이션
-
+####18.3.1.1 Iterating over [index, element] pairs
 You can combine entries() with ECMAScript 6’s for-of loop and destructuring to conveniently iterate over [index, element] pairs:
 ```js
 for (const [index, element] of ['a', 'b'].entries()) {
