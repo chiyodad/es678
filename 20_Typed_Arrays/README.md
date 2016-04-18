@@ -1,4 +1,4 @@
-20. Typed Arrays
+# 20. Typed Arrays
 
 20.1 Overview
 Typed Arrays are an ECMAScript 6 API for handling binary data.
