@@ -1,15 +1,16 @@
 # 20. Typed Arrays
 
-20.1 Overview
+## 20.1 Overview
 Typed Arrays are an ECMAScript 6 API for handling binary data.
 
 Code example:
 
-const typedArray = new Uint8Array([0,1,2]);
-console.log(typedArray.length); // 3
-typedArray[0] = 5;
-const normalArray = [...typedArray]; // [5,1,2]
-
+```javascr
+> const typedArray = new Uint8Array([0,1,2]);
+> console.log(typedArray.length); // 3
+> typedArray[0] = 5;
+> const normalArray = [...typedArray]; // [5,1,2]
+```
 // The elements are stored in typedArray.buffer.
 // Get a different view on the same data:
 const dataView = new DataView(typedArray.buffer);
