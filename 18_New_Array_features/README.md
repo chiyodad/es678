@@ -65,10 +65,10 @@ class MyArray extends Array {
 const instanceOfMyArray = MyArray.from(anIterable);
 ```
 
-You can also combine this functionality with mapping, to get a map operation where you control the result’s constructor:
+또한 from 메서드를 이용하면 map 메서드와 달리 반환되는 배열의 생성자를 지정할 수 있다.
 ```js
 // from() – receiver를 통해 결과값의 생성자를 결정한다.
-// 아래의 경우 'MyArray'
+// 아래의 경우 반환된 배열은 'MyArray'의 인스턴스이다.
 const instanceOfMyArray = MyArray.from([1, 2, 3], x => x * x);
 
 // map(): 결과는 언제나 Array의 인스턴스이다.
@@ -104,9 +104,9 @@ console.log(MyArray.of(3).length === 1); // true
 
 ###18.3.1 Iterating over Arrays
 배열을 이터레이트하는 데에 도움을 주는 메서드들은 다음과 같다 :
-- Array.prototype.entries()
-- Array.prototype.keys()
-- Array.prototype.values()
+- `Array.prototype.entries()`
+- `Array.prototype.keys()`
+- `Array.prototype.values()`
 
 위 각 메서드들의 결과는 '배열이 아닌' 일련의 값이다. 이들은 이터레이터를 통해 값을 하나씩 반환한다. 예제를 살펴보자. 이터레이터의 컨텐츠를 배열에 담기 위해 Array.from() 메서드를 이용했다.
 ```js
@@ -126,137 +126,122 @@ Array.from(['a', 'b'].keys())
 
 
 ####18.3.1.1 [index, element]쌍에 대한 이터레이션
-
-You can combine entries() with ECMAScript 6’s for-of loop and destructuring to conveniently iterate over [index, element] pairs:
+`entries()` 메서드를 이용하면 for-of 루프 및 destructuring시 편리하게 [index, element] 쌍을 이터레이트할 수 있다.
 ```js
 for (const [index, element] of ['a', 'b'].entries()) {
     console.log(index, element);
 }
 ```
 
-###18.3.2 Searching for Array elements
-Array.prototype.find(predicate, thisArg?)
-Returns the first Array element for which the callback predicate returns true. If there is no such element, it returns undefined. Example:
-
+###18.3.2 배열 요소 검색
+`Array.prototype.find(predicate, thisArg?)`
+콜백(predicate)함수에서 true를 반환하는 요소 중 첫번째 요소를 반환한다. 만약 true인 요소가 없다면 undefined를 반환한다.
 ```js
 [6, -5, 8].find(x => x < 0)    // -5
 [6, 5, 8].find(x => x < 0)     // undefined
 ```
 
-Array.prototype.findIndex(predicate, thisArg?)
-Returns the index of the first element for which the callback predicate returns true. If there is no such element, it returns -1. Example:
+`Array.prototype.findIndex(predicate, thisArg?)`
+콜백(predicate)함수에서 true를 반환하는 요소 중 첫번째 요소의 인덱스값을 반환한다. 만약 true인 요소가 없다면 -1을 반환한다.
 ```js
 [6, -5, 8].findIndex(x => x < 0)    // 1
 [6, 5, 8].findIndex(x => x < 0)     // -1
 ```
 
-The full signature of the callback predicate is:
+콜백함수에 지정 가능한 매개변수 및 순서는 다음과 같다.
 ```js
-predicate(element, index, array)
+predicate(element[, index[, array]])
 ```
 
-####18.3.2.1 Finding NaN via findIndex()
-A well-known limitation of Array.prototype.indexOf() is that it can’t find NaN, because it searches for elements via ===:
 
+####18.3.2.1 findIndex()로 NaN 찾기
+`Array.prototype.indexOf()`는 '==='를 통해 검색하기 때문에 NaN을 검색하지 못하는 한계가 있다는 점은 잘 알려진 사실이다.
 ```js
 [NaN].indexOf(NaN)    // -1
 ```
 
-With findIndex(), you can use Object.is() (explained in the chapter on OOP) and will have no such problem:
+`Object.is()`와 함께 `findIndex()`를 이용하면 문제없이 잘 동작한다.
 ```js
 [NaN].findIndex(y => Object.is(NaN, y))    // 0
 ```
 
-You can also adopt a more general approach, by creating a helper function elemIs():
+elemIs()라는 헬퍼함수를 만들어 보다 일반적인 접근방식을 적용할 수도 있다.
 ```js
 function elemIs(x) { return Object.is.bind(Object, x) }
 [NaN].findIndex(elemIs(NaN))    // 0
 ```
 
+
 ###18.3.3 Array.prototype.copyWithin()
-The signature of this method is:
 
-Array.prototype.copyWithin(target : number,
-    start : number, end = this.length) : This
-It copies the elements whose indices are in the range [start,end) to index target and subsequent indices. If the two index ranges overlap, care is taken that all source elements are copied before they are overwritten.
+문법은 다음과 같다.
+`Array.prototype.copyWithin(target[index], start[index], end[this.length])`
+> return : this
 
-Example:
+배열 내 요소 중 start(인덱스)부터 end(개수)만큼의 요소들을 복사하여 target 인덱스부터 차례로 치환한다. 범위를 초과할 경우에는 가능한 영역(끝)까지만 치환한다.
+
 ```js
-const arr = [0,1,2,3];
-arr.copyWithin(2, 0, 2)    // [ 0, 1, 0, 1 ]
-arr                        // [ 0, 1, 0, 1 ]
+const arr = [0, 1, 2, 3, 4, 5, 6, 7];
+arr.copyWithin(3, 1, 4)    // [ 0, 1, 2, 1, 2, 3, 6, 7]
 ```
 
-###18.3.4 Array.prototype.fill()
-The signature of this method is:
 
-Array.prototype.fill(value : any, start=0, end=this.length) : This
-It fills an Array with the given value:
+###18.3.4 Array.prototype.fill()
+
+문법은 다음과 같다.
+`Array.prototype.fill(value[any], start[index = 0], end[this.length])`
+> return : this
+
+배열의 각 요소들을 지정한 값으로 채운다.
 ```js
 const arr = ['a', 'b', 'c'];
 arr.fill(7)    // [ 7, 7, 7 ]
 arr            // [ 7, 7, 7 ]
 ```
 
-Optionally, you can restrict where the filling starts and ends:
+시작지점과 끝지점을 지정하여 값을 채울 영역을 제한할 수 있다.
 ```js
-['a', 'b', 'c'].fill(7, 1, 2)    // [ 'a', 7, 'c' ]
+['a', 'b', 'c', 'd'].fill(7, 1, 3)    // [ 'a', 7, 7, 'd']
 ```
 
-##18.4 ES6 and holes in Arrays
-Holes are indices “inside” an Array that have no associated element. In other words: An Array arr is said to have a hole at index i if:
-- 0 ≤ i < arr.length
-- !(i in arr)
-
-For example: The following Array has a hole at index 1.
+##18.4 배열 내의 빈칸
+배열 내의 빈칸은 요소가 없음을 의미한다. 예를들어 다음 배열은 인덱스 1의 값이 비어있다. 인덱스 2는 비어있지 않다!
 ```js
-const arr = ['a',,'b']
+const arr = ['a', , undefined, 'b']
 'use strict'
 0 in arr    // true
 1 in arr    // false
 2 in arr    // true
+3 in arr    // true
 arr[1]      // undefined
 ```
 
-You’ll see lots of examples involving holes in this section. Should anything ever be unclear, you can consult Sect. “Holes in Arrays” in “Speaking JavaScript” for more information.
-
-> ES6 pretends that holes don’t exist (as much as it can while being backward-compatible). And so should you – especially if you consider that holes can also affect performance negatively. Then you don’t have to burden your brain with the numerous and inconsistent rules around holes.
+> ES6는 빈칸을 '존재하지 않는다'고 가정한다(기존 문법과의 호환성이 보장하는 한에서 그러하다). 따라서 빈칸이 성능에 부정적인 영향을 미치지는 않을지를 두고 고민하지 않아도 된다.
 
 
-###18.4.1 ECMAScript 6 treats holes like undefined elements
-The general rule for Array methods that are new in ES6 is: each hole is treated as if it were the element undefined. Examples:
+###18.4.1 ES6는 빈칸을 undefined 처럼 다룬다.
 ```js
-Array.from(['a',,'b'])                    // [ 'a', undefined, 'b' ]
-[,'a'].findIndex(x => x === undefined)    // 0
-[...[,'a'].entries()]                     // [ [ 0, undefined ], [ 1, 'a' ] ]
+Array.from(['a', ,'b'])                    // [ 'a', undefined, 'b' ]
+[ ,'a'].findIndex(x => x === undefined)    // 0
+[...[ ,'a'].entries()]                     // [ [ 0, undefined ], [ 1, 'a' ] ]
 ```
 
-The idea is to steer people away from holes and to simplify long-term. Unfortunately that means that things are even more inconsistent now.
 
-
-###18.4.2 Array operations and holes
+###18.4.2 빈칸과 배열 조작
 ####18.4.2.1 Iteration
-The iterator created by Array.prototype[Symbol.iterator] treats each hole as if it were the element undefined. Take, for example, the following iterator iter:
+Array.prototype[Symbol.iterator]에 의해 생성된 이터레이터는 매 빈칸을 마치 undefined인 값이 있는 것처럼 다룬다.
 ```js
 var arr = [, 'a'];
 var iter = arr[Symbol.iterator]();
-```
-
-If we invoke next() twice, we get the hole at index 0 and the element 'a' at index 1. As you can see, the former produces undefined:
-```js
 iter.next()    // { value: undefined, done: false }
 iter.next()    // { value: 'a', done: false }
 ```
 
-Among others, two operations are based on the iteration protocol. Therefore, these operations also treat holes as undefined elements.
+spread operator(`...`)나 `for-of` 역시 이터레이션 프로토콜을 기반으로 하고 있으므로 빈칸에 대해 마찬가지로 취급한다.
 
-First, the spread operator (...):
 ```js
 [...[, 'a']]    // [ undefined, 'a' ]
-```
 
-Second, the for-of loop:
-```js
 for (const x of [, 'a']) {
   console.log(x);
 }
@@ -264,85 +249,79 @@ for (const x of [, 'a']) {
 // a
 ```
 
-Note that the Array prototype methods (filter() etc.) do not use the iteration protocol.
+_대부분의 Array prototype method(filter() 등)은 이터레이션 프로토콜을 사용하지 않음에 주의할 것!_
+
+
 
 ####18.4.2.2 Array.from()
-If its argument is iterable, Array.from() uses iteration to convert it to an Array. Then it works exactly like the spread operator:
+첫 번째 인자로 이터러블 객체를 지정할 경우 Array.from() 메서드는 이터레이션을 이용하여 이 인자를 배열로 전환한다. 이는 spread operator와 동일한 동작이다.
 ```js
 Array.from([, 'a'])    // [ undefined, 'a' ]
 ```
 
-But Array.from() can also convert Array-like objects to Arrays. Then holes become undefined, too:
+Array.from() 메서드는 유사배열객체를 배열로 전환할 수도 있다. 이 때 빈칸은 undefined로 자동 지정된다.
 ```js
 Array.from({1: 'a', length: 2})    // [ undefined, 'a' ]
 ```
 
-With a second argument, Array.from() works mostly like Array.prototype.map().
 
-However, Array.from() treats holes as undefined:
+두번째 인자에 함수를 지정하면 Array.prototype.map()과 유사한 동작을 한다.
+다만, 빈칸을 undefined로 지정한다는 점이 map()과 다르다.
 ```js
-Array.from([,'a'], x => x)        // [ undefined, 'a' ]
-Array.from([,'a'], (x,i) => i)    // [ 0, 1 ]
+Array.from([ ,'a'], x => x)        // [ undefined, 'a' ]
+Array.from([ ,'a'], (x,i) => i)    // [ 0, 1 ]
+
+[ ,'a'].map(x => x)        // [ , 'a' ]
+[ ,'a'].map((x,i) => i)    // [ , 1 ]
 ```
 
-Array.prototype.map() skips them, but preserves them:
-```js
-[,'a'].map(x => x)        // [ , 'a' ]
-[,'a'].map((x,i) => i)    // [ , 1 ]
-```
 
 ####18.4.2.3 Array.prototype methods
-In ECMAScript 5, behavior already varied slightly. For example:
+Array.prototype 메서드는 ES5에서 이미 약간의 변화가 있었다. 예를 들면
+- forEach(), filter(), every(), some() : 빈칸을 무시한다.
+- map() : 빈칸을 건너뛰면서 그대로 유지한다.
+- join(), toString() : 빈칸을 undefined로 취급하고, null과 undefined를 빈문자열로 해석한다.
 
-- forEach(), filter(), every() and some() ignore holes.
-- map() skips but preserves holes.
-- join() and toString() treat holes as if they were undefined elements, but interprets both null and undefined as empty strings.
+ES6에서는 여기에 새로운 동작방식이 추가되었다.
+- copyWithin()은 빈칸을 복사할 경우 빈 칸을 생성해낸다(즉 필요한 경우엔 요소를 삭제하여 빈칸을 만든다)
+- entries(), keys(), values(), find(), findIndex() : 빈칸을 undefined로 취급한다.
+- fill() :  빈칸인지 여부를 신경쓰지 않는다.
 
-ECMAScript 6 adds new kinds of behaviors:
-- copyWithin() creates holes when copying holes (i.e., it deletes elements if necessary).
-- entries(), keys(), values() treat each hole as if it was the element undefined.
-- find() and findIndex() do the same.
-- fill() doesn’t care whether there are elements at indices or not.
+아래는 Array.prototype 메서드들이 빈칸을 취급하는 형태를 설명한 표이다.
 
-
-The following table describes how Array.prototype methods handle holes.
-
-Method | Holes are | input | result |
+메서드 | 빈칸인식 | input | result |
 :---: | :---: | --- | ---
-concat | Preserved | `['a',,'b'].concat(['c',,'d'])` | `['a',,'b','c',,'d']`
-copyWithinES6 | Preserved | `[,'a','b',,].copyWithin(2,0)` | `[,'a',,'a']`
-entriesES6 | Elements | `[...[,'a'].entries()]` | `[[0,undefined], [1,'a']]`
-every | Ignored | `[,'a'].every(x => x==='a')` | `true`
-fillES6 | Filled | `new Array(3).fill('a')` | `['a','a','a']`
-filter  | Removed | `['a',,'b'].filter(x => true)` | `['a','b']`
-findES6 | Elements | `[,'a'].find(x => true)` | `undefined`
-findIndexES6 | Elements | `[,'a'].findIndex(x => true)` | `0`
-forEach | Ignored | `[,'a'].forEach((x,i) => log(i));` | `1`
-indexOf | Ignored | `[,'a'].indexOf(undefined)` | `-1`
-join | Elements | `[,'a',undefined,null].join('#')` | `'#a##'`
-keysES6 | Elements | `[...[,'a'].keys()]` | `[0,1]`
-lastIndexOf | Ignored | `[,'a'].lastIndexOf(undefined)` | `-1`
-map | Preserved | `[,'a'].map(x => 1)` | `[,1]`
-pop | Elements | `['a',,].pop()` | `undefined`
-push | Preserved | `new Array(1).push('a')` | `2`
-reduce | Ignored | `['#',,undefined].reduce((x,y)=>x+y)` | `'#undefined'`
-reduceRight | Ignored | `['#',,undefined].reduceRight((x,y)=>x+y)` | `'undefined#'`
-reverse | Preserved | `['a',,'b'].reverse()` | `['b',,'a']`
-shift | Elements | `[,'a'].shift()` | `undefined`
-slice | Preserved | `[,'a'].slice(0,1)` | `[,]`
-some  | Ignored | `[,'a'].some(x => x !== 'a')` | `false`
-sort  | Preserved | `[,undefined,'a'].sort()` | `['a',undefined,,]`
-splice | Preserved | `['a',,].splice(1,1)` | `[,]`
-toString | Elements | `[,'a',undefined,null].toString()` | `',a,,'`
-unshift | Preserved | `[,'a'].unshift('b')` | `3`
-valuesES6 | Elements | `[...[,'a'].values()]` | `[undefined,'a']`
-
+concat | 빈칸 | `['a',,'b'].concat(['c',,'d'])` | `['a',,'b','c',,'d']`
+copyWithin *ES6 | 빈칸 | `[,'a','b',,].copyWithin(2,0)` | `[,'a',,'a']`
+entries *ES6 | 요소 | `[...[,'a'].entries()]` | `[[0,undefined], [1,'a']]`
+every | 무시 | `[,'a'].every(x => x==='a')` | `true`
+fill *ES6 | 무관 | `new Array(3).fill('a')` | `['a','a','a']`
+filter  | 무시 | `['a',,'b'].filter(x => true)` | `['a','b']`
+find *ES6 | 요소 | `[,'a'].find(x => true)` | `undefined`
+findIndex *ES6 | 요소 | `[,'a'].findIndex(x => true)` | `0`
+forEach | 무시 | `[,'a'].forEach((x,i) => log(i));` | `1`
+indexOf | 무시 | `[,'a'].indexOf(undefined)` | `-1`
+join | 요소 | `[,'a',undefined,null].join('#')` | `'#a##'`
+keys *ES6 | 요소 | `[...[,'a'].keys()]` | `[0,1]`
+lastIndexOf | 무시 | `[,'a'].lastIndexOf(undefined)` | `-1`
+map | 빈칸 | `[,'a'].map(x => 1)` | `[,1]`
+pop | 요소 | `['a',,].pop()` | `undefined`
+push | 빈칸 | `new Array(1).push('a')` | `2`
+reduce | 무시 | `['#',,undefined].reduce((x,y)=>x+y)` | `'#undefined'`
+reduceRight | 무시 | `['#',,undefined].reduceRight((x,y)=>x+y)` | `'undefined#'`
+reverse | 빈칸 | `['a',,'b'].reverse()` | `['b',,'a']`
+shift | 요소 | `[,'a'].shift()` | `undefined`
+slice | 빈칸 | `[,'a'].slice(0,1)` | `[,]`
+some  | 무시 | `[,'a'].some(x => x !== 'a')` | `false`
+sort  | 빈칸 | `[,undefined,'a'].sort()` | `['a',undefined,,]`
+splice | 빈칸 | `['a',,].splice(1,1)` | `[,]`
+toString | 요소 | `[,'a',undefined,null].toString()` | `',a,,'`
+unshift | 빈칸 | `[,'a'].unshift('b')` | `3`
+values *ES6 | 요소 | `[...[,'a'].values()]` | `[undefined,'a']`
 
 Notes:
-
-ES6 methods are marked via the superscript “ES6”.
-JavaScript ignores a trailing comma in an Array literal: ['a',,].length → 2
-Helper function used in the table: const log = console.log.bind(console);
+- ES6 메서드는 메서드명 우측에 '*ES6'라고 표기했다.
+- JS는 배열의 마지막 부분에 여러개의 빈칸이 중복되어 있을 경우 맨 마지막 빈칸을 무시한다. => `['a',,].length → 2`
 
 ###18.4.3 Creating Arrays filled with values
 Holes being treated as undefined elements by the new ES6 operations helps with creating Arrays that are filled with values.
