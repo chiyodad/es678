@@ -38,7 +38,7 @@ const map = new Map([
 ### 19.1.2 Sets
 
 A Set is a collection of unique elements:
-Set는 유니크한 요소들의 콜렉션이다 :
+Set는 유니크한 요소의 콜렉션이다 :
 
 ```javascript
 const arr = [5, 1, 5, 7, 7, 5];
@@ -52,7 +52,7 @@ As you can see, you can initialize a Set with elements if you hand the construct
 
 A WeakMap is a Map that doesn’t prevent its keys from being garbage-collected. That means that you can associate private data with objects without having to worry about memory leaks:
 
-WeakMap은 Map이지만 key가 가비지 콜렉션이 되는것을 막을 수 없다. 이는 메모리 누수 걱정이 없는 객체의 private 데이터를 참조할 수 있다는 것이다.
+WeakMap은 Map이지만 그 key가 가비지 콜렉션이 되는것을 막을 수 없다. 이는 private 데이터를 메모리 누수 걱정이 없는 객체에 연결할 수 있음을 의미한다.
 
 ```javascript
 const _counter = new WeakMap();
@@ -77,6 +77,8 @@ class Countdown {
 ## 19.2 Map
 
 JavaScript has always had a very spartan standard library. Sorely missing was a data structure for mapping values to values. The best you can get in ECMAScript 5 is a Map from strings to arbitrary values, by abusing objects. Even then there are several pitfalls that can trip you up.
+
+
 
 The Map data structure in ECMAScript 6 lets you use arbitrary values as keys and is highly welcome.
 
