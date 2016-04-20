@@ -6,15 +6,17 @@ Typed Arrays are an ECMAScript 6 API for handling binary data.
 Code example:
 
 ```javascr
-> const typedArray = new Uint8Array([0,1,2]);
-> console.log(typedArray.length); // 3
-> typedArray[0] = 5;
-> const normalArray = [...typedArray]; // [5,1,2]
+const typedArray = new Uint8Array([0,1,2]);
+console.log(typedArray.length); // 3
+typedArray[0] = 5;
+const normalArray = [...typedArray]; // [5,1,2]
 ```
 // The elements are stored in typedArray.buffer.
 // Get a different view on the same data:
+```javascr
 const dataView = new DataView(typedArray.buffer);
 console.log(dataView.getUint8(0)); // 5
+```
 Instances of ArrayBuffer store the binary data to be processed. Two kinds of views are used to access the data:
 
 Typed Arrays (Uint8Array, Int16Array, Float32Array, etc.) interpret the ArrayBuffer as an indexed sequence of elements of a single type.
