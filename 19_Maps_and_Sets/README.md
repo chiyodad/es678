@@ -236,6 +236,8 @@ for (const value of map.values()) {
 항목 이터러블
 
 entries() returns the entries of the Map as an iterable over [key,value] pairs (Arrays).
+entries() 는 맵의 항목들을 [키, 밸류] 쌍인 이터러블로 반환한다.
+
 ```javascript
 for (const entry of map.entries()) {
     console.log(entry[0], entry[1]);
@@ -245,31 +247,37 @@ for (const entry of map.entries()) {
 // true yes
 ```
 Destructuring enables you to access the keys and values directly:
+해체를 통해 키와 값에 바로 접근할 수 있다.
+
 ```javascript
 for (const [key, value] of map.entries()) {
     console.log(key, value);
 }
 ```
 The default way of iterating over a Map is entries():
+맵을 이터레이팅하는 기본적인 방법은 entries():
 ```javascript
 > map[Symbol.iterator] === map.entries
 true
 ```
 Thus, you can make the previous code snippet even shorter:
+고로 앞에 코드를 더 짧게 만들 수 있음:
 ```javascript
 for (const [key, value] of map) {
     console.log(key, value);
 }
 ```
 #### 19.2.4.3 Converting iterables (incl. Maps) to Arrays
-
+이터러블(맵 포함)을 배열로 변환하기
 The spread operator (...) can turn an iterable into an Array. That lets us convert the result of Map.prototype.keys() (an iterable) into an Array:
+펼치기 연산자는 이터러블을 배열로 변환할 수 있다. Map.prototype.keys()의 결과(이터러블)를 변환할 수 있다는 것임.
 ```javascript
 > const map = new Map().set(false, 'no').set(true, 'yes');
 > [...map.keys()]
 [ false, true ]
 ```
 Maps are also iterable, which means that the spread operator can turn Maps into Arrays:
+맵은 이터러블한데, 이는 펼치기 연산자가 맵을 배열로 변환할 수 있음을 의미한다.
 ```javascript
 > const map = new Map().set(false, 'no').set(true, 'yes');
 > [...map]
@@ -277,12 +285,15 @@ Maps are also iterable, which means that the spread operator can turn Maps into 
   [ true, 'yes' ] ]
 ```
 ### 19.2.5 Looping over Map entries
+맵 항목 루프
 
 The Map method forEach has the following signature:
-
+맵의 forEach 메쏘드는 아래와 같은 나타낼 수 있다.
+```javascript
 Map.prototype.forEach((value, key, map) => void, thisArg?) : void
-
+```
 The signature of the first parameter mirrors the signature of the callback of Array.prototype.forEach, which is why the value comes first.
+첫 번째 변수의 나타냄은 Array.prototype.forEach의 콜백 나타냄? 반영한다. 이는 왜 밸류가 앞쪽에 오는 이유이다.
 ```javascript
 const map = new Map([
     [false, 'no'],
@@ -297,14 +308,19 @@ map.forEach((value, key) => {
 ```
 
 ### 19.2.6 Mapping and filtering Maps
-
+매핑과 맵의 필터링
 You can map() and filter() Arrays, but there are no such operations for Maps. The solution is:
+배열에 map()과 filter()를 할수 있는데, 이는 맵의 동작이랑은 다르다. 이는:
 
     Convert the Map into an Array of [key,value] pairs.
     Map or filter the Array.
     Convert the result back to a Map.
+    맵을 [키,밸류] 쌍의 배열로 전환한다.
+    배열에 맵이나 필터한다.
+    이 결과를 다시 맵으로 변환한다.
 
 I’ll use the following Map to demonstrate how that works.
+어떻게 작동하는지 아래의 맵으로 증명할거다.
 ```javascript
 const originalMap = new Map()
 .set(1, 'a')
@@ -312,6 +328,7 @@ const originalMap = new Map()
 .set(3, 'c');
 ```
 Mapping originalMap:
+원본 맵에 매핑:
 ```javascript
 const mappedMap = new Map( // step 3
     [...originalMap] // step 1
@@ -320,6 +337,7 @@ const mappedMap = new Map( // step 3
 // Resulting Map: {2 => '_a', 4 => '_b', 6 => '_c'}
 ```
 Filtering originalMap:
+원본맵 필터링:
 ```javascript
 const filteredMap = new Map( // step 3
     [...originalMap] // step 1
@@ -328,11 +346,16 @@ const filteredMap = new Map( // step 3
 // Resulting Map: {1 => 'a', 2 => 'b'}
 ```
 Step 1 is performed by the spread operator (...) which I have explained previously.
+1단계는 앞서 설명한대로 펼치기 연산자에 의해 수행된다.
+
 ### 19.2.7 Combining Maps
+맵 결합
 
 There are no methods for combining Maps, which is why the approach from the previous section must be used to do so.
+맵을 결합하기 위한 메쏘드는 없다, 앞의 섹션으로부터 접근이 선행되어야 하는 이유임.
 
 Let’s combine the following two Maps:
+아래의 두 맵을 결합해보자.:
 ```javascript
 const map1 = new Map()
 .set(1, 'a1')
@@ -345,6 +368,8 @@ const map2 = new Map()
 .set(4, 'd2');
 ```
 To combine map1 and map2, I turn them into Arrays via the spread operator (...) and concatenate those Arrays. Afterwards, I convert the result back to a Map. All of that is done in the first line.
+map1과 map2를 결합하기 위해, 펼치기 연산자를 이용해 배열로 전환하고 이 배열을 병합한다.
+그 다음에 이 결과를 다시 맵으로 전환한다. 이 모든게 첫번째 줄에서 끝남.
 ```javascript
 > const combinedMap = new Map([...map1, ...map2])
 > [...combinedMap] // convert to Array to display
@@ -354,11 +379,17 @@ To combine map1 and map2, I turn them into Arrays via the spread operator (...) 
   [ 4, 'd2' ] ]
 ```
 ### 19.2.8 Arbitrary Maps as JSON via Arrays of pairs
+페어 배열로 부터의 임의의 제이슨 맵
 
 If a Map contains arbitrary (JSON-compatible) data, we can convert it to JSON by encoding it as an Array of key-value pairs (2-element Arrays). Let’s examine first how to achieve that encoding.
+만약 맵이 임의의 (제이슨-호환) 데이터를 가지고 있으면, 이를 키-밸류 페어 배열로 인코딩하여 제이슨형식으로 바꿀 수 있다.
+어떻게 인코딩 하는지 보자.
+
 #### 19.2.8.1 Converting Maps to and from Arrays of pairs
+짝의 배열 으로, 으로부터 맵 전환
 
 The spread operator lets you convert a Map to an Array of pairs:
+펼치기 연산자는 맵을 페어의 배열로 전환하게 해줌.:
 ```javascript
 > const myMap = new Map().set(true, 7).set({foo: 3}, ['abc']);
 > [...myMap]
