@@ -323,41 +323,41 @@ Notes:
 - ES6 메서드는 메서드명 우측에 '*ES6'라고 표기했다.
 - JS는 배열의 마지막 부분에 여러개의 빈칸이 중복되어 있을 경우 맨 마지막 빈칸을 무시한다. => `['a',,].length → 2`
 
-###18.4.3 Creating Arrays filled with values
-Holes being treated as undefined elements by the new ES6 operations helps with creating Arrays that are filled with values.
+###18.4.3 값이 채워진 배열 생성하기
+빈칸을 undefined인 요소로 취급하는 ES6의 새로운 명령어들은 값이 채워진 배열을 생성하는 데에 도움을 준다.
 
-####18.4.3.1 Filling with a fixed value
-Array.prototype.fill() replaces all Array elements (incl. holes) with a fixed value:
+####18.4.3.1 고정값으로 채우기
+`Array.prototype.fill()` 메서드는 빈칸을 포함한 배열의 모든 요소들을 같은 값으로 채워준다.
 ```js
 new Array(3).fill(7)    // [ 7, 7, 7 ]
 ```
-new Array(3) creates an Array with three holes and fill() replaces each hole with the value 7.
+`new Array(3)`은 세 개의 빈칸으로 이루어진 배열을 만들고, 다시 `fill(7)`에 의해 빈칸들을 모두 7로 채운 것이다.
 
-####18.4.3.2 Filling with ascending numbers
-Array.prototype.keys() reports keys even if an Array only has holes. It returns an iterable, which you can convert to an Array via the spread operator:
+####18.4.3.2 오름차순으로 채우기
+`Array.prototype.keys()`는 빈칸에 대해서도 키값(인덱스)를 반환해준다. 이 반환값은 이터러블하므로, spread operator를 이용하면 0부터 시작하는 오름차순의 숫자들로 구성된 배열을 만들 수 있다.
 ```js
 [...new Array(3).keys()]    // [ 0, 1, 2 ]
 ```
 
-####18.4.3.3 Filling with computed values
-The mapping function in the second parameter of Array.from() is notified of holes. Therefore, you can use Array.from() for more sophisticated filling:
+####18.4.3.3 계산된 값으로 채우기
+`Array.from()`의 두번째 파라미터에 지정한 매핑함수 역시 빈칸을 인지한다. 따라서 Array.from()을 통해 보다 세련되게 값들을 채울 수 있다.
 ```js
 Array.from(new Array(5), (x,i) => i*2)    // [ 0, 2, 4, 6, 8 ]
 ```
 
-####18.4.3.4 Filling with undefined
-If you need an Array that is filled with undefined, you can use the fact that iteration (as triggered by the spread operator) converts holes to undefineds:
+####18.4.3.4 undefined로 채우기
+undefined인 값으로 채워진 배열을 얻고자 할 때는 spread operator에 의한 iteration이 빈칸을 undefined로 전환한다는 사실을 기억하자.
 ```js
 [...new Array(3)]    // [ undefined, undefined, undefined ]
 ```
 
-###18.4.4 Removing holes from Arrays
-The ES5 method filter() lets you remove holes:
+###18.4.4 빈 칸 제거하기
+ES5 메서드인 `filter()`를 이용하면 빈 칸을 제거할 수 있다.
 ```js
 ['a',,'c'].filter(() => true)    // [ 'a', 'c' ]
 ```
 
-ES6 iteration (triggered via the spread operator) lets you convert holes to undefined elements:
+> ES6의 이터레이션은 빈 칸을 undefined요소로 전환한다.
 ```js
 [...['a',,'c']]    //[ 'a', undefined, 'c' ]
 ```
