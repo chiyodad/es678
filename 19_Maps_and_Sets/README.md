@@ -78,13 +78,17 @@ class Countdown {
 
 JavaScript has always had a very spartan standard library. Sorely missing was a data structure for mapping values to values. The best you can get in ECMAScript 5 is a Map from strings to arbitrary values, by abusing objects. Even then there are several pitfalls that can trip you up.
 
-
+자바스크립트는 항상 완전 표준 라이브러리를 가져왔다. 
 
 The Map data structure in ECMAScript 6 lets you use arbitrary values as keys and is highly welcome.
+ECMA6에서의 맵 데이터 구조는 임의의 값을 키로 쓸 수 있고 이는 아주 환영스럽다.
+
 
 ### 19.2.1 Basic operations
+기본 동작들
 
 Working with single entries:
+단일 항목으로 작업:
 ```javascript
 > const map = new Map();
 
@@ -100,6 +104,7 @@ true
 false
 ```
 Determining the size of a Map and clearing it:
+맵의 사이즈를 구하고 지우고:
 ```javascript
 > const map = new Map();
 > map.set('foo', true);
@@ -112,16 +117,19 @@ Determining the size of a Map and clearing it:
 0
 ```
 ### 19.2.2 Setting up a Map
+맵 셋팅하기
 
 You can set up a Map via an iterable over key-value “pairs” (Arrays with 2 elements). One possibility is to use an Array (which is iterable):
+키-밸류 "페어"로 맵을 세팅할 수 있다.(2개의 인자를 가진 배열) 배열도 맵으로 이용할 수 있다.(이터러블 함)
 ```javascript
 const map = new Map([
     [ 1, 'one' ],
     [ 2, 'two' ],
-    [ 3, 'three' ], // trailing comma is ignored
+    [ 3, 'three' ], // trailing comma is ignored //컴마 뒤는 무시됨
 ]);
 ```
 Alternatively, the set() method is chainable:
+대신에 set() 메쏘드는 체이너블하다.
 ```javascript
 const map = new Map()
 .set(1, 'one')
@@ -129,8 +137,10 @@ const map = new Map()
 .set(3, 'three');
 ```
 ### 19.2.3 Keys
+키
 
 Any value can be a key, even an object:
+아무 값이나 키가 될 수 있다. 심지어 객채도:
 ```javascript
 const map = new Map();
 
@@ -143,15 +153,20 @@ map.set(KEY2, 'world');
 console.log(map.get(KEY2)); // world
 ```
 #### 19.2.3.1 What keys are considered equal?
+어떤 키가 동등하다고 여겨지는가?
 
 Most Map operations need to check whether a value is equal to one of the keys. They do so via the internal operation SameValueZero, which works like ===, but considers NaN to be equal to itself.
+대부분의 맵 동작은 값이 키 중 하나와 동등한지를 체크하는 동작이 필요하다. 이는 내부의 SameValueZero 작업을 통해 이루어지고
+이는 === 처럼 동작하지만, NaN은 스스로를 동등하게 여긴다.
 
 Let’s first see how === handles NaN:
+=== 가 NaN을 어떻게 다루는지를 보자.
 ```javascript
 > NaN === NaN
 false
 ```
 Conversely, you can use NaN as a key in Maps, just like any other value:
+거꾸로, 맵에서 Nan을 다른 값들처럼 키로 이용할 수 있다
 ```javascript
 > const map = new Map();
 
@@ -160,24 +175,31 @@ Conversely, you can use NaN as a key in Maps, just like any other value:
 123
 ```
 Like ===, -0 and +0 are considered the same value. That is normally the best way to handle the two zeros (details are explained in “Speaking JavaScript”).
+=== 처럼 -0과 +0은 같은 값으로 친다. 이는 두 제로값을 다루기 가장 좋은 방법이라서.(자바스크립트를 말하다에 자세히 설명되어 있다)
+
 ```javascript
 > map.set(-0, 123);
 > map.get(+0)
 123
 ```
 Different objects are always considered different. That is something that can’t be configured (yet), as explained later, in the FAQ.
+서로 다른 객채는 언제나 다르다고 친다. 이는 이는 여기서 다루지 않고 나중에 FAQ에서 설명하겠다.
 ```javascript
 > new Map().set({}, 1).set({}, 2).size
 2
 ```
 Getting an unknown key produces undefined:
+unknown인 키는 undefined를 발생시킨다.
 ```javascript
 > new Map().get('asfddfsasadf')
 undefined
 ```
 ### 19.2.4 Iterating over Maps
+맵으로 이터레이팅
 
 Let’s set up a Map to demonstrate how one can iterate over it.
+맵이 어떻게 이터레이트 되는지를 보기 위해 맵을 셋팅하겠다.
+
 ```javascript
 const map = new Map([
     [false, 'no'],
@@ -185,10 +207,13 @@ const map = new Map([
 ]);
 ```
 Maps record the order in which elements are inserted and honor that order when iterating over keys, values or entries.
+맵은 요소가 삽입된 차례대로 저장(기록)되며, 키나 값, 항목으로 반복시에 정렬됨을 볼 수 있다.
 
 #### 19.2.4.1 Iterables for keys and values
+키와 밸류로 반복
 
 keys() returns an iterable over the keys in the Map:
+keys()는 맵의 키의 이터러블을 반환한다:
 ```javascript
 for (const key of map.keys()) {
     console.log(key);
@@ -198,6 +223,7 @@ for (const key of map.keys()) {
 // true
 ```
 values() returns an iterable over the values in the Map:
+values()는 맵의 값의 이터러블을 반환한다.
 ```javascript
 for (const value of map.values()) {
     console.log(value);
@@ -207,6 +233,7 @@ for (const value of map.values()) {
 // yes
 ```
 #### 19.2.4.2 Iterables for entries
+항목 이터러블
 
 entries() returns the entries of the Map as an iterable over [key,value] pairs (Arrays).
 ```javascript
