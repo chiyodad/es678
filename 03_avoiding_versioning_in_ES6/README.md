@@ -35,46 +35,80 @@ use version 6;
 태깅하는 두 가지 방법 모두 문제점이 있다 : out-of-band versions는 잘 깨지고 잃어버리기 쉽고 in-band 버전은 코드를 지저분하게 한다. 
 Both ways of tagging are problematic: out-of-band versions are brittle and can get lost, in-band versions add clutter to code.
 
-더욱 근본적인 이슈는, 코드 베이스 마다 언어를 효과적으로 fork하   여러 버전을 허용하는 것 .....후..... 동시에 유지보수되어야만 하는 서브 랭귀지 
+더욱 근본적인 이슈는, 코드 베이스 마다 언어를 효과적으로 fork하   여러 버전을 허용하는 것 .....후..... 동시에 유지보수되어야만 하는 서브 랭귀지  후... 나의 번역은 여기까지 인가...
 A more fundamental issue is that allowing multiple versions per code base effectively forks a language into sub-languages that have to be maintained in parallel. This causes problems:
 
-Engines become bloated, because they need to implement the semantics of all versions. The same applies to tools analyzing the language (e.g. style checkers such as JSLint).
+엔진들은 모든 버전의 의미해석을 구현해야하기 때문에 비대해진다. 언어분석 툴에도 똑같이 적용된다.
+Engines become bloated, because they need to implement the semantics of all versions. The same applies to tools analyzing the language (예: JSLint) (e.g. style checkers such as JSLint).
+프로그래머는 버전들이 어떻게 다른지 기억해야한다.
 Programmers need to remember how the versions differ.
+코드는 더욱 리팩토링하기 어려워진다. 왜냐하면 
 Code becomes harder to refactor, because you need to take versions into consideration when you move pieces of code.
+
+그러므로 versioning 은 피해야하는 것이다. 특히 JavaScript와 웹을 위해서 말이다. 
 Therefore, versioning is something to avoid, especially for JavaScript and the web.
 
-### 3.1.1 Evolution without versioning
+### 3.1.1 versioning이 없는 점진적 발전 
+### 3.1.1 Evolution without versioning 
+그러나 어떻게 versioning을 제거 할 수 있을까? 항상 이전 버전과 호환이 되어야하는데. 우리는 자바스크립트를 정화하는 그런 야망을 포기해야만 한다. 우리는 breaking changes를 소개 할 수 없다. 이전 버전과 호환이 된다는 것은 이전 버전의 특성을 바꾸거나 지우지 않는 것을 의미한다. 이 원칙에 의거한 슬로건이 바로 "dont' break the wb" 이다.
+
 But how can we get rid of versioning? By always being backwards-compatible. That means we must give up some of our ambitions w.r.t. cleaning up JavaScript: We can’t introduce breaking changes. Being backwards-compatible means not removing features and not changing features. The slogan for this principle is: “don’t break the web”.
 
 We can, however, add new features and make existing features more powerful.
 
+이러한 결과로써, 새로운 엔진을 위한 버전은 필요가 없다. 엔진은 여전히 오래된 모든 코드를 실행할 수 있기 때문에 말이다. David Herman 은 versioning을 피하기 위한 접근을 One JavaScript (1JS) 을 부른다. 그렇게 부르는 이유는 자바스크립트가 다른 버전이나 다른 모드로 분열되는 것을 피할 수 있기 때문이다. 나중에 보게 되겠지만, 1JS는 stric mode 로 인해 이미 분열된 것들을 다시 원상태로 돌리기도 한다.
 As a consequence, no versions are needed for new engines, because they can still run all old code. David Herman calls this approach to avoiding versioning One JavaScript (1JS) [1], because it avoids splitting up JavaScript into different versions or modes. As we shall see later, 1JS even undoes some of a split that already exists, due to strict mode.
 
+One JavaScript 는 우리가 언어를 cleaning up 하는 걸 완전히 포기해야만 한다는 의미는 아니다. 이미 존재하는 특징들을 없애는 대신에 새롭고 클린한 특징을 접하게 된다. 그러한 예의 한 가지로써 let 을 들 수 있다. 이것은 var 의 향상된 버전이며 블록 스코프 변수를 선언한다. 그러나 이것이 var를 대체하는 것은 아니다. let 은 더 상위 옵션으로써 var 와 나란히 존재한다.
 One JavaScript does not mean that you have to completely give up on cleaning up the language. Instead of cleaning up existing features, you introduce new, clean, features. One example for that is let, which declares block-scoped variables and is an improved version of var. It does not, however, replace var, it exists alongside it, as the superior option.
 
+더 이상 아무도 사용하지 않는 특징들은 언젠가 제거 될 수도 있다. ES6 특징의 몇 가지는 웹에서의 자바스크립트 코드의 측정에 의해 고안되었다. 다음의 두 가지 예제가 있다.
 One day, it may even be possible to eliminate features that nobody uses, anymore. Some of the ES6 features were designed by surveying JavaScript code on the web. Two examples are:
 
+let 선언은 non-strict 모드에 추가하기는 어렵다. 왜냐하면 non-strict 모드에서 let은 에약어가 아니기 때문이다. ES5 코드로 유효한 let의 변형은 다음과 같다.
 let-declarations are difficult to add to non-strict mode, because let is not a reserved word in that mode. The only variant of let that looks like valid ES5 code is:
+```javascript
   let[x] = arr;
-Research yielded that no code on the web uses a variable let in non-strict mode in this manner. That enabled TC39 to add let to non-strict mode. Details of how this was done are described later in this chapter.
+```
 
+Research yielded that no code on the web uses a variable let in non-strict mode in this manner. That enabled TC39 to add let to non-strict mode. 자세한 내용은 이 챕터 후반부에 설명한다. Details of how this was done are described later in this chapter.
+
+함수 선언은 때때로 non-strict blocks에서 나타난다. 
 Function declarations do occasionally appear in non-strict blocks, which is why the ES6 specification describes measures that web browsers can take to ensure that such code doesn’t break. Details are explained later.
-3.2 Strict mode and ECMAScript 6
+
+###3.2 Strict 모드 그리고 ECMAScript6
+###3.2 Strict mode and ECMAScript 6
+Strict 모드는 ECMAScript 5에서 언어를 더욱 클린업 시키기 위해 소개되었다. 파일이나 함수의 첫 번째 줄에 아래와 같이 추가하면 strict 모드로 전환된다.
 Strict mode was introduced in ECMAScript 5 to clean up the language. It is switched on by putting the following line first in a file or in a function:
 
+```javascript
 'use strict';
+```
+Strict 모드는 3가지 braking cahnges를 소개한다.
 Strict mode introduces three kinds of breaking changes:
 
+문법적 변화 : 이전의 몇가지 유효한 문법이 스트릭트 모드에서는 금지된다. 예:
 Syntactic changes: some previously legal syntax is forbidden in strict mode. For example:
+
+with 문은 금지된다. with문은 사용자가 임의의 객체를 변수 스코프 체인에 추가하게 한다. 이것은 실행을 느리게 하고 변수 참조를 알아보기 어렵게 만든다. 
 The with statement is forbidden. It lets users add arbitrary objects to the chain of variable scopes, which slows down execution and makes it tricky to figure out what a variable refers to.
+자격이 없는 식별자(객체의 속성이 아닌 변수)를 지우는것은 금지된다.
 Deleting an unqualified identifier (a variable, not a property) is forbidden.
+함수는 오직 스코프의 최상단에만 선언될 수 있다.
 Functions can only be declared at the top level of a scope.
+더 많은 식별자들이 생겼다 : implements interface let package private protected public static yield
 More identifiers are reserved: implements interface let package private protected public static yield
+더 많은 오류. 예 :
 More errors. For example:
+선언되지 않는 변수에 할당하는 것은 ReferenceError 를 발생시킨다. non-strict mode 에서는 이와 같은 경웨 전역 변수가 생성된다.
 Assigning to an undeclared variable causes a ReferenceError. In non-strict mode, a global variable is created in this case.
+읽기전용 속성을 변경하는 것(string 의 length 변경 같은 것) 은 typeError 을 유발한다. non-strict mode 에서는 아무런 영향을 미치지 않는다.
 Changing read-only properties (such as the length of a string) causes a TypeError. In non-strict mode, it simply has no effect.
+다른 의미들: 어떤 것들은 스트릭트 모드에서 다르게 동작한다. 예 :
 Different semantics: Some constructs behave differently in strict mode. For example:
+arguments 는 더 이상 현재 매개변수의 값들을 추적하지 않는다.
 arguments doesn’t track the current values of parameters, anymore.
+메소드가 아닌 함수에서 arguments는 undefined 이다. non-strict모드에서 이것은 전역변수를 참조한다. 
 this is undefined in non-method functions. In non-strict mode, it refers to the global object (window), which meant that global variables were created if you called a constructor without new.
 Strict mode is a good example of why versioning is tricky: Even though it enables a cleaner version of JavaScript, its adoption is still relatively low. The main reasons are that it breaks some existing code, can slow down execution and is a hassle to add to files (let alone interactive command lines). I love the idea of strict mode and don’t nearly use it often enough.
 
