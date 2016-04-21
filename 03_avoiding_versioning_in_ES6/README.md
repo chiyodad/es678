@@ -6,23 +6,36 @@ What is the best way to add new features to a language? This chapter describes t
 ### 3.1 Versioning
 
 원론적으로, 언어의 새로운 버전은 오래된 특징을 제거하거나 동작하는 방법을 바꾸기 위한 찬스다. 
-In principle, a new version of a language is a chance to clean it up, by removing outdated features or by changing how features work. That means that new code doesn’t work in older implementations of the language and that old code doesn’t work in a new implementation. Each piece of code is linked to a specific version of the language. Two approaches are common for dealing with versions being different.
+In principle, a new version of a language is a chance to clean it up, by removing outdated features or by changing how features work. 
+이 말은 곧 새로운 코드가 그 언어의 더 오래된 구현물에서 동작하지 않거나 오래된 코드가 새로운 구현에서 동작하지 않는다는 것을 의미한다.
+That means that new code doesn’t work in older implementations of the language and that old code doesn’t work in a new implementation.
+각각의 코드 조각들은 언어의 특정 버전에 연결되어 있다. 다른 버전을 다루기 위한 두 가지 접근법이 흔히 사용된다.
+Each piece of code is linked to a specific version of the language. Two approaches are common for dealing with versions being different.
 
+첫 째, 코드 베이스가 새로운 버전을 사용길 원한다면 "all or nothing" 접근을 선택 할 수 있다. 이것은 완전히 업그레이드 되어야만 한다. 파이썬은 2에서 3버전으로 올라갈 때 이러한 접근법을 적용했다. 이 방법의 한 가지 문제점은 존재하는 코드베이스의 모든것을 통합하는 것이 실현 불가능 할 수도 있다. 특히 규모가 크다면 더더욱 그렇다. 더군다나 이 방법은 오래된 코드가 항상 있고 자바스크립트 엔진이 자동으로 업데이트되는 웹에서 선택 가능한 방법은 아니다. 
 First, you can take an “all or nothing” approach and demand that, if a code base wants to use the new version, it must be upgraded completely. Python took that approach when upgrading from Python 2 to Python 3. A problem with it is that it may not be feasible to migrate all of an existing code base at once, especially if it is large. Furthermore, the approach is not an option for the web, where you’ll always have old code and where JavaScript engines are updated automatically.
 
+둘 째, 코드에 버전을 명시하는 것으로써 여러가지 버전에서의 코드를 포함하는 코드베이스를 허용 할 수도 있다. 웹에서는, 전용 인터넷 미디어 타입을 통한 ECMAScript 6 코드를 태그할 수도 있다. 미디어 타입은 HTTP header 를 통한 파일과 연관된 것일 수 있다.
 Second, you can permit a code base to contain code in multiple versions, by tagging code with versions. On the web, you could tag ECMAScript 6 code via a dedicated Internet media type. Such a media type can be associated with a file via an HTTP header:
 
 Content-Type: application/ecmascript;version=6
+
+이것은 스크립트 태그의 타입 속성을 통해 관련될수도 있다. (기본값은 text/javascript) :
 It can also be associated via the type attribute of the <script> element (whose default value is text/javascript):
 
 <script type="application/ecmascript;version=6">
     ···
 </script>
+
+이것은 외부적으로 실제 컨텐츠에 the version out of band를 명시한다. 또 다른 옵션은 컨텐츠 내부에 버전을 명시하는 것이다.(in-band). 예를 들어 다음의 예처럼 파일을 시작하는것에 의해 :
 This specifies the version out of band, externally to the actual content. Another option is to specify the version inside the content (in-band). For example, by starting a file with the following line:
 
 use version 6;
+
+태깅하는 두 가지 방법 모두 문제점이 있다 : out-of-band versions는 잘 깨지고 잃어버리기 쉽고 in-band 버전은 코드를 지저분하게 한다. 
 Both ways of tagging are problematic: out-of-band versions are brittle and can get lost, in-band versions add clutter to code.
 
+더욱 근본적인 이슈는, 코드 베이스 마다 언어를 효과적으로 fork하   여러 버전을 허용하는 것 .....후..... 동시에 유지보수되어야만 하는 서브 랭귀지 
 A more fundamental issue is that allowing multiple versions per code base effectively forks a language into sub-languages that have to be maintained in parallel. This causes problems:
 
 Engines become bloated, because they need to implement the semantics of all versions. The same applies to tools analyzing the language (e.g. style checkers such as JSLint).
