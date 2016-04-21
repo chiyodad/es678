@@ -3,7 +3,7 @@
 언어에 새로운 features를 추가하기위한 가장 좋은 방법은 무엇인가? 이 챕터에서는 ECMAScript6 에 대한 접근을 설명한다. versioning 을 피해야하기 때문에 이것은 One JavaScript로 불린다. 
 What is the best way to add new features to a language? This chapter describes the approach taken by ECMAScript 6. It is called One JavaScript, because it avoids versioning.
 
-3.1 Versioning
+### 3.1 Versioning
 
 원론적으로, 언어의 새로운 버전은 오래된 특징을 제거하거나 동작하는 방법을 바꾸기 위한 찬스다. 
 In principle, a new version of a language is a chance to clean it up, by removing outdated features or by changing how features work. That means that new code doesn’t work in older implementations of the language and that old code doesn’t work in a new implementation. Each piece of code is linked to a specific version of the language. Two approaches are common for dealing with versions being different.
@@ -30,7 +30,7 @@ Programmers need to remember how the versions differ.
 Code becomes harder to refactor, because you need to take versions into consideration when you move pieces of code.
 Therefore, versioning is something to avoid, especially for JavaScript and the web.
 
-3.1.1 Evolution without versioning
+### 3.1.1 Evolution without versioning
 But how can we get rid of versioning? By always being backwards-compatible. That means we must give up some of our ambitions w.r.t. cleaning up JavaScript: We can’t introduce breaking changes. Being backwards-compatible means not removing features and not changing features. The slogan for this principle is: “don’t break the web”.
 
 We can, however, add new features and make existing features more powerful.
@@ -65,10 +65,10 @@ arguments doesn’t track the current values of parameters, anymore.
 this is undefined in non-method functions. In non-strict mode, it refers to the global object (window), which meant that global variables were created if you called a constructor without new.
 Strict mode is a good example of why versioning is tricky: Even though it enables a cleaner version of JavaScript, its adoption is still relatively low. The main reasons are that it breaks some existing code, can slow down execution and is a hassle to add to files (let alone interactive command lines). I love the idea of strict mode and don’t nearly use it often enough.
 
-3.2.1 Supporting sloppy (non-strict) mode
+### 3.2.1 Supporting sloppy (non-strict) mode
 One JavaScript means that we can’t give up on sloppy mode: it will continue to be around (e.g. in HTML attributes). Therefore, we can’t build ECMAScript 6 on top of strict mode, we must add its features to both strict mode and non-strict mode (a.k.a. sloppy mode). Otherwise, strict mode would be a different version of the language and we’d be back to versioning. Unfortunately, two ECMAScript 6 features are difficult to add to sloppy mode: let declarations and block-level function declarations. Let’s examine why that is and how to add them, anyway.
 
-3.2.2 let declarations in sloppy mode
+### 3.2.2 let declarations in sloppy mode
 let enables you to declare block-scoped variables. It is difficult to add to sloppy mode, because let is only a reserved word in strict mode. That is, the following two statements are legal ES5 sloppy code:
 
 var let = [];
@@ -84,7 +84,7 @@ ECMAScript 5 strict mode forbids function declarations in blocks. The specificat
 
 ECMAScript 6 wants a function declaration in a block to be local to that block. That is OK as an extension of ES5 strict mode, but breaks some sloppy code. Therefore, ES6 provides “web legacy compatibility semantics” for browsers that lets function declarations in blocks exist at function scope.
 
-3.2.4 Other keywords
+### 3.2.4 Other keywords
 The identifiers yield and static are only reserved in ES5 strict mode. ECMAScript 6 uses context-specific syntax rules to make them work in sloppy mode:
 
 In sloppy mode, yield is only a reserved word inside a generator function.
@@ -94,7 +94,7 @@ The bodies of modules and classes are implicitly in strict mode in ECMAScript 6 
 
 The bodies of other constructs (such as arrow functions and generator functions) could have been made implicitly strict, too. But given how small these constructs usually are, using them in sloppy mode would have resulted in code that is fragmented between the two modes. Classes and especially modules are large enough to make fragmentation less of an issue.
 
-3.2.6 Things that can’t be fixed
+### 3.2.6 Things that can’t be fixed
 The downside of One JavaScript is that you can’t fix existing quirks, especially the following two.
 
 First, typeof null should return the string 'null' and not 'object'. TC39 tried fixing it, but it broke existing code. On the other hand, adding new results for new kinds of operands is OK, because current JavaScript engines already occasionally return custom values for host objects. One example are ECMAScript 6’s symbols:
@@ -103,16 +103,16 @@ First, typeof null should return the string 'null' and not 'object'. TC39 tried 
 'symbol'
 Second, the global object (window in browsers) shouldn’t be in the scope chain of variables. But it is also much too late to change that now. At least, one won’t be in global scope in modules and let never creates properties of the global object, not even when used in global scope.
 
-3.3 Breaking changes in ES6
+### 3.3 Breaking changes in ES6
 ECMAScript 6 does introduce a few minor breaking changes (nothing you’re likely to encounter). They are listed in two annexes:
 
 Annex D: Corrections and Clarifications in ECMAScript 2015 with Possible Compatibility Impact
 Annex E: Additions and Changes That Introduce Incompatibilities with Prior Editions
-3.4 Conclusion
+### 3.4 Conclusion
 One JavaScript means making ECMAScript 6 completely backwards compatible. It is great that that succeeded. Especially appreciated is that modules (and thus most of our code) are implicitly in strict mode.
 
 In the short term, adding ES6 constructs to both strict mode and sloppy mode is more work when it comes to writing the language specification and to implementing it in engines. In the long term, both the spec and engines profit from the language not being forked (less bloat etc.). Programmers profit immediately from One JavaScript, because it makes it easier to get started with ECMAScript 6.
 
-3.5 Further reading
+### 3.5 Further reading
 [1] The original 1JS proposal (warning: out of date): “ES6 doesn’t need opt-in” by David Herman.
 
