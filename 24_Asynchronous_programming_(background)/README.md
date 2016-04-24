@@ -76,9 +76,11 @@ Error
 
 <sub>Items 2–4 are tasks that run JavaScript code, via the engine built into the browser. They terminate when the code terminates. Then the next task from the queue can be executed. The following diagram (inspired by a slide by Philip Roberts [1]) gives an overview of how all these mechanisms are connected.</sub>
 
-[[https://github.com/ES678/es678/blob/master/24_Asynchronous_programming_(background)/async----event_loop.jpg|alt=async-stack]]
+![async-stack](./async----event_loop.jpg)
 
-The event loop is surrounded by other processes running in parallel to it (timers, input handling, etc.). These processes communicate with it by adding tasks to its queue.
+이벤트 루프는 병렬로 실행되는 다른 프로세스로 둘러싸여 있다 (타이머, input 핸들링 등). 그 프로세스들은 그들의 큐에 task 를 삽입하는 것으로 커뮤니케이션한다.
+
+<sub>The event loop is surrounded by other processes running in parallel to it (timers, input handling, etc.). These processes communicate with it by adding tasks to its queue.</sub>
 
 ### 24.2.1 Timers
 Browsers have timers. setTimeout() creates a timer, waits until it fires and then adds a task to the queue. It has the signature:
