@@ -1,6 +1,7 @@
 # 24. 비동기 프로그래밍 (백그라운드) (Asynchronous programming (background))
 
 이번 챕터는 자바스크립트의 비동기 프로그래밍의 기초를 알아본다. 이 지식은 다음 장의 ES6 Promise 에 도움이 될 것이다
+
 <sub>This chapter explains foundations of asynchronous programming in JavaScript. It provides background knowledge for the next chapter on ES6 Promises.</sub>
 
 ## 24.1 자바스크립트의 호출 스택 (The JavaScript call stack)
@@ -202,12 +203,15 @@ Whenever the link at the beginning is clicked, the function onClick() is trigger
 
 ## 24.3 비동기적으로 결과 받기 (Receiving results asynchronously)
 
-두가지 패턴
+비동기적으로 결과를 받는 두가지 일반적 패턴: 이벤트와 콜백이다.
 
-Two common patterns for receiving results asynchronously are: events and callbacks.
+<sub>Two common patterns for receiving results asynchronously are: events and callbacks.</sub>
 
-### 24.3.1 Asynchronous results via events
-In this pattern for asynchronously receiving results, you create an object for each request and register event handlers with it: one for a successful computation, another one for handling errors. The following code shows how that works with the XMLHttpRequest API:
+### 24.3.1 이벤트를 통한 비동기 결과 (Asynchronous results via events)
+
+이 비동기적을 결과를 받는 이 패턴에서는 요청 객체를 생성하고 각각의 성공적인 계산 및 에러 핸들링의 이벤트 핸들러를 등록한다. 다음 코드는 XMLHttpRequest API 와 함께 작동하는 방법을 보여준다.
+
+<sub>In this pattern for asynchronously receiving results, you create an object for each request and register event handlers with it: one for a successful computation, another one for handling errors. The following code shows how that works with the XMLHttpRequest API:</sub>
 
 ```javascript
 var req = new XMLHttpRequest();
@@ -225,10 +229,12 @@ req.onerror = function () {
     console.log('Network Error');
 };
 
-req.send(); // Add request to task queue
+req.send(); // 요청을 stack 큐에 추가한다. (Add request to task queue)
 ```
 
-Note that the last line doesn’t actually perform the request, it adds it to the task queue. Therefore, you could also call that method right after open(), before setting up onload and onerror. Things would work the same, due to JavaScript’s run-to-completion semantics.
+마지막 라인
+
+<sub>Note that the last line doesn’t actually perform the request, it adds it to the task queue. Therefore, you could also call that method right after open(), before setting up onload and onerror. Things would work the same, due to JavaScript’s run-to-completion semantics.</sub>
 
 #### 24.3.1.1 Implicit requests
 
@@ -363,10 +369,11 @@ Callbacks in Node.js style have three disadvantages (compared to those in a func
 The if statement for error handling adds verbosity.
 Reusing error handlers is harder.
 Providing a default error handler is also harder. A default error handler is useful if you make a function call and don’t want to write your own handler. It could also be used by a function if a caller doesn’t specify a handler.
-24.4 Looking ahead
+
+## 24.4 먼저 찾아보기 (Looking ahead)
 The next chapter covers Promises and the ES6 Promise API. Promises are more complicated under the hood than callbacks. In exchange, they bring several significant advantages and eliminate most of the aforementioned cons of callbacks.
 
-## 24.5 Further reading
+## 24.5 추가로 읽을 것 (Further reading)
 [1] “Help, I’m stuck in an event-loop” by Philip Roberts (video).
 
 [2] “Event loops” in the HTML Specification.
