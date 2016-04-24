@@ -67,13 +67,14 @@ Error
 
 <sub>Simplifyingly, each browser tab runs (in) a single process: the event loop. This loop executes browser-related things (so-called tasks) that it is fed via a task queue. Examples of tasks are:</sub>
 
-- HTML 파싱 (Parsing HTML)
-- script 엘리먼트 안의 자바스크립트 코드 실행 (Executing JavaScript code in script elements)
-- Reacting to user input (mouse clicks, key presses, etc.)
-- Processing the result of an asynchronous network request
+- HTML 파싱 <sub>(Parsing HTML)</sub>
+- <script> 엘리먼트 안의 자바스크립트 코드 실행 <sub>(Executing JavaScript code in script elements)</sub>
+- 사용자 입력에 반응(마우스 클릭, 키 입력 등) <sub>(Reacting to user input (mouse clicks, key presses, etc.))</sub>
+- 비동기 네트워크 요청 결과 처리 <sub>(Processing the result of an asynchronous network request)</sub>
  
+2-4 항목은 브라우저 안의 엔진에 의한 자바스크립트 코드 실행 task 이다. 그것들은 코드 종료시에 종료된다. 그뒤 queue 에서 다음 task 를 실행할 수 있다. 다음 다이어그램은 (필립 로버츠에게 영감을 얻은) 모든 연결된 메커니즘에 대한 개요를 제공한다.
 
-Items 2–4 are tasks that run JavaScript code, via the engine built into the browser. They terminate when the code terminates. Then the next task from the queue can be executed. The following diagram (inspired by a slide by Philip Roberts [1]) gives an overview of how all these mechanisms are connected.
+<sub>Items 2–4 are tasks that run JavaScript code, via the engine built into the browser. They terminate when the code terminates. Then the next task from the queue can be executed. The following diagram (inspired by a slide by Philip Roberts [1]) gives an overview of how all these mechanisms are connected.</sub>
 
 
 The event loop is surrounded by other processes running in parallel to it (timers, input handling, etc.). These processes communicate with it by adding tasks to its queue.
