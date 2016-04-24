@@ -27,7 +27,7 @@ return; // (E)
 처음에는 위의 프로그램이 시작될 때 호출 스택은 비었다. D 라인의 함수 호출 f(3) 이 된 후 스택은 하나의 엔트리를 가진다.
 <sub>Initially, when the program above is started, the call stack is empty. After the function call f(3) in line D, the stack has one entry:</sub>
 
-Location in global scope
+- Location in global scope
 After the function call g(x + 1) in line C, the stack has two entries:
 
 Location in f
