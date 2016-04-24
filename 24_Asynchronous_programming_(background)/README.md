@@ -96,14 +96,19 @@ ms 밀리초 후 콜백함수는 task 큐에 추가된다. 중요한 점은 ms �
 
 <sub>After ms milliseconds, callback is added to the task queue. It is important to note that ms only specifies when the callback is added, not when it actually executed. That may happen much later, especially if the event loop is blocked (as demonstrated later in this chapter).</sub>
 
-0으로 세팅한 setTimeout()은 보통 바로 다음의 task 큐에 무언가를 추가하는 방법으로 사용된다. 그러나 일부 브라우저는 최소값 이하의 ms 를 허용하지 않는다 (Firefox 는 4 ms); 그것이 있다면 최소값으로 세팅된다.
+0으로 세팅한 setTimeout()은 보통 바로 다음의 task 큐에 무언가를 추가하는 방법으로 사용된다. 그러나 일부 브라우저는 최소값 이하의 ms 를 허용하지 않는다 (Firefox 는 4 ms); 만일 그렇다면 최소값으로 세팅된다.
 
 <sub>setTimeout() with ms set to zero is a commonly used work-around to add something to the task queue right away. However, some browsers do not allow ms to be below a minimum (4 ms in Firefox); they set it to that minimum if it is.</sub>
 
-### 24.2.2 Displaying DOM changes
-For most DOM changes (especially those involving a re-layout), the display isn’t updated right away. “Layout happens off a refresh tick every 16ms” (@bz_moz) and must be given a chance to run via the event loop.
+### 24.2.2 표시중인 DOM의 변화 (Displaying DOM changes)
 
-There are ways to coordinate frequent DOM updates with the browser, to avoid clashing with its layout rhythm. Consult the documentation on requestAnimationFrame() for details.
+대부분의 DOM 변화 (특히 레이이웃 재설정)에서, 화면은 바로 업데이트 되지 않는다. "레이아웃은 매 16ms 의 틱마다 새 갱신 작업이 발생한다. " [@bz_moz](https://twitter.com/bz_moz) 그리고 반드시 이벤트 루프를 통해 그 실행 찬스가 주어진다
+
+<sub>For most DOM changes (especially those involving a re-layout), the display isn’t updated right away. “Layout happens off a refresh tick every 16ms” ([@bz_moz](https://twitter.com/bz_moz)) and must be given a chance to run via the event loop.</sub>
+
+브라우저에는 레이아웃 리듬(?)과의 충돌을 회피하는 빈번한 DOM 업데이트를 조정하는 방법이 있다. 자세한 것에 대해서는 requestAnimationFrame() 문서를 찾아봐라.
+
+<sub>There are ways to coordinate frequent DOM updates with the browser, to avoid clashing with its layout rhythm. Consult the documentation on requestAnimationFrame() for details.</sub>
 
 ### 24.2.3 Run-to-completion semantics
 JavaScript has so-called run-to-completion semantics: The current task is always finished before the next task is executed. That means that each task has complete control over all current state and doesn’t have to worry about concurrent modification.
