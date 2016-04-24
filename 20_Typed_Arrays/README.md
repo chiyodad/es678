@@ -20,7 +20,7 @@ Instances of `ArrayBuffer` store the binary data to be processed. Two kinds of v
 * Typed Arrays (`Uint8Array, Int16Array, Float32Array,` etc.) interpret the ArrayBuffer as an indexed sequence of elements of a single type.
 * Instances of DataView let you access data as elements of several types (`Uint8, Int16, Float32,` etc.), at any byte offset inside an ArrayBuffer.
 
-The following browser APIs support Typed Arrays ([details are mentioned in a dedicated section](ch_typed-arrays.html#sec_browser-apis-supporting-typed-arrays)):
+The following browser APIs support Typed Arrays ([details are mentioned in a dedicated section](http://exploringjs.com/es6/ch_typed-arrays.html#sec_browser-apis-supporting-typed-arrays)):
 
 *   File API
 *   XMLHttpRequest
@@ -47,7 +47,7 @@ Two kinds of objects work together in the Typed Array API:
 
 This is a diagram of the structure of the Typed Array API (notable: all Typed Arrays have a common superclass):
 
-[TypedArray](images/typed-arrays----typed_arrays_class_diagram.jpg)
+[TypedArray](http://exploringjs.com/es6/images/typed-arrays----typed_arrays_class_diagram.jpg)
 
 ### 20.2.1Element types
 
@@ -612,7 +612,7 @@ socket.addEventListener('message', function (event) {
 
 ## 20.7 Extended example: JPEG SOF0 decoder
 
-[](http://exploringjs.com/es6/images/leanpub_github-alt.png) The code of the following example is [on GitHub](https://github.com/rauschma/typed-array-demos). And you can [run it online](http://rauschma.github.io/typed-array-demos/).
+[Github](http://exploringjs.com/es6/images/leanpub_github-alt.png) The code of the following example is [on GitHub](https://github.com/rauschma/typed-array-demos). And you can [run it online](http://rauschma.github.io/typed-array-demos/).
 
 The example is a web pages that lets you upload a JPEG file and parses its structure to determine the height and the width of the image and more.
 
