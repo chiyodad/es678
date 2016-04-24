@@ -27,23 +27,32 @@ return; // (E)
 처음에는 위의 프로그램이 시작될 때 호출 스택은 비었다. D 라인의 함수 호출 f(3) 이 된 후 스택은 하나의 엔트리를 가진다.
 <sub>Initially, when the program above is started, the call stack is empty. After the function call f(3) in line D, the stack has one entry:</sub>
 
-- Location in global scope
-After the function call g(x + 1) in line C, the stack has two entries:
+- 전역 스코프안의 위치 (Location in global scope)
 
-Location in f
-Location in global scope
-After the function call h(y + 1) in line B, the stack has three entries:
+C 라인의 g(x + 1) 이 호출된 뒤 스택은 두개의 엔트리를 가진다.
+<sub>After the function call g(x + 1) in line C, the stack has two entries:</sub>
 
-Location in g
-Location in f
-Location in global scope
-The stack trace printed in line A shows you what the call stack looks like:
+- f 안에 위치 (Location in f)
+- 전역 스코프안의 위치 (Location in global scope)
 
+B 라인의 h(y + 1) 이 호출된 뒤 스택은 세개의 엔트리를 가진다.
+<sub>After the function call h(y + 1) in line B, the stack has three entries:</sub>
+
+- g 안에 위치 (Location in g)
+- f 안에 위치 (Location in f)
+- 전역 스코프안의 위치 (Location in global scope)
+
+A 라인에서 보여지는 호출 스택의 스택 트레이스는 다음과 같다.
+<sub>The stack trace printed in line A shows you what the call stack looks like:</sub>
+
+```javascript
 Error
     at h (stack_trace.js:2:17)
     at g (stack_trace.js:6:5)
     at f (stack_trace.js:9:5)
     at <global> (stack_trace.js:11:1)
+```
+
 Next, each of the functions terminates and each time the top entry is removed from the stack. After function f is done, we are back in global scope and the call stack is empty. In line E we return and the stack is empty, which means that the program terminates.
 
 ## 24.2 The browser event loop
