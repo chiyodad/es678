@@ -1,7 +1,7 @@
 # 24. 비동기 프로그래밍 (백그라운드) (Asynchronous programming (background))
 
 이번 챕터는 자바스크립트의 비동기 프로그래밍의 기초를 알아본다. 다음 장의 ES6 Promise 를 위한 지식에 도움이 될것이다
-<sub><sup>This chapter explains foundations of asynchronous programming in JavaScript. It provides background knowledge for the next chapter on ES6 Promises.</sup></sub>
+<sub>This chapter explains foundations of asynchronous programming in JavaScript. It provides background knowledge for the next chapter on ES6 Promises.</sub>
 
 ## 24.1 자바스크립트의 호출 스택 (The JavaScript call stack)
 
