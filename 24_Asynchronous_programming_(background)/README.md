@@ -178,7 +178,7 @@ Second
 
 <sub>You can try out the code online. ([sample](http://rauschma.github.io/async-examples/blocking.html)</sub>
 
-
+처음 링크를 클릭할 때마다 onClick() 이 발생된다. 그것은 5초동안 이벤트 루프를 블럭하는 동기 - sleep() 함수를 사용한다. 그 초 동안 사용자 인터페이스는 동작하지 않는다. 예를 들면 "Simple 버튼" 을 클릭할 수 없다.
 
 Whenever the link at the beginning is clicked, the function onClick() is triggered. It uses the – synchronous – sleep() function to block the event loop for five seconds. During those seconds, the user interface doesn’t work. For example, you can’t click the “Simple button”.
 
