@@ -110,18 +110,26 @@ ms 밀리초 후 콜백함수는 task 큐에 추가된다. 중요한 점은 ms �
 
 <sub>There are ways to coordinate frequent DOM updates with the browser, to avoid clashing with its layout rhythm. Consult the documentation on requestAnimationFrame() for details.</sub>
 
-### 24.2.3 Run-to-completion semantics
-JavaScript has so-called run-to-completion semantics: The current task is always finished before the next task is executed. That means that each task has complete control over all current state and doesn’t have to worry about concurrent modification.
+### 24.2.3 실행-완료 의미 (Run-to-completion semantics)
 
-Let’s look at an example:
+자바스크립트는 소위 실행 완료 의미를 가진다. 현재 task 는 항상  다음 task 가 실행되기 전에 종료된다. 그것은 각 task 는 현재의 모든 상태를 완벽하게 제어하고 동시 변경(concurrent modification)에 대해 걱정할 필요가 없다는걸 의미한다.
+
+<sub>JavaScript has so-called run-to-completion semantics: The current task is always finished before the next task is executed. That means that each task has complete control over all current state and doesn’t have to worry about concurrent modification.</sub>
+
+예제를 보자
+
+<sub>Let’s look at an example:</sub>
 
 ```javascript
 setTimeout(function () { // (A)
     console.log('Second');
 }, 0);
-```
 
 console.log('First'); // (B)
+```
+
+
+
 The function starting in line A is added to the task queue immediately, but only executed after the current piece of code is done (in particular line B!). That means that this code’s output will always be:
 
 First
