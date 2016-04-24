@@ -174,9 +174,9 @@ Second
 </script>
 ```
 
-여기서 온라인으로 시도해볼 수 있다. ([sample](http://rauschma.github.io/async-examples/blocking.html)
+여기서 온라인으로 시도해볼 수 있다. (http://rauschma.github.io/async-examples/blocking.html)
 
-<sub>You can try out the code online. ([sample](http://rauschma.github.io/async-examples/blocking.html)</sub>
+<sub>You can try out the code online. (http://rauschma.github.io/async-examples/blocking.html)</sub>
 
 처음 링크를 클릭할 때마다 onClick() 이 발생된다. 그것은 5초동안 이벤트 루프를 블럭하는 동기 - sleep() 함수를 사용한다. 그 초 동안 사용자 인터페이스는 동작하지 않는다. 예를 들면 "Simple 버튼" 을 클릭할 수 없다.
 
