@@ -68,7 +68,7 @@ Error
 <sub>Simplifyingly, each browser tab runs (in) a single process: the event loop. This loop executes browser-related things (so-called tasks) that it is fed via a task queue. Examples of tasks are:</sub>
 
 - HTML 파싱 <sub>(Parsing HTML)</sub>
-- <script> 엘리먼트 안의 자바스크립트 코드 실행 <sub>(Executing JavaScript code in script elements)</sub>
+- script 엘리먼트 안의 자바스크립트 코드 실행 <sub>(Executing JavaScript code in script elements)</sub>
 - 사용자 입력에 반응(마우스 클릭, 키 입력 등) <sub>(Reacting to user input (mouse clicks, key presses, etc.))</sub>
 - 비동기 네트워크 요청 결과 처리 <sub>(Processing the result of an asynchronous network request)</sub>
  
