@@ -2,7 +2,7 @@
 
 This chapter explains foundations of asynchronous programming in JavaScript. It provides background knowledge for the next chapter on ES6 Promises.
 
-24.1 The JavaScript call stack
+## 24.1 The JavaScript call stack
 When a function f calls a function g, g needs to know where to return to (inside f) after it is done. This information is usually managed with a stack, the call stack. Let’s look at an example.
 
 ```javascript
@@ -41,7 +41,7 @@ Error
     at <global> (stack_trace.js:11:1)
 Next, each of the functions terminates and each time the top entry is removed from the stack. After function f is done, we are back in global scope and the call stack is empty. In line E we return and the stack is empty, which means that the program terminates.
 
-24.2 The browser event loop
+## 24.2 The browser event loop
 Simplifyingly, each browser tab runs (in) a single process: the event loop. This loop executes browser-related things (so-called tasks) that it is fed via a task queue. Examples of tasks are:
 
 Parsing HTML
@@ -53,7 +53,7 @@ Items 2–4 are tasks that run JavaScript code, via the engine built into the br
 
 The event loop is surrounded by other processes running in parallel to it (timers, input handling, etc.). These processes communicate with it by adding tasks to its queue.
 
-24.2.1 Timers
+### 24.2.1 Timers
 Browsers have timers. setTimeout() creates a timer, waits until it fires and then adds a task to the queue. It has the signature:
 
 ```javascript
@@ -64,12 +64,12 @@ After ms milliseconds, callback is added to the task queue. It is important to n
 
 setTimeout() with ms set to zero is a commonly used work-around to add something to the task queue right away. However, some browsers do not allow ms to be below a minimum (4 ms in Firefox); they set it to that minimum if it is.
 
-24.2.2 Displaying DOM changes
+### 24.2.2 Displaying DOM changes
 For most DOM changes (especially those involving a re-layout), the display isn’t updated right away. “Layout happens off a refresh tick every 16ms” (@bz_moz) and must be given a chance to run via the event loop.
 
 There are ways to coordinate frequent DOM updates with the browser, to avoid clashing with its layout rhythm. Consult the documentation on requestAnimationFrame() for details.
 
-24.2.3 Run-to-completion semantics
+### 24.2.3 Run-to-completion semantics
 JavaScript has so-called run-to-completion semantics: The current task is always finished before the next task is executed. That means that each task has complete control over all current state and doesn’t have to worry about concurrent modification.
 
 Let’s look at an example:
@@ -123,7 +123,7 @@ You can try out the code online.
 
 Whenever the link at the beginning is clicked, the function onClick() is triggered. It uses the – synchronous – sleep() function to block the event loop for five seconds. During those seconds, the user interface doesn’t work. For example, you can’t click the “Simple button”.
 
-24.2.5 Avoiding blocking
+### 24.2.5 Avoiding blocking
 You avoid blocking the event loop in two ways:
 
 First, you don’t perform long-running computations in the main process, you move them to a different process. This can be achieved via the Worker API.
@@ -132,10 +132,10 @@ Second, you don’t (synchronously) wait for the results of a long-running compu
 
 The next section explains techniques for waiting asynchronously for results.
 
-24.3 Receiving results asynchronously
+## 24.3 Receiving results asynchronously
 Two common patterns for receiving results asynchronously are: events and callbacks.
 
-24.3.1 Asynchronous results via events
+### 24.3.1 Asynchronous results via events
 In this pattern for asynchronously receiving results, you create an object for each request and register event handlers with it: one for a successful computation, another one for handling errors. The following code shows how that works with the XMLHttpRequest API:
 
 ```javascript
@@ -159,7 +159,7 @@ req.send(); // Add request to task queue
 
 Note that the last line doesn’t actually perform the request, it adds it to the task queue. Therefore, you could also call that method right after open(), before setting up onload and onerror. Things would work the same, due to JavaScript’s run-to-completion semantics.
 
-24.3.1.1 Implicit requests
+#### 24.3.1.1 Implicit requests
 
 The browser API IndexedDB has a slightly peculiar style of event handling:
 
@@ -180,10 +180,10 @@ You first create a request object, to which you add event listeners that are not
 
 If you are used to multi-threaded programming languages, this style of handling requests probably looks strange, as if it may be prone to race conditions. But, due to run to completion, things are always safe.
 
-24.3.1.2 Events don’t work well for single results
+#### 24.3.1.2 Events don’t work well for single results
 This style of handling asynchronously computed results is OK if you receive results multiple times. If, however, there is only a single result then the verbosity becomes a problem. For that use case, callbacks have become popular.
 
-24.3.2 Asynchronous results via callbacks
+### 24.3.2 Asynchronous results via callbacks
 If you handle asynchronous results via callbacks, you pass callback functions as trailing parameters to asynchronous function or method calls.
 
 The following is an example in Node.js. We read the contents of a text file via an asynchronous call to fs.readFile():
@@ -212,7 +212,7 @@ readFileFunctional('myfile.txt', { encoding: 'utf8' },
     });
 ```
 
-24.3.3 Continuation-passing style
+### 24.3.3 Continuation-passing style
 The programming style of using callbacks (especially in the functional manner shown previously) is also called continuation-passing style (CPS), because the next step (the continuation) is explicitly passed as a parameter. This gives an invoked function more control over what happens next and when.
 
 The following code illustrates CPS:
@@ -255,7 +255,7 @@ console.log('E');
 More information on CPS is given in [3].
 ```
 
-24.3.4 Composing code in CPS
+### 24.3.4 Composing code in CPS
 In normal JavaScript style, you compose pieces of code via:
 
 Putting them one after another. This is blindingly obvious, but it’s good to remind ourselves that concatenating code in normal style is sequential composition.
@@ -281,7 +281,7 @@ async.map(fileNames,
     });
 ```
 
-24.3.5 Pros and cons of callbacks
+### 24.3.5 Pros and cons of callbacks
 Using callbacks results in a radically different programming style, CPS. The main advantage of CPS is that its basic mechanisms are easy to understand. But there are also disadvantages:
 
 Error handling becomes more complicated: There are now two ways in which errors are reported – via callbacks and via exceptions. You have to be careful to combine both properly.
@@ -295,7 +295,7 @@ Providing a default error handler is also harder. A default error handler is use
 24.4 Looking ahead
 The next chapter covers Promises and the ES6 Promise API. Promises are more complicated under the hood than callbacks. In exchange, they bring several significant advantages and eliminate most of the aforementioned cons of callbacks.
 
-24.5 Further reading
+## 24.5 Further reading
 [1] “Help, I’m stuck in an event-loop” by Philip Roberts (video).
 
 [2] “Event loops” in the HTML Specification.
