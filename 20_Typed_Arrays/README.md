@@ -5,7 +5,7 @@ Typed Arrays are an ECMAScript 6 API for handling binary data.
 
 Code example:
 
-```javascr
+```javascript
 const typedArray = new Uint8Array([0,1,2]);
 console.log(typedArray.length); // 3
 typedArray[0] = 5;
@@ -15,44 +15,10 @@ const normalArray = [...typedArray]; // [5,1,2]
 const dataView = new DataView(typedArray.buffer);
 console.log(dataView.getUint8(0)); // 5
 ```
-Instances of ArrayBuffer store the binary data to be processed. Two kinds of views are used to access the data:
+Instances of `ArrayBuffer` store the binary data to be processed. Two kinds of views are used to access the data:
 
-* Typed Arrays (Uint8Array, Int16Array, Float32Array, etc.) interpret the ArrayBuffer as an indexed sequence of elements of a single type.
-* Instances of DataView let you access data as elements of several types (Uint8, Int16, Float32, etc.), at any byte offset inside an ArrayBuffer.
-
-The following browser APIs support Typed Arrays ([details are mentioned in a dedicated section](ch_typed-arrays.html#sec_browser-apis-supporting-typed-arrays)):
-
-*   File API
-*   XMLHttpRequest
-*   Fetch API
-*   Canvas
-*   WebSockets
-*   And more
-
-## 20.Typed Arrays
-
-### Overview
-
-Typed Arrays are an ECMAScript 6 API for handling binary data.
-
-Code example:
-
-<figure class="code">
-
-<div class="highlight">
-
-```
-
-```
-
-</div>
-
-</figure>
-
-Instances of `ArrayBuffer` store the binary data to be processed. Two kinds of _views_ are used to access the data:
-
-*   Typed Arrays (`Uint8Array`, `Int16Array`, `Float32Array`, etc.) interpret the ArrayBuffer as an indexed sequence of elements of a single type.
-*   Instances of `DataView` let you access data as elements of several types (`Uint8`, `Int16`, `Float32`, etc.), at any byte offset inside an ArrayBuffer.
+* Typed Arrays (`Uint8Array, Int16Array, Float32Array,` etc.) interpret the ArrayBuffer as an indexed sequence of elements of a single type.
+* Instances of DataView let you access data as elements of several types (`Uint8, Int16, Float32,` etc.), at any byte offset inside an ArrayBuffer.
 
 The following browser APIs support Typed Arrays ([details are mentioned in a dedicated section](ch_typed-arrays.html#sec_browser-apis-supporting-typed-arrays)):
 
@@ -63,7 +29,7 @@ The following browser APIs support Typed Arrays ([details are mentioned in a ded
 *   WebSockets
 *   And more
 
-### <span class="section-number">20.2</span> Introduction
+## 20.2 Introduction
 
 Much data one encounters on the web is text: JSON files, HTML files, CSS files, JavaScript code, etc. For handling such data, JavaScript’s built-in string data type works well. However, until a few years ago, JavaScript was ill-equipped to handle binary data. On 8 February 2011, [the Typed Array Specification 1.0](https://www.khronos.org/registry/typedarray/specs/1.0/) standardized facilities for handling binary data. By now, Typed Arrays are [well supported](http://caniuse.com/#feat=typedarrays) by various engines. With ECMAScript 6, they became part of the core language and gained many methods in the process that were previously only available for Arrays (`map()`, `filter()`, etc.).
 
@@ -81,13 +47,9 @@ Two kinds of objects work together in the Typed Array API:
 
 This is a diagram of the structure of the Typed Array API (notable: all Typed Arrays have a common superclass):
 
-<figure class="image center">![](images/typed-arrays----typed_arrays_class_diagram.jpg)
+[TypedArray](images/typed-arrays----typed_arrays_class_diagram.jpg)
 
-<figcaption></figcaption>
-
-</figure>
-
-#### <span class="section-number">20.2.1</span> Element types
+### 20.2.1Element types
 
 The following element types are supported by the API:
 
@@ -107,7 +69,7 @@ The element type `Uint8C` is special: it is not supported by `DataView` and only
 
 > Just to be super-clear (and I was around when it was born), `Uint8ClampedArray` is _totally_ a historical artifact (of the HTML5 canvas element). Avoid unless you really are doing canvas-y things.
 
-#### <span class="section-number">20.2.2</span> Handling overflow and underflow
+### 20.2.2 Handling overflow and underflow
 
 Normally, when a value is out of the range of the element type, modulo arithmetic is used to convert it to a value within range. For signed and unsigned integers that means that:
 
@@ -116,50 +78,48 @@ Normally, when a value is out of the range of the element type, modulo arithmeti
 
 Modulo conversion for unsigned 8-bit integers:
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+> const uint8 = new Uint8Array(1);
+> uint8[0] = 255; uint8[0] // highest value within range
+255
+> uint8[0] = 256; uint8[0] // overflow
+0
+> uint8[0] = 0; uint8[0] // lowest value within range
+0
+> uint8[0] = -1; uint8[0] // underflow
+255
 ```
-
-```
-
-</div>
-
-</figure>
-
 Modulo conversion for signed 8-bit integers:
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+> const int8 = new Int8Array(1);
+> int8[0] = 127; int8[0] // highest value within range
+127
+> int8[0] = 128; int8[0] // overflow
+-128
+> int8[0] = -128; int8[0] // lowest value within range
+-128
+> int8[0] = -129; int8[0] // underflow
+127
 ```
-
-```
-
-</div>
-
-</figure>
 
 Clamped conversion is different:
 
 *   All underflowing values are converted to the lowest value.
 *   All overflowing values are converted to the highest value.
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+> const uint8c = new Uint8ClampedArray(1);
+> uint8c[0] = 255; uint8c[0] // highest value within range
+255
+> uint8c[0] = 256; uint8c[0] // overflow
+255
+> uint8c[0] = 0; uint8c[0] // lowest value within range
+0
+> uint8c[0] = -1; uint8c[0] // underflow
+0
 ```
-
-```
-
-</div>
-
-</figure>
-
-#### <span class="section-number">20.2.3</span> Endianness
+### 20.2.3 Endianness
 
 Whenever a type (such as `Uint16`) is stored as multiple bytes, _endianness_ matters:
 
@@ -176,95 +136,74 @@ On the other hand, the endianness of protocols and binary files varies and is fi
 *   Little-endian storage is popular for microprocessors in part due to significant historical influence on microprocessor designs by Intel Corporation.
 
 You can use the following function to determine the endianness of a platform.
-
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+const BIG_ENDIAN = Symbol('BIG_ENDIAN');
+const LITTLE_ENDIAN = Symbol('LITTLE_ENDIAN');
+function getPlatformEndianness() {
+    const arr32 = Uint32Array.of(0x12345678);
+    const arr8 = new Uint8Array(arr32.buffer);
+    switch ((arr8[0]*0x1000000) + (arr8[1]*0x10000) + (arr8[2]*0x100) + (arr8\[3])) {
+        case 0x12345678:
+            return BIG_ENDIAN;
+        case 0x78563412:
+            return LITTLE_ENDIAN;
+        default:
+            throw new Error('Unknown endianness');
+    }
+}
 ```
-
-```
-
-</div>
-
-</figure>
 
 There are also platforms that arrange _words_ (pairs of bytes) with a different endianness than bytes inside words. That is called mixed endianness. Should you want to support such a platform then it is easy to extend the previous code.
 
-#### <span class="section-number">20.2.4</span> Negative indices
+### 20.2.4 Negative indices
 
 With the bracket operator `[ ]`, you can only use non-negative indices (starting at 0). The methods of ArrayBuffers, Typed Arrays and DataViews work differently: every index can be negative. If it is, it counts backwards from the length. In other words, it is added to the length to produce a normal index. Therefore `-1` refers to the last element, `-2` to the second-last, etc. Methods of normal Arrays work the same way.
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+> const ui8 = Uint8Array.of(0, 1, 2);
+> ui8.slice(-1)
+Uint8Array [ 2 ]
 ```
-
-```
-
-</div>
-
-</figure>
 
 Offsets, on the other hand, must be non-negative. If, for example, you pass `-1` to:
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+DataView.prototype.getInt8(byteOffset)
 ```
-
-```
-
-</div>
-
-</figure>
-
 then you get a `RangeError`.
 
-### <span class="section-number">20.3</span> ArrayBuffers
+## 20.3 ArrayBuffers
 
 ArrayBuffers store the data, _views_ (Typed Arrays and DataViews) let you read and change it. In order to create a DataView, you need to provide its constructor with an ArrayBuffer. Typed Array constructors can optionally create an ArrayBuffer for you.
 
-#### <span class="section-number">20.3.1</span> `ArrayBuffer` constructor
+### 20.3.1 `ArrayBuffer` constructor
 
 The signature of the constructor is:
-
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+ArrayBuffer(length : number)
 ```
-
-```
-
-</div>
-
-</figure>
-
 Invoking this constructor via `new` creates an instance whose capacity is `length` bytes. Each of those bytes is initially 0.
 
-#### <span class="section-number">20.3.2</span> Static `ArrayBuffer` methods
+### 20.3.2 Static `ArrayBuffer` methods
 
 *   `ArrayBuffer.isView(arg)`
     Returns `true` if `arg` is an object and a view for an ArrayBuffer. Only Typed Arrays and DataViews have the required internal property `[[ViewedArrayBuffer]]`. That means that this check is roughly equivalent to checking whether `arg` is an instance of a Typed Array or of `DataView`.
 
-#### <span class="section-number">20.3.3</span> `ArrayBuffer.prototype` properties
+### 20.3.3 `ArrayBuffer.prototype` properties
 
 *   `get ArrayBuffer.prototype.byteLength`
     Returns the capacity of this ArrayBuffer in bytes.
 *   `ArrayBuffer.prototype.slice(start, end)`
     Creates a new ArrayBuffer that contains the bytes of this ArrayBuffer whose indices are greater than or equal to `start` and less than `end`. `start` and `end` can be negative (see Sect. “[Negative indices](ch_typed-arrays.html#sec_negative-typed-array-indices)”).
 
-### <span class="section-number">20.4</span> Typed Arrays
+## 20.4 Typed Arrays
 
 The various kinds of Typed Array are only different w.r.t. to the type of their elements:
 
 *   Typed Arrays whose elements are integers: `Int8Array`, `Uint8Array`, `Uint8ClampedArray`, `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`
 *   Typed Arrays whose elements are floats: `Float32Array`, `Float64Array`
 
-#### <span class="section-number">20.4.1</span> Typed Arrays versus normal Arrays
+### 20.4.1 Typed Arrays versus normal Arrays
 
 Typed Arrays are much like normal Arrays: they have a `length`, elements can be accessed via the bracket operator `[ ]` and they have all of the standard Array methods. They differ from Arrays in the following ways:
 
@@ -275,85 +214,53 @@ Typed Arrays are much like normal Arrays: they have a `length`, elements can be 
     *   `new Uint8Array(10)` creates a Typed Array whose 10 elements are all 0.
 *   An associated buffer. The elements of a Typed Array `ta` are not stored in `ta`, they are stored in an associated ArrayBuffer that can be accessed via `ta.buffer`.
 
-#### <span class="section-number">20.4.2</span> Typed Arrays are iterable
+### 20.4.2 Typed Arrays are iterable
 
-Typed Arrays implement a method whose key is `Symbol.iterator` and are therefore iterable (consult chapter “[Iterables and iterators](ch_iteration.html#ch_iteration)” for more information). That means that you can use the `for-of` loop and similar mechanisms in ES6:
+Typed Arrays implement a method whose key is `Symbol.iterator` and are therefore iterable (consult chapter “[Iterables and iterators](http://exploringjs.com/es6/ch_iteration.html#ch_iteration)” for more information). That means that you can use the `for-of` loop and similar mechanisms in ES6:
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+const ui8 = Uint8Array.of(0,1,2);
+for (const byte of ui8) {
+    console.log(byte);
+}
+// Output:
+// 0
+// 1
+// 2
 ```
-
-```
-
-</div>
-
-</figure>
-
 ArrayBuffers and DataViews are not iterable.
 
-#### <span class="section-number">20.4.3</span> Converting Typed Arrays to and from normal Arrays
+### 20.4.3 Converting Typed Arrays to and from normal Arrays
 
 To convert a normal Array to a Typed Array, you make it the parameter of a Typed Array constructor. For example:
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+> const tarr = new Uint8Array([0,1,2]);
 ```
-
-```
-
-</div>
-
-</figure>
 
 The classic way to convert a Typed Array to an Array is to invoke `Array.prototype.slice` on it. This trick works for all Array-like objects (such as `arguments`) and Typed Arrays are Array-like.
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+> Array.prototype.slice.call(tarr)
+[ 0, 1, 2 ]
 ```
-
-```
-
-</div>
-
-</figure>
 
 In ES6, you can use the spread operator (`...`), because Typed Arrays are iterable:
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+> [...tarr]
+[ 0, 1, 2 ]
 ```
-
-```
-
-</div>
-
-</figure>
 
 Another ES6 alternative is `Array.from()`, which works with either iterables or Array-like objects:
-
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+> Array.from(tarr)
+[ 0, 1, 2 ]
 ```
 
-```
+### <span class="section-number">20.4.4</span> The Species pattern for Typed Arrays
 
-</div>
-
-</figure>
-
-#### <span class="section-number">20.4.4</span> The Species pattern for Typed Arrays
-
-Some methods create new instances that are similar to `this`. The species pattern lets you configure what constructor should be used to do so. For example, if you create a subclass `MyArray` of `Array` then the default is that `map()` creates instances of `MyArray`. If you want it to create instances of `Array`, you can use the species pattern to make that happen. Details are explained in Sect “[The species pattern](ch_classes.html#sec_species-pattern)” in the chapter on classes.
+Some methods create new instances that are similar to `this`. The species pattern lets you configure what constructor should be used to do so. For example, if you create a subclass `MyArray` of `Array` then the default is that `map()` creates instances of `MyArray`. If you want it to create instances of `Array`, you can use the species pattern to make that happen. Details are explained in Sect “[The species pattern](http://exploringjs.com/es6/ch_classes.html#sec_species-pattern)” in the chapter on classes.
 
 ArrayBuffers use the species pattern in the following locations:
 
@@ -369,91 +276,53 @@ Typed Arrays use the species pattern in the following locations:
 
 DataViews don’t use the species pattern.
 
-#### <span class="section-number">20.4.5</span> The inheritance hierarchy of Typed Arrays
+### 20.4.5 The inheritance hierarchy of Typed Arrays
 
 As you could see in the diagram at the beginning of this chapter, all Typed Array classes (`Uint8Array` etc.) have a common superclass. I’m calling that superclass `TypedArray`, but it is not directly accessible from JavaScript (the ES6 specification calls it _the intrinsic object `%TypedArray%`_). `TypedArray.prototype` houses all methods of Typed Arrays.
 
-#### <span class="section-number">20.4.6</span> Static `TypedArray` methods
+### 20.4.6 Static `TypedArray` methods
 
 Both static `TypedArray` methods are inherited by its subclasses (`Uint8Array` etc.).
 
-##### <span class="section-number">20.4.6.1</span> `TypedArray.of()`
+#### 20.4.6.1 `TypedArray.of()`
 
 This method has the signature:
-
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+TypedArray.of(...items)
 ```
-
-```
-
-</div>
-
-</figure>
 
 It creates a new Typed Array that is an instance of `this` (the class on which `of()` was invoked). The elements of that instance are the parameters of `of()`.
 
 You can think of `of()` as a custom literal for Typed Arrays:
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+> Float32Array.of(0.151, -8, 3.7)
+Float32Array [ 0.151, -8, 3.7 ]
 ```
-
-```
-
-</div>
-
-</figure>
-
-##### <span class="section-number">20.4.6.2</span> `TypedArray.from()`
+#### 20.4.6.2 `TypedArray.from()`
 
 This method has the signature:
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+TypedArray<U>.from(source : Iterable<T>, mapfn? : T => U, thisArg?)
 ```
-
-```
-
-</div>
-
-</figure>
 
 It converts the iterable `source` into an instance of `this` (a Typed Array).
 
 For example, normal Arrays are iterable and can be converted with this method:
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+> Uint16Array.from([0, 1, 2])
+Uint16Array [ 0, 1, 2 ]
 ```
-
-```
-
-</div>
-
-</figure>
 
 Typed Arrays are iterable, too:
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+> const ui16 = Uint16Array.from(Uint8Array.of(0, 1, 2));
+> ui16 instanceof Uint16Array
+true
 ```
-
-```
-
-</div>
-
-</figure>
 
 The optional `mapfn` lets you transform the elements of `source` before they become elements of the result. Why perform the two steps _mapping_ and _conversion_ in one go? Compared to performing the first step separately, via `source.map()`, there are two advantages:
 
@@ -462,39 +331,25 @@ The optional `mapfn` lets you transform the elements of `source` before they bec
 
 To illustrate the second advantage, let’s use `map()` to double the elements of a Typed Array:
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+> Int8Array.of(127, 126, 125).map(x => 2 * x)
+Int8Array [ -2, -4, -6 ]
 ```
-
-```
-
-</div>
-
-</figure>
 
 As you can see, the values overflow and are coerced into the `Int8` range of values. If map via `from()`, you can choose the type of the result so that values don’t overflow:
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+> Int16Array.from(Int8Array.of(127, 126, 125), x => 2 * x)
+Int16Array [ 254, 252, 250 ]
 ```
-
-```
-
-</div>
-
-</figure>
 
 [According to Allen Wirfs-Brock](https://twitter.com/awbjs/status/585199958661472257), mapping between Typed Arrays was what motivated the `mapfn` parameter of `from()`.
 
-#### <span class="section-number">20.4.7</span> `TypedArray.prototype` properties
+### 20.4.7 `TypedArray.prototype` properties
 
 Indices accepted by Typed Array methods can be negative (they work like traditional Array methods that way). Offsets must be non-negative. For details, see Sect. “[Negative indices](ch_typed-arrays.html#sec_negative-typed-array-indices)”.
 
-##### <span class="section-number">20.4.7.1</span> Methods specific to Typed Arrays
+##### 20.4.7.1 Methods specific to Typed Arrays
 
 The following properties are specific to Typed Arrays, normal Arrays don’t have them:
 
@@ -511,7 +366,7 @@ The following properties are specific to Typed Arrays, normal Arrays don’t hav
 *   `TypedArray<T>.prototype.subarray(begin=0, end=this.length) : TypedArray<T>`
     Returns a new Typed Array that has the same buffer as this Typed Array, but a (generally) smaller range. If `begin` is non-negative then the first element of the resulting Typed Array is `this[begin]`, the second `this[begin+1]` (etc.). If `begin` in negative, it is converted appropriately.
 
-##### <span class="section-number">20.4.7.2</span> Array methods
+##### 20.4.7.2 Array methods
 
 The following methods are basically the same as the methods of normal Arrays:
 
@@ -567,7 +422,7 @@ Due to all of these methods being available for Arrays, you can consult the foll
 
 Note that while normal Array methods are generic (any Array-like `this` is OK), the methods listed in this section are not (`this` must be a Typed Array).
 
-#### <span class="section-number">20.4.8</span> `«ElementType»Array` constructor
+### 20.4.8 `«ElementType»Array` constructor
 
 Each Typed Array constructor has a name that follows the pattern `«ElementType»Array`, where `«ElementType»` is one of the element types in the table at the beginning. That means that there are 9 constructors for Typed Arrays: `Int8Array`, `Uint8Array`, `Uint8ClampedArray` (element type `Uint8C`), `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`, `Float32Array`, `Float64Array`.
 
@@ -586,36 +441,31 @@ Each constructor has five _overloaded_ versions – it behaves differently depen
 
 The following code shows three different ways of creating the same Typed Array:
 
-<figure class="code">
+```javascript
+const tarr1 = new Uint8Array([1,2,3]);
 
-<div class="highlight">
+const tarr2 = Uint8Array.of(1,2,3);
 
+const tarr3 = new Uint8Array(3);
+tarr3[0] = 0;
+tarr3[1] = 1;
+tarr3[2] = 2;
 ```
-
-```
-
-</div>
-
-</figure>
-
-#### <span class="section-number">20.4.9</span> Static `«ElementType»Array` properties
+### 20.4.9 Static `«ElementType»Array` properties
 
 *   `«ElementType»Array.BYTES_PER_ELEMENT`
     Counts how many bytes are needed to store a single element:
 
-    <figure class="code">
-
-    <div class="highlight">
-
+    ```javascript
+   > Uint8Array.BYTES_PER_ELEMENT
+   1
+   > Int16Array.BYTES_PER_ELEMENT
+   2
+   > Float64Array.BYTES_PER_ELEMENT
+   8
     ```
 
-    ```
-
-    </div>
-
-    </figure>
-
-#### <span class="section-number">20.4.10</span> `«ElementType»Array.prototype` properties
+### 20.4.10 `«ElementType»Array.prototype` properties
 
 *   `«ElementType»Array.prototype.BYTES_PER_ELEMENT`
     The same as `«ElementType»Array.BYTES_PER_ELEMENT`.
@@ -624,40 +474,37 @@ The following code shows three different ways of creating the same Typed Array:
 
 Typed Arrays don’t have a method `concat()`, like normal Arrays do. The work-around is to use the method
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+typedArray.set(arrayOrTypedArray, offset=0)
 ```
-
-```
-
-</div>
-
-</figure>
 
 That method copies an existing Typed Array (or normal Array) into `typedArray` at index `offset`. Then you only have to make sure that `typedArray` is big enough to hold all (Typed) Arrays you want to concatenate:
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+function concatenate(resultConstructor, ...arrays) {
+    let totalLength = 0;
+    for (const arr of arrays) {
+        totalLength += arr.length;
+    }
+    const result = new resultConstructor(totalLength);
+    let offset = 0;
+    for (const arr of arrays) {
+        result.set(arr, offset);
+        offset += arr.length;
+    }
+    return result;
+}
+console.log(concatenate(Uint8Array, Uint8Array.of(1, 2), Uint8Array.of(3, 4)));
+// Uint8Array [1, 2, 3, 4]
 ```
+## 20.5 DataViews
 
-```
-
-</div>
-
-</figure>
-
-### <span class="section-number">20.5</span> DataViews
-
-#### <span class="section-number">20.5.1</span> `DataView` constructor
+### 20.5.1 `DataView` constructor
 
 *   `DataView(buffer, byteOffset=0, byteLength=buffer.byteLength-byteOffset)`
     Creates a new DataView whose data is stored in the ArrayBuffer `buffer`. By default, the new DataView can access all of `buffer`, the last two parameters allow you to change that.
 
-#### <span class="section-number">20.5.2</span> `DataView.prototype` properties
+### 20.5.2 `DataView.prototype` properties
 
 *   `get DataView.prototype.buffer`
     Returns the ArrayBuffer of this DataView.
@@ -672,59 +519,53 @@ That method copies an existing Typed Array (or normal Array) into `typedArray` a
     Writes `value` to the buffer of this DataView.
     *   `«ElementType»` can be: `Float32`, `Float64`, `Int8`, `Int16`, `Int32`, `Uint8`, `Uint16`, `Uint32`
 
-### <span class="section-number">20.6</span> Browser APIs that support Typed Arrays
+### 20.6 Browser APIs that support Typed Arrays
 
 Typed Arrays have been around for a while, so there are quite a few browser APIs that support them.
 
-#### <span class="section-number">20.6.1</span> File API
+#### 20.6.1 File API
 
 [The file API](http://www.w3.org/TR/FileAPI/) lets you access local files. The following code demonstrates how to get the bytes of a submitted local file in an ArrayBuffer.
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+const fileInput = document.getElementById('fileInput');
+const file = fileInput.files[0];
+const reader = new FileReader();
+reader.readAsArrayBuffer(file);
+reader.onload = function () {
+    const arrayBuffer = reader.result;
+    ···
+};
 ```
 
-```
-
-</div>
-
-</figure>
-
-#### <span class="section-number">20.6.2</span> `XMLHttpRequest`
+#### 20.6.2 `XMLHttpRequest`
 
 In newer versions of [the `XMLHttpRequest` API](http://www.w3.org/TR/XMLHttpRequest/), you can have the results delivered in an ArrayBuffer:
 
-<figure class="code">
+```javascript
+const xhr = new XMLHttpRequest();
+xhr.open('GET', someUrl);
+xhr.responseType = 'arraybuffer';
 
-<div class="highlight">
+xhr.onload = function () {
+    const arrayBuffer = xhr.response;
+    ···
+};
 
+xhr.send();
 ```
 
-```
-
-</div>
-
-</figure>
-
-#### <span class="section-number">20.6.3</span> Fetch API
+#### 20.6.3 Fetch API
 
 Similarly to `XMLHttpRequest`, [the Fetch API](https://fetch.spec.whatwg.org/) lets you request resources. But it is based on Promises, which makes it more convenient to use. The following code demonstrates how to download the content pointed to by `url` as an ArrayBuffer:
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+fetch(url)
+.then(request => request.arrayBuffer())
+.then(arrayBuffer => ···);
 ```
 
-```
-
-</div>
-
-</figure>
-
-#### <span class="section-number">20.6.4</span> Canvas
+### 20.6.4 Canvas
 
 [Quoting the HTML5 specification](http://www.w3.org/TR/html5/scripting-1.html#the-canvas-element):
 
@@ -732,35 +573,36 @@ Similarly to `XMLHttpRequest`, [the Fetch API](https://fetch.spec.whatwg.org/) l
 
 [The 2D Context of `canvas`](http://www.w3.org/TR/2dcontext/) lets you retrieve the bitmap data as an instance of `Uint8ClampedArray`:
 
-<figure class="code">
-
-<div class="highlight">
-
+```javascript
+const canvas = document.getElementById('my_canvas');
+const context = canvas.getContext('2d');
+const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+const uint8ClampedArray = imageData.data;
 ```
 
-```
-
-</div>
-
-</figure>
-
-#### <span class="section-number">20.6.5</span> WebSockets
+### 20.6.5 WebSockets
 
 [WebSockets](http://www.w3.org/TR/websockets/) let you send and receive binary data via ArrayBuffers:
 
-<figure class="code">
+```javascript
+const socket = new WebSocket('ws://127.0.0.1:8081');
+socket.binaryType = 'arraybuffer';
 
-<div class="highlight">
+// Wait until socket is open
+socket.addEventListener('open', function (event) {
+    // Send binary data
+    const typedArray = new Uint8Array(4);
+    socket.send(typedArray.buffer);
+});
 
+// Receive binary data
+socket.addEventListener('message', function (event) {
+    const arrayBuffer = event.data;
+    ···
+});
 ```
 
-```
-
-</div>
-
-</figure>
-
-#### <span class="section-number">20.6.6</span> Other APIs
+### <span class="section-number">20.6.6</span> Other APIs
 
 *   [WebGL](https://www.khronos.org/registry/webgl/specs/latest/2.0/) uses the Typed Array API for: accessing buffer data, specifying pixels for texture mapping, reading pixel data, and more.
 *   [The Web Audio API](http://www.w3.org/TR/webaudio/) lets you [decode audio data](http://www.w3.org/TR/webaudio/#dfn-decodeAudioData) submitted via an ArrayBuffer.
@@ -768,17 +610,13 @@ Similarly to `XMLHttpRequest`, [the Fetch API](https://fetch.spec.whatwg.org/) l
 *   Communication with [Web Workers](http://www.w3.org/TR/workers/): If you send data to a Worker via [`postMessage()`](http://www.w3.org/TR/workers/#dom-worker-postmessage), either the message (which will be cloned) or the transferable objects can contain ArrayBuffers.
 *   [Cross-document communication](https://html.spec.whatwg.org/multipage/comms.html#crossDocumentMessages): works similarly to communication with Web Workers and also uses the method `postMessage()`.
 
-### <span class="section-number">20.7</span> Extended example: JPEG SOF0 decoder
+## 20.7 Extended example: JPEG SOF0 decoder
 
-<aside class="generic_inbar blurb github-alt">
-
-The code of the following example is [on GitHub](https://github.com/rauschma/typed-array-demos). And you can [run it online](http://rauschma.github.io/typed-array-demos/).
-
-</aside>
+[](http://exploringjs.com/es6/images/leanpub_github-alt.png) The code of the following example is [on GitHub](https://github.com/rauschma/typed-array-demos). And you can [run it online](http://rauschma.github.io/typed-array-demos/).
 
 The example is a web pages that lets you upload a JPEG file and parses its structure to determine the height and the width of the image and more.
 
-#### <span class="section-number">20.7.1</span> The JPEG file format
+### 20.7.1 The JPEG file format
 
 A JPEG file is a sequence of _segments_ (typed data). Each segment starts with the following four bytes:
 
@@ -787,21 +625,43 @@ A JPEG file is a sequence of _segments_ (typed data). Each segment starts with t
 
 JPEG files are big-endian on all platforms. Therefore, this example demonstrates how important it is that we can specify endianness when using DataViews.
 
-#### <span class="section-number">20.7.2</span> The JavaScript code
+### 20.7.2 The JavaScript code
 
 The following function `processArrayBuffer()` is an abridged version of the actual code; I’ve removed a few error checks to reduce clutter. `processArrayBuffer()` receives an ArrayBuffer with the contents of the submitted JPEG file and iterates over its segments.
 
-<figure class="code">
+```javascript
+// JPEG is big endian
+var IS_LITTLE_ENDIAN = false;
 
-<div class="highlight">
+function processArrayBuffer(arrayBuffer) {
+    try {
+        var dv = new DataView(arrayBuffer);
+        ···
+        var ptr = 2;
+        while (true) {
+            ···
+            var lastPtr = ptr;
+            enforceValue(0xFF, dv.getUint8(ptr),
+                'Not a marker');
+            ptr++;
+            var marker = dv.getUint8(ptr);
+            ptr++;
+            var len = dv.getUint16(ptr, IS_LITTLE_ENDIAN);
+            ptr += len;
+            logInfo('Marker: '+hex(marker)+' ('+len+' byte(s))');
+            ···
 
+            // Did we find what we were looking for?
+            if (marker === 0xC0) { // SOF0
+                logInfo(decodeSOF0(dv, lastPtr));
+                break;
+            }
+        }
+    } catch (e) {
+        logError(e.message);
+    }
+}
 ```
-
-```
-
-</div>
-
-</figure>
 
 This code uses the following helper functions (that are not shown here):
 
@@ -811,24 +671,29 @@ This code uses the following helper functions (that are not shown here):
 
 `decodeSOF0()` parses the segment SOF0:
 
-<figure class="code">
 
-<div class="highlight">
-
+```javascript
+function decodeSOF0(dv, start) {
+    // Example (16x16):
+    // FF C0 00 11 08 00 10 00 10 03 01 22 00 02 11 01 03 11 01
+    var data = {};
+    start += 4; // skip marker 0xFFC0 and segment length 0x0011
+    var data = {
+        bitsPerColorComponent: dv.getUint8(start), // usually 0x08
+        imageHeight: dv.getUint16(start+1, IS_LITTLE_ENDIAN),
+        imageWidth: dv.getUint16(start+3, IS_LITTLE_ENDIAN),
+        numberOfColorComponents: dv.getUint8(start+5),
+    };
+    return JSON.stringify(data, null, 4);
+}
 ```
-
-```
-
-</div>
-
-</figure>
 
 More information on the structure of JPEG files:
 
 *   “[JPEG: Syntax and structure](https://en.wikipedia.org/wiki/JPEG#Syntax_and_structure)” (on Wikipedia)
 *   “[JPEG File Interchange Format: File format structure](https://en.wikipedia.org/wiki/JPEG_File_Interchange_Format#File_format_structure)” (on Wikipedia)
 
-### <span class="section-number">20.8</span> Availability
+## 20.8 Availability
 
 Much of the Typed Array API is implemented by all modern JavaScript engines, but several features are new to ECMAScript 6:
 
