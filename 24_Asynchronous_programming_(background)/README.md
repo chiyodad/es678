@@ -1,4 +1,4 @@
-24. Asynchronous programming (background)
+# 24. Asynchronous programming (background)
 
 This chapter explains foundations of asynchronous programming in JavaScript. It provides background knowledge for the next chapter on ES6 Promises.
 
