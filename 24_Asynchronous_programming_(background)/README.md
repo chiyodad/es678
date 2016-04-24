@@ -1,13 +1,17 @@
-# 24. Asynchronous programming (background)
+# 24. 비동기 프로그래밍 (백그라운드) (Asynchronous programming (background))
 
+이번 챕터는 자바스크립트의 비동기 프로그래밍의 기초를 알아본다. 다음 장의 ES6 Promise 를 위한 지식에 도움이 될것이다
 This chapter explains foundations of asynchronous programming in JavaScript. It provides background knowledge for the next chapter on ES6 Promises.
 
-## 24.1 The JavaScript call stack
+## 24.1 자바스크립트의 호출 스택 (The JavaScript call stack)
+
+함수 f 가 함수 g 를 호출할 때, g는 완료 후 (f 내부의) 돌아갈 곳을 알 필요가 있다. 이 정보는 보통 스택으로 관리되는, 호출 스택이다. 예제를 보자
+
 When a function f calls a function g, g needs to know where to return to (inside f) after it is done. This information is usually managed with a stack, the call stack. Let’s look at an example.
 
 ```javascript
 function h(z) {
-    // Print stack trace
+    // 스택을 찍어보자
     console.log(new Error().stack); // (A)
 }
 function g(y) {
