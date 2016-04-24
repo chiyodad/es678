@@ -82,16 +82,23 @@ Error
 
 <sub>The event loop is surrounded by other processes running in parallel to it (timers, input handling, etc.). These processes communicate with it by adding tasks to its queue.</sub>
 
-### 24.2.1 Timers
-Browsers have timers. setTimeout() creates a timer, waits until it fires and then adds a task to the queue. It has the signature:
+### 24.2.1 타이머 (Timers)
+
+브라우저는 타이머를 가진다. setTimeout() 은 타이터를 생성하며, 그게 수행될 때까지 기다린 뒤 큐에 task 를 추가한다. 그것은 이 시그니쳐를 가진다.
+
+<sub>Browsers have timers. setTimeout() creates a timer, waits until it fires and then adds a task to the queue. It has the signature:</sub>
 
 ```javascript
 setTimeout(callback, ms)
 ```
 
-After ms milliseconds, callback is added to the task queue. It is important to note that ms only specifies when the callback is added, not when it actually executed. That may happen much later, especially if the event loop is blocked (as demonstrated later in this chapter).
+ms 밀리초 후 콜백함수는 task 큐에 추가된다. 중요한 점은 ms 는 단지 콜백이 추가되는 것을 나타낼 뿐이고, 실제 실행되는 때가 아니다. 즉, 이벤트 루프가 블럭되거나 해서 훨씬 나중에 일어날 수 있다.
 
-setTimeout() with ms set to zero is a commonly used work-around to add something to the task queue right away. However, some browsers do not allow ms to be below a minimum (4 ms in Firefox); they set it to that minimum if it is.
+<sub>After ms milliseconds, callback is added to the task queue. It is important to note that ms only specifies when the callback is added, not when it actually executed. That may happen much later, especially if the event loop is blocked (as demonstrated later in this chapter).</sub>
+
+0으로 세팅한 setTimeout()은 보통 바로 다음의 task 큐에 무언가를 추가하는 방법으로 사용된다. 그러나 일부 브라우저는 최소값 이하의 ms 를 허용하지 않는다 (Firefox 는 4 ms); 그것이 있다면 최소값으로 세팅된다.
+
+<sub>setTimeout() with ms set to zero is a commonly used work-around to add something to the task queue right away. However, some browsers do not allow ms to be below a minimum (4 ms in Firefox); they set it to that minimum if it is.</sub>
 
 ### 24.2.2 Displaying DOM changes
 For most DOM changes (especially those involving a re-layout), the display isn’t updated right away. “Layout happens off a refresh tick every 16ms” (@bz_moz) and must be given a chance to run via the event loop.
