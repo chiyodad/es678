@@ -57,7 +57,9 @@ Error
     at <global> (stack_trace.js:11:1)
 ```
 
-Next, each of the functions terminates and each time the top entry is removed from the stack. After function f is done, we are back in global scope and the call stack is empty. In line E we return and the stack is empty, which means that the program terminates.
+다음에 각각 함수의 종료마다, 스택의 탑 엔트리에서 지워진다. f 가 종료되면 우리는 다시 글로벌 스코프로 돌아가며, 호출 스택은 빈다. 라인 E 에서 리턴하고 스택은 빈다. 그것은 프로그램의 종료를 의미한다.
+
+<sub>Next, each of the functions terminates and each time the top entry is removed from the stack. After function f is done, we are back in global scope and the call stack is empty. In line E we return and the stack is empty, which means that the program terminates.</sub>
 
 ## 24.2 The browser event loop
 Simplifyingly, each browser tab runs (in) a single process: the event loop. This loop executes browser-related things (so-called tasks) that it is fed via a task queue. Examples of tasks are:
