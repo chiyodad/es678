@@ -128,14 +128,20 @@ setTimeout(function () { // (A)
 console.log('First'); // (B)
 ```
 
+A 라인의 함수 시작은 즉시 task 큐에 추가된다. 그러나 현재의 코드 조각의 완료(B 라인) 후에만 실행된다. 그것은 코드의 출력은 항상 다음이라는걸 의미한다:
 
+<sub>The function starting in line A is added to the task queue immediately, but only executed after the current piece of code is done (in particular line B!). That means that this code’s output will always be:</sub>
 
-The function starting in line A is added to the task queue immediately, but only executed after the current piece of code is done (in particular line B!). That means that this code’s output will always be:
-
+```javascript
 First
 Second
-24.2.4 Blocking the event loop
-As we have seen, each tab (in some browers, the complete browser) is managed by a single process – both the user interface and all other computations. That means that you can freeze the user interface by performing a long-running computation in that process. The following code demonstrates that.
+```
+
+24.2.4 이벤트 루프의 블럭 (Blocking the event loop)
+
+봤던 대로, 각 탭(일부 완전한 브라우저)은는 싱글 프로세스로 관리된다. - 사용자 인터페이스와 다른 계산들 둘다. 그것은 당신이 사용자 인터페이스를 프로세스 안의 장시간의 계산을 수행함으로 프리징할 수 있다는걸 의미한다. 다음 코드는 그것을 보여준다.
+
+<sub>As we have seen, each tab (in some browers, the complete browser) is managed by a single process – both the user interface and all other computations. That means that you can freeze the user interface by performing a long-running computation in that process. The following code demonstrates that.</sub>
 
 ```html
 <a id="block" href="">Block for 5 seconds</a>
@@ -150,9 +156,9 @@ As we have seen, each tab (in some browers, the complete browser) is managed by 
         event.preventDefault();
 
         setStatusMessage('Blocking...');
-
-        // Call setTimeout(), so that browser has time to display
-        // status message
+        
+        // setTimeout 호출, 브라우저가 표시(setStatusMessage)할 시간을 가진다. (Call setTimeout(), so that browser has time to display)
+        // 상태 메시지 (status message)
         setTimeout(function () {
             sleep(5000);
             setStatusMessage('Done');
@@ -168,7 +174,11 @@ As we have seen, each tab (in some browers, the complete browser) is managed by 
 </script>
 ```
 
-You can try out the code online.
+여기서 온라인으로 시도해볼 수 있다. ([sample](http://rauschma.github.io/async-examples/blocking.html)
+
+<sub>You can try out the code online. ([sample](http://rauschma.github.io/async-examples/blocking.html)</sub>
+
+
 
 Whenever the link at the beginning is clicked, the function onClick() is triggered. It uses the – synchronous – sleep() function to block the event loop for five seconds. During those seconds, the user interface doesn’t work. For example, you can’t click the “Simple button”.
 
