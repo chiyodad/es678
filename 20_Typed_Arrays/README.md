@@ -1,9 +1,10 @@
 # 20. Typed Arrays
 
-## 20.1 Overview
+## 20.1 개요
+타입 어레이는 이진 데이터를 다루기 위한 ES6 API 이다.
 Typed Arrays are an ECMAScript 6 API for handling binary data.
 
-Code example:
+코드 예제:
 
 ```javascript
 const typedArray = new Uint8Array([0,1,2]);
@@ -15,6 +16,7 @@ const normalArray = [...typedArray]; // [5,1,2]
 const dataView = new DataView(typedArray.buffer);
 console.log(dataView.getUint8(0)); // 5
 ```
+
 Instances of `ArrayBuffer` store the binary data to be processed. Two kinds of views are used to access the data:
 
 * Typed Arrays (`Uint8Array, Int16Array, Float32Array,` etc.) interpret the ArrayBuffer as an indexed sequence of elements of a single type.
