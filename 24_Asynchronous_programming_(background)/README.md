@@ -7,7 +7,7 @@
 
 함수 f 가 함수 g 를 호출할 때, g는 완료 후 (f 내부의) 돌아갈 곳을 알 필요가 있다. 이 정보는 보통 스택으로 관리되는, 호출 스택이다. 예제를 보자
 
-When a function f calls a function g, g needs to know where to return to (inside f) after it is done. This information is usually managed with a stack, the call stack. Let’s look at an example.
+<sub>When a function f calls a function g, g needs to know where to return to (inside f) after it is done. This information is usually managed with a stack, the call stack. Let’s look at an example.</sub>
 
 ```javascript
 function h(z) {
