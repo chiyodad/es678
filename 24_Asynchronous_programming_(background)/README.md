@@ -61,13 +61,18 @@ Error
 
 <sub>Next, each of the functions terminates and each time the top entry is removed from the stack. After function f is done, we are back in global scope and the call stack is empty. In line E we return and the stack is empty, which means that the program terminates.</sub>
 
-## 24.2 The browser event loop
-Simplifyingly, each browser tab runs (in) a single process: the event loop. This loop executes browser-related things (so-called tasks) that it is fed via a task queue. Examples of tasks are:
+## 24.2 브라우저 이벤트 루프 (The browser event loop)
 
-Parsing HTML
-Executing JavaScript code in script elements
-Reacting to user input (mouse clicks, key presses, etc.)
-Processing the result of an asynchronous network request
+심플하게도 각 브라우저는 탭마다 하나의 이벤트 루프 프로세스 로 돌아간다. 이 루프는 task 큐에 의해 공급되는 브라우저에 관련된 일(소위 task 라고 하는) 을 실행한다.
+
+<sub>Simplifyingly, each browser tab runs (in) a single process: the event loop. This loop executes browser-related things (so-called tasks) that it is fed via a task queue. Examples of tasks are:</sub>
+
+- HTML 파싱 (Parsing HTML)
+- script 엘리먼트 안의 자바스크립트 코드 실행 (Executing JavaScript code in script elements)
+- Reacting to user input (mouse clicks, key presses, etc.)
+- Processing the result of an asynchronous network request
+ 
+
 Items 2–4 are tasks that run JavaScript code, via the engine built into the browser. They terminate when the code terminates. Then the next task from the queue can be executed. The following diagram (inspired by a slide by Philip Roberts [1]) gives an overview of how all these mechanisms are connected.
 
 
