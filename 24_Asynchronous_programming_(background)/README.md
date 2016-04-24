@@ -1,6 +1,6 @@
 # 24. 비동기 프로그래밍 (백그라운드) (Asynchronous programming (background))
 
-이번 챕터는 자바스크립트의 비동기 프로그래밍의 기초를 알아본다. 다음 장의 ES6 Promise 를 위한 지식에 도움이 될것이다
+이번 챕터는 자바스크립트의 비동기 프로그래밍의 기초를 알아본다. 이 지식은 다음 장의 ES6 Promise 에 도움이 될 것이다
 <sub>This chapter explains foundations of asynchronous programming in JavaScript. It provides background knowledge for the next chapter on ES6 Promises.</sub>
 
 ## 24.1 자바스크립트의 호출 스택 (The JavaScript call stack)
@@ -182,16 +182,28 @@ Second
 
 Whenever the link at the beginning is clicked, the function onClick() is triggered. It uses the – synchronous – sleep() function to block the event loop for five seconds. During those seconds, the user interface doesn’t work. For example, you can’t click the “Simple button”.
 
-### 24.2.5 Avoiding blocking
-You avoid blocking the event loop in two ways:
+### 24.2.5 블럭 회피 (Avoiding blocking)
 
-First, you don’t perform long-running computations in the main process, you move them to a different process. This can be achieved via the Worker API.
+이벤트 루프에서 블럭을 회피하는 두가지 방법:
 
-Second, you don’t (synchronously) wait for the results of a long-running computation (your own algorithm in a Worker process, a network request, etc.), you carry on with the event loop and let the computation notify you when it is finished. In fact, you usually don’t even have a choice in browsers and have to do things this way. For example, there is no built-in way to sleep synchronously (like the previously implemented sleep()). Instead, setTimeout() lets you sleep asynchronously.
+<sub>You avoid blocking the event loop in two ways:</sub>
 
-The next section explains techniques for waiting asynchronously for results.
+첫째, 메인 프로세스에서 긴 실행시간이 걸리는 계산을 수행하지 않고, 다른 프로세스로 이동시킨다. 이것은 Worker API를 통해 달성될 수 있다.
 
-## 24.3 Receiving results asynchronously
+<sub>First, you don’t perform long-running computations in the main process, you move them to a different process. This can be achieved via the Worker API.</sub>
+
+둘째, 긴 실행시간이 걸리는 계산(당신의 작업 프로세스의 알고리즘, 네트워크 요청 등) 의 결과를 (동기적으로) 기다리지 말고, 이벤트 루프와 함께 계산을 실행시키고, 끝났을 때 알림을 받는다. 사실, 일반적으로 브라우저에서 이런 방법으로 일을 하는걸 선택할 필요가 없다. 예를 들면, 동기적인 내장된 기본 sleep 이 없다(이전에 구현된 sleep() 처럼). 대신 setTimeout 으로 sleep을 비동기로 시킬 수 있다.
+
+<sub>Second, you don’t (synchronously) wait for the results of a long-running computation (your own algorithm in a Worker process, a network request, etc.), you carry on with the event loop and let the computation notify you when it is finished. In fact, you usually don’t even have a choice in browsers and have to do things this way. For example, there is no built-in way to sleep synchronously (like the previously implemented sleep()). Instead, setTimeout() lets you sleep asynchronously.</sub>
+
+다음 섹션에서는 결과를 비동기적으로 기다리는 테크닉에 대해 알아본다
+
+<sub>The next section explains techniques for waiting asynchronously for results.</sub>
+
+## 24.3 비동기적으로 결과 받기 (Receiving results asynchronously)
+
+두가지 패턴
+
 Two common patterns for receiving results asynchronously are: events and callbacks.
 
 ### 24.3.1 Asynchronous results via events
