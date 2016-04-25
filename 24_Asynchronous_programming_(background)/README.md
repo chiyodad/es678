@@ -232,13 +232,15 @@ req.onerror = function () {
 req.send(); // 요청을 stack 큐에 추가한다. (Add request to task queue)
 ```
 
-마지막 라인은 요청 시 실
+마지막 라인은 요청을 사실은 수행하지 않고, task 큐에 추가한다. 따라서 당신은 onload와 onerror 를 세팅 전 open 메서드를 나중에 호출할 수 있다. 동일하게 동작하며 자바스크립트의 실행 완료 표현에 알맞다.
 
 <sub>Note that the last line doesn’t actually perform the request, it adds it to the task queue. Therefore, you could also call that method right after open(), before setting up onload and onerror. Things would work the same, due to JavaScript’s run-to-completion semantics.</sub>
 
-#### 24.3.1.1 Implicit requests
+#### 24.3.1.1 암묵적 요청 (Implicit requests)
 
-The browser API IndexedDB has a slightly peculiar style of event handling:
+브라우저 API IndexedDB 는 약간 괴상한 이벤트 핸들링을 가진다.
+
+<sub>The browser API IndexedDB has a slightly peculiar style of event handling:</sub>
 
 ```javascript
 var openRequest = indexedDB.open('test', 1);
@@ -253,7 +255,9 @@ openRequest.onerror = function (error) {
 };
 ```
 
-You first create a request object, to which you add event listeners that are notified of results. However, you don’t need to explicitly queue the request, that is done by open(). It is executed after the current task is finished. That is why you can (and in fact must) register event handlers after calling open().
+먼저 요청 객ㅔ를 만들고 결과 알림을 받기 위한 이벤트 리스너를 추가한다. 하지만 명시적으로 요청을 대기할 필요가 없고, open()으로 종료된다. 그것은 현재 task가 완료 된 뒤 실행된다. 당신은 open을 호출한 뒤 이벤트 핸들러를 등록할 수(실제로 해야 한다) 있다.
+
+<sub>You first create a request object, to which you add event listeners that are notified of results. However, you don’t need to explicitly queue the request, that is done by open(). It is executed after the current task is finished. That is why you can (and in fact must) register event handlers after calling open().</sub>
 
 If you are used to multi-threaded programming languages, this style of handling requests probably looks strange, as if it may be prone to race conditions. But, due to run to completion, things are always safe.
 
