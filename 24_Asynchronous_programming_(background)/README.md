@@ -58,13 +58,13 @@ Error
     at <global> (stack_trace.js:11:1)
 ```
 
-다음에 각각 함수의 종료마다, 스택의 탑 엔트리에서 지워진다. f 가 종료되면 우리는 다시 글로벌 스코프로 돌아가며, 호출 스택은 빈다. 라인 E 에서 리턴하고 스택은 빈다. 그것은 프로그램의 종료를 의미한다.
+다음에 각각 함수의 종료마다, 스택의 탑 엔트리에서 지워진다. f 가 종료되면 우리는 다시 글로벌 스코프로 돌아가며, 호출 스택은 비워진다. 라인 E 에서 리턴하고 스택은 비워진다. 그것은 프로그램의 종료를 의미한다.
 
 <sub>Next, each of the functions terminates and each time the top entry is removed from the stack. After function f is done, we are back in global scope and the call stack is empty. In line E we return and the stack is empty, which means that the program terminates.</sub>
 
 ## 24.2 브라우저 이벤트 루프 (The browser event loop)
 
-심플하게도 각 브라우저는 탭마다 하나의 이벤트 루프 프로세스 로 돌아간다. 이 루프는 task 큐에 의해 공급되는 브라우저에 관련된 일(소위 task 라고 하는) 을 실행한다.
+심플하게도 각 브라우저는 탭마다 하나의 프로세스:이벤트 루프 로 돌아간다. 이 루프는 task 큐에서 주어지는 브라우저에 관련된 일(소위 task 라고 하는) 을 실행한다.
 
 <sub>Simplifyingly, each browser tab runs (in) a single process: the event loop. This loop executes browser-related things (so-called tasks) that it is fed via a task queue. Examples of tasks are:</sub>
 
@@ -311,10 +311,13 @@ readFileFunctional('myfile.txt', { encoding: 'utf8' },
 
 ### 24.3.3 지속 - 통과 스타일 (Continuation-passing style)
 
+콜백을 사용하는 스타일(특히 전에 보여준 기능적인 벙식)은 continuation-passing style (CPS) 이라고 하는데 다음 단계를 명시적으로 파라미터로 보내기 때문이다. 이것은 next 와 when 의 발생을 통해 함수 호출에 더 많은 제어를 제공한다.
 
-The programming style of using callbacks (especially in the functional manner shown previously) is also called continuation-passing style (CPS), because the next step (the continuation) is explicitly passed as a parameter. This gives an invoked function more control over what happens next and when.
+<sub>The programming style of using callbacks (especially in the functional manner shown previously) is also called continuation-passing style (CPS), because the next step (the continuation) is explicitly passed as a parameter. This gives an invoked function more control over what happens next and when.</sub>
 
-The following code illustrates CPS:
+다음 코드는 CPS 를 보여준다.
+
+<sub>The following code illustrates CPS:</sub>
 
 ```javascript
 console.log('A');
@@ -336,13 +339,15 @@ function identity(input, callback) {
 }
 ```
 
-For each step, the control flow of the program continues inside the callback. This leads to nested functions, which are sometimes referred to as callback hell. However, you can often avoid nesting, because JavaScript’s function declarations are hoisted (their definitions are evaluated at the beginning of their scope). That means that you can call ahead and invoke functions defined later in the program. The following code uses hoisting to flatten the previous example.
+각 단계동안 프로그램 제어의 흐름은 콜백 안에서 계속된다. 이건 중첩 함수에 리드되는데 때때로 이는 때때로 콜백 헬로 불려진다. 하지만 자바스크립트의 함수 선언은 호이스트(함수 정의는 반드시 스코프의 처음에 평가된다) 이기에 중첩을 회피할 수 있다. 이 뜻은 프로그램에서 호출 전 함수 정의를 해둔다는걸 의미한다. 다음은 이전 예제를 호이스팅을 사용하여 펼쳐본 코드이다.
+
+<sub>For each step, the control flow of the program continues inside the callback. This leads to nested functions, which are sometimes referred to as callback hell. However, you can often avoid nesting, because JavaScript’s function declarations are hoisted (their definitions are evaluated at the beginning of their scope). That means that you can call ahead and invoke functions defined later in the program. The following code uses hoisting to flatten the previous example.</sub>
 
 ```javascript
 console.log('A');
 identity('B', step2);
 function step2(result2) {
-    // The program continues here
+    // 프로그램은 여기서 계속된다. (The program continues here)
     console.log(result2);
     identity('C', step3);
     console.log('D');
@@ -351,16 +356,29 @@ function step3(result3) {
    console.log(result3);
 }
 console.log('E');
-More information on CPS is given in [3].
 ```
 
-### 24.3.4 Composing code in CPS
-In normal JavaScript style, you compose pieces of code via:
+CPS에 대한 더 많은 정보는 [3](http://www.2ality.com/2012/06/continuation-passing-style.html) 에 있다
 
-Putting them one after another. This is blindingly obvious, but it’s good to remind ourselves that concatenating code in normal style is sequential composition.
-Array methods such as map(), filter() and forEach()
-Loops such as for and while
-The library Async.js provides combinators to let you do similar things in CPS, with Node.js-style callbacks. It is used in the following example to load the contents of three files, whose names are stored in an Array.
+<sub>More information on CPS is given in [3](http://www.2ality.com/2012/06/continuation-passing-style.html).</sub>
+
+### 24.3.4 CPS 구성 코드 (Composing code in CPS)
+
+보통의 자바스크립트 스타일에서 코드 조각은 다음에 의해 구성된다.
+
+<sub>In normal JavaScript style, you compose pieces of code via:</sub>
+
+- 차례로 놓는다. 너무나도 분명하지만, 순차적 구성인 보통 스타일 안의 연결을 떠올리게 하는것이 좋다.
+- 배열 메서드는 map, filter, forEach 등
+- 루프는 for 와 while 등
+
+- <sub>Putting them one after another. This is blindingly obvious, but it’s good to remind ourselves that concatenating code in normal style is sequential composition.</sub>
+- <sub>Array methods such as map(), filter() and forEach()</sub>
+- <sub>Loops such as for and while</sub>
+
+라이브러리 Async.js 는 CPS Node.js 스타일 콜백과 비슷한 CPS 방식의 콤비네이터를 제공한다. 배열에 저장된 이름들을 가진 세개의 파일에서 컨텐츠를 로딩하는 예제에서 사용된다.
+
+<sub>The library Async.js provides combinators to let you do similar things in CPS, with Node.js-style callbacks. It is used in the following example to load the contents of three files, whose names are stored in an Array.</sub>
 
 ```javascript
 var async = require('async');
@@ -370,7 +388,7 @@ async.map(fileNames,
     function (fileName, callback) {
         fs.readFile(fileName, { encoding: 'utf8' }, callback);
     },
-    // Process the result
+    // 결과 처리 (Process the result)
     function (error, textArray) {
         if (error) {
             console.log(error);
@@ -380,17 +398,30 @@ async.map(fileNames,
     });
 ```
 
-### 24.3.5 Pros and cons of callbacks
-Using callbacks results in a radically different programming style, CPS. The main advantage of CPS is that its basic mechanisms are easy to understand. But there are also disadvantages:
+### 24.3.5 콜백의 장점과 단점 (Pros and cons of callbacks)
 
-Error handling becomes more complicated: There are now two ways in which errors are reported – via callbacks and via exceptions. You have to be careful to combine both properly.
-Less elegant signatures: In synchronous functions, there is a clear separation of concerns between input (parameters) and output (function result). In asynchronous functions that use callbacks, these concerns are mixed: the function result doesn’t matter and some parameters are used for input, others for output.
-Composition is more complicated: Because the concern “output” shows up in the parameters, it is more complicated to compose code via combinators.
-Callbacks in Node.js style have three disadvantages (compared to those in a functional style):
+콜백의 결과를 사용하는 CPS는 근본적으로 다른 프로그래밍 스타일이다. CPS의 주요 장점은 기본 메커니즘이 이해하기 쉽다는 것이다. 하지만 단점도 있다.
 
-The if statement for error handling adds verbosity.
-Reusing error handlers is harder.
-Providing a default error handler is also harder. A default error handler is useful if you make a function call and don’t want to write your own handler. It could also be used by a function if a caller doesn’t specify a handler.
+<sub>Using callbacks results in a radically different programming style, CPS. The main advantage of CPS is that its basic mechanisms are easy to understand. But there are also disadvantages:</sub>
+
+- 에러 핸들링이 더욱 복잡해진다: 지금 에러 보고서 두개 - 콜백과 예외를 통해 - 가 있다. 두개의 장점을 조합하는것에 주의해야 한다.
+- 덜 우아한 식별자: 동기 함수에서는 입력(파라미터)과 출력(함수 결과) 의 명확한 구분이 있다. 콜백을 사용하는 비동기 함수에서는, 이런 구분이 혼재되어 있다. 함수의 결과는 중요하지 않고 일부 파라미터는 입력 혹은 출력을 위해 사용된다.
+- 구성이 더욱 복잡해진다: 출력을 파라미터로 표현하는 관심사 때문에 연계를 통한 코드 구성이 더욱 복잡해진다.
+
+- <sub>Error handling becomes more complicated: There are now two ways in which errors are reported – via callbacks and via exceptions. You have to be careful to combine both properly.</sub>
+- <sub>Less elegant signatures: In synchronous functions, there is a clear separation of concerns between input (parameters) and output (function result). In asynchronous functions that use callbacks, these concerns are mixed: the function result doesn’t matter and some parameters are used for input, others for output.</sub>
+- <sub>Composition is more complicated: Because the concern “output” shows up in the parameters, it is more complicated to compose code via combinators.</sub>
+
+Node.js 스타일의 콜백은 세개의 단점을 가진다.(함수형 스타일에 비해))
+
+<sub>Callbacks in Node.js style have three disadvantages (compared to those in a functional style):</sub>
+
+- 에러를 위한 if 문이 중복으로 추가된다
+- 재사용되는 에러 핸들러는 어렵다.
+
+- The if statement for error handling adds verbosity.
+- Reusing error handlers is harder.
+- Providing a default error handler is also harder. A default error handler is useful if you make a function call and don’t want to write your own handler. It could also be used by a function if a caller doesn’t specify a handler.
 
 ## 24.4 먼저 찾아보기 (Looking ahead)
 The next chapter covers Promises and the ES6 Promise API. Promises are more complicated under the hood than callbacks. In exchange, they bring several significant advantages and eliminate most of the aforementioned cons of callbacks.
