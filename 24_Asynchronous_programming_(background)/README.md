@@ -58,13 +58,13 @@ Error
     at <global> (stack_trace.js:11:1)
 ```
 
-다음에 각각 함수의 종료마다, 스택의 탑 엔트리에서 지워진다. f 가 종료되면 우리는 다시 글로벌 스코프로 돌아가며, 호출 스택은 빈다. 라인 E 에서 리턴하고 스택은 빈다. 그것은 프로그램의 종료를 의미한다.
+다음에 각각 함수의 종료마다, 스택의 탑 엔트리에서 지워진다. f 가 종료되면 우리는 다시 글로벌 스코프로 돌아가며, 호출 스택은 비워진다. 라인 E 에서 리턴하고 스택은 비워진다. 그것은 프로그램의 종료를 의미한다.
 
 <sub>Next, each of the functions terminates and each time the top entry is removed from the stack. After function f is done, we are back in global scope and the call stack is empty. In line E we return and the stack is empty, which means that the program terminates.</sub>
 
 ## 24.2 브라우저 이벤트 루프 (The browser event loop)
 
-심플하게도 각 브라우저는 탭마다 하나의 이벤트 루프 프로세스 로 돌아간다. 이 루프는 task 큐에 의해 공급되는 브라우저에 관련된 일(소위 task 라고 하는) 을 실행한다.
+심플하게도 각 브라우저는 탭마다 하나의 프로세스:이벤트 루프 로 돌아간다. 이 루프는 task 큐에서 주어지는 브라우저에 관련된 일(소위 task 라고 하는) 을 실행한다.
 
 <sub>Simplifyingly, each browser tab runs (in) a single process: the event loop. This loop executes browser-related things (so-called tasks) that it is fed via a task queue. Examples of tasks are:</sub>
 
@@ -339,7 +339,7 @@ function identity(input, callback) {
 }
 ```
 
-각 단계동안 프로그램 제어의 흐름은 콜백 안에서 계속된다. 이건 중첩 함수에 리드되는데 때때로 이는 때때로 콜백 헬로 불려진다. 하지만 자바스크립트의 함수 선언은 호이스트(함수 정의는 반드시 스코프의 처음에 평가된다) 이기에 중첩을 회피할 수 있다. 이 뜻은 프로그램에서 호출 전 함수 정의를 해둔다는걸 의미한다. 다음 코드는 이전 예제를 호이스팅을 사용하여 폈다.
+각 단계동안 프로그램 제어의 흐름은 콜백 안에서 계속된다. 이건 중첩 함수에 리드되는데 때때로 이는 때때로 콜백 헬로 불려진다. 하지만 자바스크립트의 함수 선언은 호이스트(함수 정의는 반드시 스코프의 처음에 평가된다) 이기에 중첩을 회피할 수 있다. 이 뜻은 프로그램에서 호출 전 함수 정의를 해둔다는걸 의미한다. 다음은 이전 예제를 호이스팅을 사용하여 펼쳐본 코드이다.
 
 <sub>For each step, the control flow of the program continues inside the callback. This leads to nested functions, which are sometimes referred to as callback hell. However, you can often avoid nesting, because JavaScript’s function declarations are hoisted (their definitions are evaluated at the beginning of their scope). That means that you can call ahead and invoke functions defined later in the program. The following code uses hoisting to flatten the previous example.</sub>
 
@@ -364,14 +364,21 @@ CPS에 대한 더 많은 정보는 [3](http://www.2ality.com/2012/06/continuatio
 
 ### 24.3.4 CPS 구성 코드 (Composing code in CPS)
 
-보통의 자바스크립트 스타일에서 코드 조각을 구성하는
+보통의 자바스크립트 스타일에서 코드 조각은 다음에 의해 구성된다.
 
-In normal JavaScript style, you compose pieces of code via:
+<sub>In normal JavaScript style, you compose pieces of code via:</sub>
 
-Putting them one after another. This is blindingly obvious, but it’s good to remind ourselves that concatenating code in normal style is sequential composition.
-Array methods such as map(), filter() and forEach()
-Loops such as for and while
-The library Async.js provides combinators to let you do similar things in CPS, with Node.js-style callbacks. It is used in the following example to load the contents of three files, whose names are stored in an Array.
+- 차례로 놓는다. 너무나도 분명하지만, 순차적 구성인 보통 스타일 안의 연결을 떠올리게 하는것이 좋다.
+- 배열 메서드는 map, filter, forEach 등
+- 루프는 for 와 while 등
+
+- <sub>Putting them one after another. This is blindingly obvious, but it’s good to remind ourselves that concatenating code in normal style is sequential composition.</sub>
+- <sub>Array methods such as map(), filter() and forEach()</sub>
+- <sub>Loops such as for and while</sub>
+
+라이브러리 Async.js 는 CPS Node.js 스타일 콜백과 비슷한 CPS 방식의 콤비네이터를 제공한다.
+
+<sub>The library Async.js provides combinators to let you do similar things in CPS, with Node.js-style callbacks. It is used in the following example to load the contents of three files, whose names are stored in an Array.</sub>
 
 ```javascript
 var async = require('async');
