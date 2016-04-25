@@ -376,7 +376,7 @@ CPS에 대한 더 많은 정보는 [3](http://www.2ality.com/2012/06/continuatio
 - <sub>Array methods such as map(), filter() and forEach()</sub>
 - <sub>Loops such as for and while</sub>
 
-라이브러리 Async.js 는 CPS Node.js 스타일 콜백과 비슷한 CPS 방식의 콤비네이터를 제공한다.
+라이브러리 Async.js 는 CPS Node.js 스타일 콜백과 비슷한 CPS 방식의 콤비네이터를 제공한다. 배열에 저장된 이름들을 가진 세개의 파일에서 컨텐츠를 로딩하는 예제에서 사용된다.
 
 <sub>The library Async.js provides combinators to let you do similar things in CPS, with Node.js-style callbacks. It is used in the following example to load the contents of three files, whose names are stored in an Array.</sub>
 
@@ -388,7 +388,7 @@ async.map(fileNames,
     function (fileName, callback) {
         fs.readFile(fileName, { encoding: 'utf8' }, callback);
     },
-    // Process the result
+    // 결과 처리 (Process the result)
     function (error, textArray) {
         if (error) {
             console.log(error);
@@ -398,17 +398,30 @@ async.map(fileNames,
     });
 ```
 
-### 24.3.5 Pros and cons of callbacks
-Using callbacks results in a radically different programming style, CPS. The main advantage of CPS is that its basic mechanisms are easy to understand. But there are also disadvantages:
+### 24.3.5 콜백의 장점과 단점 (Pros and cons of callbacks)
 
-Error handling becomes more complicated: There are now two ways in which errors are reported – via callbacks and via exceptions. You have to be careful to combine both properly.
-Less elegant signatures: In synchronous functions, there is a clear separation of concerns between input (parameters) and output (function result). In asynchronous functions that use callbacks, these concerns are mixed: the function result doesn’t matter and some parameters are used for input, others for output.
-Composition is more complicated: Because the concern “output” shows up in the parameters, it is more complicated to compose code via combinators.
-Callbacks in Node.js style have three disadvantages (compared to those in a functional style):
+콜백의 결과를 사용하는 CPS는 근본적으로 다른 프로그래밍 스타일이다. CPS의 주요 장점은 기본 메커니즘이 이해하기 쉽다는 것이다. 하지만 단점도 있다.
 
-The if statement for error handling adds verbosity.
-Reusing error handlers is harder.
-Providing a default error handler is also harder. A default error handler is useful if you make a function call and don’t want to write your own handler. It could also be used by a function if a caller doesn’t specify a handler.
+<sub>Using callbacks results in a radically different programming style, CPS. The main advantage of CPS is that its basic mechanisms are easy to understand. But there are also disadvantages:</sub>
+
+- 에러 핸들링이 더욱 복잡해진다: 지금 에러 보고서 두개 - 콜백과 예외를 통해 - 가 있다. 두개의 장점을 조합하는것에 주의해야 한다.
+- 덜 우아한 식별자: 동기 함수에서는 입력(파라미터)과 출력(함수 결과) 의 명확한 구분이 있다. 콜백을 사용하는 비동기 함수에서는, 이런 구분이 혼재되어 있다. 함수의 결과는 중요하지 않고 일부 파라미터는 입력 혹은 출력을 위해 사용된다.
+- 구성이 더욱 복잡해진다: 출력을 파라미터로 표현하는 관심사 때문에 연계를 통한 코드 구성이 더욱 복잡해진다.
+
+- <sub>Error handling becomes more complicated: There are now two ways in which errors are reported – via callbacks and via exceptions. You have to be careful to combine both properly.</sub>
+- <sub>Less elegant signatures: In synchronous functions, there is a clear separation of concerns between input (parameters) and output (function result). In asynchronous functions that use callbacks, these concerns are mixed: the function result doesn’t matter and some parameters are used for input, others for output.</sub>
+- <sub>Composition is more complicated: Because the concern “output” shows up in the parameters, it is more complicated to compose code via combinators.</sub>
+
+Node.js 스타일의 콜백은 세개의 단점을 가진다.(함수형 스타일에 비해))
+
+<sub>Callbacks in Node.js style have three disadvantages (compared to those in a functional style):</sub>
+
+- 에러를 위한 if 문이 중복으로 추가된다
+- 재사용되는 에러 핸들러는 어렵다.
+
+- The if statement for error handling adds verbosity.
+- Reusing error handlers is harder.
+- Providing a default error handler is also harder. A default error handler is useful if you make a function call and don’t want to write your own handler. It could also be used by a function if a caller doesn’t specify a handler.
 
 ## 24.4 먼저 찾아보기 (Looking ahead)
 The next chapter covers Promises and the ES6 Promise API. Promises are more complicated under the hood than callbacks. In exchange, they bring several significant advantages and eliminate most of the aforementioned cons of callbacks.
