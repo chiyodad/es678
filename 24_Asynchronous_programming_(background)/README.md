@@ -322,16 +322,17 @@ Node.js 스타일의 콜백은 세개의 단점을 가진다.(함수형 스타�
 
 - 에러를 위한 if 문이 중복으로 추가된다
 - 재사용되는 에러 핸들러는 어렵다.
+- 제공되는 기본 에러 핸들러를 제공하는 것도 어렵다. 함수 호출을 하면서 자신만의 핸들러를 작성하지 않을 때 기본 핸들러는 유용하다. 호출자가 특정 핸들러를 하지 않을 경우 함수로서 사용될 수 있다.
 
-- The if statement for error handling adds verbosity.
-- Reusing error handlers is harder.
-- Providing a default error handler is also harder. A default error handler is useful if you make a function call and don’t want to write your own handler. It could also be used by a function if a caller doesn’t specify a handler.
+## 24.4 앞서 찾아보기
 
-## 24.4 먼저 찾아보기
-The next chapter covers Promises and the ES6 Promise API. Promises are more complicated under the hood than callbacks. In exchange, they bring several significant advantages and eliminate most of the aforementioned cons of callbacks.
+다음 장에서는 Promise 와 ES6 Promise API 를 포함한다. Promise 는 콜백보다 더 복잡하다. 그 대신 여러 중요한 이점을 가져다주고, 콜백의 단점을 대부분 제거할 수 있다.
+
 
 ## 24.5 추가로 읽을 것
 
-[1] “Help, I’m stuck in an event-loop” by Philip Roberts (video).
-[2] “Event loops” in the HTML Specification.
-[3] “Asynchronous programming and continuation-passing style in JavaScript” by Axel Rauschmayer.
+[1] [“Help, I’m stuck in an event-loop” by Philip Roberts](video)(https://vimeo.com/96425312).
+
+[2] [“Event loops” in the HTML Specification.](https://html.spec.whatwg.org/multipage/webappapis.html#event-loops)
+
+[3] [“Asynchronous programming and continuation-passing style in JavaScript” by Axel Rauschmayer.](http://www.2ality.com/2012/06/continuation-passing-style.html)
