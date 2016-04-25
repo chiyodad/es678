@@ -1,55 +1,66 @@
-# 20. Typed Arrays
-
+# 20. 타입화 배열(Typed Arrays)
 ## 20.1 개요
-타입 어레이는 이진 데이터를 다루기 위한 ES6 API 이다.
-Typed Arrays are an ECMAScript 6 API for handling binary data.
+타입화 배열은 이진 데이터를 다루기 위한 ES6 API 이다.
 
-코드 예제:
+예제:
 
 ```javascript
 const typedArray = new Uint8Array([0,1,2]);
 console.log(typedArray.length); // 3
 typedArray[0] = 5;
 const normalArray = [...typedArray]; // [5,1,2]
-// The elements are stored in typedArray.buffer.
-// Get a different view on the same data:
+// 배열의 요소들은 typedArray.buffer 에 저장 된다.
+// 동일한 데이터를 다른 뷰를 통해서도 볼 수 있다. 
 const dataView = new DataView(typedArray.buffer);
 console.log(dataView.getUint8(0)); // 5
 ```
 
 Instances of `ArrayBuffer` store the binary data to be processed. Two kinds of views are used to access the data:
+`ArrayBuffer` 인스턴스는 처리를 위해 이진 데이터를 저장한다. 데이터에 접근할 수 있는 View에는 다음과 같이 2가지가 있다. 
 
 * Typed Arrays (`Uint8Array, Int16Array, Float32Array,` etc.) interpret the ArrayBuffer as an indexed sequence of elements of a single type.
+* 타입화 배열(`Uint8Array`, `Int16Array`, `Float32Array` 등등)은 ArrayBuffer 를 싱글 타입의 요소의 인덱스 시퀀스로 번역한다.
 * Instances of DataView let you access data as elements of several types (`Uint8, Int16, Float32,` etc.), at any byte offset inside an ArrayBuffer.
+* DataView 인스턴스는 ArrayBuffer 안에 있는 어떤 바이트 오프셋에서도 몇몇 타입(`Uint8`, `Int16`, `Float32` 등등)의 요소처럼 데이터에 접근 가능하게 해준다. 
 
 The following browser APIs support Typed Arrays ([details are mentioned in a dedicated section](http://exploringjs.com/es6/ch_typed-arrays.html#sec_browser-apis-supporting-typed-arrays)):
+아래의 브라우저 API는 타입화 배열을 지원한다. ([자세한 내용은 각 섹션에서 살펴 볼 것.](http://exploringjs.com/es6/ch_typed-arrays.html#sec_browser-apis-supporting-typed-arrays)):
 
 *   File API
 *   XMLHttpRequest
 *   Fetch API
 *   Canvas
 *   WebSockets
-*   And more
+*   기타 등등
 
-## 20.2 Introduction
+## 20.2 소개
 
 Much data one encounters on the web is text: JSON files, HTML files, CSS files, JavaScript code, etc. For handling such data, JavaScript’s built-in string data type works well. However, until a few years ago, JavaScript was ill-equipped to handle binary data. On 8 February 2011, [the Typed Array Specification 1.0](https://www.khronos.org/registry/typedarray/specs/1.0/) standardized facilities for handling binary data. By now, Typed Arrays are [well supported](http://caniuse.com/#feat=typedarrays) by various engines. With ECMAScript 6, they became part of the core language and gained many methods in the process that were previously only available for Arrays (`map()`, `filter()`, etc.).
 
-The main uses cases for Typed Arrays are:
+웹에서 마주치는 많은 데이터(JSON 파일, HTML 파일, CSS 파일, 자바스크립트 코드 등)는 텍스트이다. 이런 데이터를 다루는데 자바스크립트 내장(built-in) 스트링 데이터 타입은 충분히 쓸만하다. 그러나 몇 년 전만 해도 자바스크립트로 이진 데이터를 다루기는 쉽지 않았다. 2011년 8월, 이진 데이터를 위한 [타입화 배열 스펙 1.0](https://www.khronos.org/registry/typedarray/specs/1.0/)이 표준화 되었다. 이제는 타입화 배열를 다양 엔진에서 [제대로 지원한다](http://caniuse.com/#feat=typedarrays). ES6에 이르러 타입화 배열은 언어 중심(core)의 한 부분이 되었고, 이전에는 배열에서만 사용 가능했던 많은 메소드(`map()`, `filter()` 등등)도 얻게 되었다.
 
+The main uses cases for Typed Arrays are:
+다음은 타입화 배열의 주 사용 예시이다.
 *   Processing binary data: manipulating image data in HTML Canvas elements, parsing binary files, handling binary network protocols, etc.
+*   이진 데이터 처리 : HTML Canvas 요소에 쓰이는 이미지 데이터 조작, 이진 데이터 파싱, 이진 네트워크 프로토콜 처리 등.
 *   Interacting with native APIs: Native APIs often receive and return data in a binary format, which you could neither store nor manipulate well in traditional JavaScript. That meant that whenever you were communicating with such an API, data had to be converted from JavaScript to binary and back, for every call. Typed Arrays eliminate this bottleneck. One example of communicating with native APIs is WebGL, for which Typed Arrays were initially created. Section “[History of Typed Arrays](http://www.html5rocks.com/en/tutorials/webgl/typed_arrays/#toc-history)” of the article “[Typed Arrays: Binary Data in the Browser](http://www.html5rocks.com/en/tutorials/webgl/typed_arrays/#toc-history)” (by Ilmari Heikkinen for HTML5 Rocks) has more information.
+*   네이티브 API와의 통신 : 네이티브 API는 종종 이진 포맷으로 데이터를 주고 받는데, 기존의 자바스크립트에서는 이를 저장은 물론 조작도 할 수 없었다. 이는 어떤 API와 통신을 하든 호출 시마다 데이터를 자바스크립트에서 바이너리로, 그리고 그 반대로 변환해야 했다는 의미이다. 타입화 배열은 이런 병목 현상을 없애준다. 네이티브 API 중 WebGL은 타입화 배열이 만들어진 한 이유이다. 더 많은 정보는 “[타입화 배열:브라우저에서의 이진 데이터](http://www.html5rocks.com/en/tutorials/webgl/typed_arrays/#toc-history)”(Ilmari Heikkinen, HTML5 Rocks)라는 글의 “[타입화 배열의 역사](http://www.html5rocks.com/en/tutorials/webgl/typed_arrays/#toc-history)” 섹션에서 찾아 볼 수 있다. 
 
 Two kinds of objects work together in the Typed Array API:
-
+타입화 배열 API에서는 다음 두 가지 오브젝트가 함께 동작한다.
 *   Buffers: Instances of `ArrayBuffer` hold the binary data.
+*   버퍼(Buffers) : 이진 데이터를 담고 있는 `ArrayBuffer`의 인스턴스
 *   Views: provide the methods for accessing the binary data. There are two kinds of views:
     *   An instance of a Typed Array constructor (`Uint8Array`, `Float64Array`, etc.) works much like a normal Array, but only allows a single type for its elements and doesn’t have holes.
     *   An instance of `DataView` lets you access data at any byte offset in the buffer, and interprets that data as one of several types (`Uint8`, `Float64`, etc.).
+*  뷰(Views): 이진 데이터 접근 메소드를 제공한다. 뷰에는 두 가지가 있다.
+    *   타입화 배열 생성자(`Uint8Array`, `Float64Array` 등등)의 인스턴스는 일반 배열과 매우 흡사하게 동작하지만, 오직 한 가지 타입의 요소만 허용하고 빈 요소는 갖지 않는다.
+    *   `DataView` 버퍼 내 어느 바이트 오프셋에 있는 데이터에도 접근 가능하게 해주고, 몇몇 데이터 타입(`Uint8`, `Float64` 등)으로 변환해 준다.
 
 This is a diagram of the structure of the Typed Array API (notable: all Typed Arrays have a common superclass):
+다음은 타입화 배열 API 구조를 도식화한 다이어그램이다.(주의: 모든 타입화 배열은 공통 superclass 를 갖는다.)
 
-[TypedArray](http://exploringjs.com/es6/images/typed-arrays----typed_arrays_class_diagram.jpg)
+![TypedArray](http://exploringjs.com/es6/images/typed-arrays----typed_arrays_class_diagram.jpg)
 
 ### 20.2.1Element types
 
