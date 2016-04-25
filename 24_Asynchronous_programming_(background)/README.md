@@ -265,14 +265,20 @@ openRequest.onerror = function (error) {
 
 #### 24.3.1.2 이벤트는 단일 결과로 작동하지 않는다 (Events don’t work well for single results)
 
+만일 결과를 여러번 받을 때 이런 결과 비동기 결과 계산 스타일은 OK 다. 하지만 만일 단지 하나의 결과를 받을 경우 중복이 문제가 된다. 이런 경우에는 콜백이 인기가 있다.
 
+<sub>This style of handling asynchronously computed results is OK if you receive results multiple times. If, however, there is only a single result then the verbosity becomes a problem. For that use case, callbacks have become popular.</sub>
 
-This style of handling asynchronously computed results is OK if you receive results multiple times. If, however, there is only a single result then the verbosity becomes a problem. For that use case, callbacks have become popular.
+### 24.3.2 콜백을 통한 비동기 결과 (Asynchronous results via callbacks)
 
-### 24.3.2 Asynchronous results via callbacks
-If you handle asynchronous results via callbacks, you pass callback functions as trailing parameters to asynchronous function or method calls.
+만일 콜백을 통한 비동기 핸들링을 할 경우, 당신은 비동기 함수 혹은 메서드 호출에 콜백 함수 파라미터를 전달한다.
 
-The following is an example in Node.js. We read the contents of a text file via an asynchronous call to fs.readFile():
+<sub>If you handle asynchronous results via callbacks, you pass callback functions as trailing parameters to asynchronous function or method calls.</sub>
+
+다음은 Node.js 에 예저 코드이다. 비동기적인 fs.readFile 호출로 텍스트 파일의 컨텐트를 읽는다.
+
+<sub>The following is an example in Node.js. We read the contents of a text file via an asynchronous call to fs.readFile():</sub>
+
 ```javascript
 // Node.js
 fs.readFile('myfile.txt', { encoding: 'utf8' },
@@ -283,9 +289,14 @@ fs.readFile('myfile.txt', { encoding: 'utf8' },
         console.log(text);
     });
 ```
-If readFile() is successful, the callback in line A receives a result via the parameter text. If it isn’t, the callback gets an error (often an instance of Error or a sub-constructor) via its first parameter.
 
-The same code in classic functional programming style would look like this:
+readFile()이 성공하면, 라인 A 콜백은 파라미터 텍스트를 통해 결과를 받는다. 그렇지 않으면 콜백은 첫번째 인자를 통해 에러(보통, Error 혹은 에러를 상속한 생성자의 인스턴스) 를 얻는다.
+
+<sub>If readFile() is successful, the callback in line A receives a result via the parameter text. If it isn’t, the callback gets an error (often an instance of Error or a sub-constructor) via its first parameter.</sub>
+
+고전적인 함수형 프로그래밍 스타일에서 동일한 코드는 다음과 같다.
+
+<sub>The same code in classic functional programming style would look like this:</sub>
 
 ```javascript
 // Functional
@@ -298,7 +309,9 @@ readFileFunctional('myfile.txt', { encoding: 'utf8' },
     });
 ```
 
-### 24.3.3 Continuation-passing style
+### 24.3.3 지속 - 통과 스타일 (Continuation-passing style)
+
+
 The programming style of using callbacks (especially in the functional manner shown previously) is also called continuation-passing style (CPS), because the next step (the continuation) is explicitly passed as a parameter. This gives an invoked function more control over what happens next and when.
 
 The following code illustrates CPS:
