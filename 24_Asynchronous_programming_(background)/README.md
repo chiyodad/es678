@@ -175,7 +175,7 @@ Second
 </script>
 ```
 
-여기서 온라인으로 시도해볼 수 있다. (http://rauschma.github.io/async-examples/blocking.html)
+<img src="./leanpub_github-alt.png" height="40"> 여기서 온라인으로 시도해볼 수 있다. (http://rauschma.github.io/async-examples/blocking.html)
 
 <sub>You can try out the code online. (http://rauschma.github.io/async-examples/blocking.html)</sub>
 
@@ -232,7 +232,7 @@ req.onerror = function () {
 req.send(); // 요청을 stack 큐에 추가한다. (Add request to task queue)
 ```
 
-마지막 라인
+마지막 라인은 요청 시 실
 
 <sub>Note that the last line doesn’t actually perform the request, it adds it to the task queue. Therefore, you could also call that method right after open(), before setting up onload and onerror. Things would work the same, due to JavaScript’s run-to-completion semantics.</sub>
 
