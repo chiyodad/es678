@@ -396,13 +396,17 @@ The spread operator lets you convert a Map to an Array of pairs:
 [ [ true, 7 ], [ { foo: 3 }, [ 'abc' ] ] ]
 ```
 The Map constructor lets you convert an Array of pairs to a Map:
+맵 생성자는 짝의 배열을 맵으로 전환할 수 있게 해준다:
 ```javascript
 > new Map([[true, 7], [{foo: 3}, ['abc']]])
 Map {true => 7, Object {foo: 3} => ['abc']}
 ```
+
 #### 19.2.8.2 The conversion to and from JSON
+JSON으로, 으로부터 전환
 
 Let’s use this knowledge to convert any Map with JSON-compatible data to JSON and back:
+JSON-호환되는 데이터를 가진 아무런 맵을 JSON으로, 다시 맵으로 전환하게 위해 이 지식을 이용하자.:
 ```javascript
 function mapToJson(map) {
     return JSON.stringify([...map]);
@@ -412,6 +416,7 @@ function jsonToMap(jsonStr) {
 }
 ```
 The following interaction demonstrates how these functions are used:
+아래의 상호작용은 어떻게 함수들이 이용되는지를 보여준다:
 ```javascript
 > const myMap = new Map().set(true, 7).set({foo: 3}, ['abc']);
 
@@ -421,12 +426,18 @@ The following interaction demonstrates how these functions are used:
 > jsonToMap('[[true,7],[{"foo":3},["abc"]]]')
 Map {true => 7, Object {foo: 3} => ['abc']}
 ```
+
 ### 19.2.9 String Maps as JSON via objects
+겍체를 통한 JSON 문자 맵 ????????????
 
 Whenever a Map only has strings as keys, you can convert it to JSON by encoding it as an object. Let’s examine first how to achieve that encoding.
+맵이 문자열로만 된 키를 가졌을 때에는, 이를 object처럼 인코딩하여 JSON으로 전환할 수 있다. 어떻게 인코딩이 이루어지는지 먼저 보자.
+
 #### 19.2.9.1 Converting a string Map to and from an object
+객체로, 객체로부터 문자열 맵 전환
 
 The following two function convert string Maps to and from objects:
+아래의 두 함수는 문자열맵을 객체로, 객체로부터 문자열 맵으로 전환한다.:
 ```javascript
 function strMapToObj(strMap) {
     const obj = Object.create(null);

@@ -88,30 +88,61 @@ tagFunction`Hello ${firstName} ${lastName}!`
 tagFunction(['Hello ', ' ', '!'], firstName, lastName)
 ```
 
-따라서, 역 따옴표로 둘러쌓인 컨텐트 이전에 나오는 이름은 호출 될 함수(태그 함수)의 이름이다. 이 테그 함수는 두 종류의 데이터를 받는다.
-‘Hello’ 와 같은 템플릿 문자열.
-firstName (${}로 구분된) 치환자. 치환자는 어떤 표현도 될 수 있다.
-템플릿 문자열 정적으로 알려진다. (컴플릿 시간) 치환자는 오직 런타입때 알려진다. 태그 함수는 그들의 변수로 원하는 바를 할 수 있다.: 이것은 템플릿 문자열을 완전히 무시 할 수 있고, 다른 어떤 타입의 값으로 반환할 수 있다.
+따라서, 역 따옴표로 둘러쌓인 컨텐트 이전에 나오는 이름은 호출 될 함수(태그 함수)의 이름이다. 이 태그 함수는 두 종류의 데이터를 받는다.
+* 'Hello' 와 같은 템플릿 문자열.
+* firstName (${}로 구분된) 치환자. 치환자는 어떤 표현도 될 수 있다.
 
-태그드 템플릿 리터럴 사용예
-태그드 템플릿 리터럴은 작은 노력으로 커스톰 임베디드 서브 랭귀지(때때로 이것은 도메인 특화 언어라고 불린다.)를 구현을 허용한다. 왜냐하면 자바스크립트는 너를 위한 파싱을 많이 한다. 너는 단지 결과를 받는 함수를 구현 해야 한다.
+템플릿 문자열 정적(컴플릿 시간)으로 알려져 있고, 치환자는 오직 런타입때 알려진다. 태그 함수는 그 변수로 원하는 바를 할 수 있다.: 이것은 템플릿 문자열을 완전히 무시 할 수 있고, 다른 어떤 타입의 값으로 반환할 수 있다.
 
-예제를 봐라. 어떤건 템플릿 리터럴의 원래 제안에서 영감을 받았다. which refers to them via their old name, quasi-literals.
+추가적으로 태그 함수는 각 템플릿 문자열의 두가지 버전을 얻는다.:
+* 역슬래시 안의 "raw" 버전은 해석되지 않는다. (`\n`는 `\\n`이 된다. 문자열의 길이는 2)
+* 역슬래시 안의 "cooked" 버전은 특별하다. (`\n`는 줄바꿈이 있는 문자열이 된다.)
 
-Raw String
-ES6은 백 슬래시가 아무 의미가 없는 String.raw 태그 함수를 포함하고 있다.
+String.raw는 아래처럼 수행된다.:
+```javascript
+> String.raw`\n` === '\\n'
+true
+```
+
+## 8.3 태그드 템플릿 리터럴 사용예
+
+ 자바스크립트는 당신을 위한 파싱을 수행하기 때문에 태그드 템플릿 리터럴은 작은 노력으로 커스톰 임베디드 서브 랭귀지(때때로 이것은 도메인 특화 언어라고 불린다.)를 구현하는 것을 가능하게 한다. 단지 결과를 받는 함수를 구현 해야 한다.
+
+예제를 봐라. 어떤건 템플릿 리터럴의 "the original proposal"에서 영감을 받았다. 오래된 이름인 quasi-literals를 통해 그것들을 참고 할 수 있다.
+
+### 8.3.1 Raw 문자열
+
+ES6은 역슬래시가 아무 의미가 없는 String.raw 태그 함수를 포함하고 있다.
+```javascript
 const str = String.raw`This is a text
 with multiple lines.
 Escapes are not interpreted,
 \n is not a newline.`;
+```
 
-쉘 커맨드
+역슬래시를 가진 문자열 생성이 필요할때 유용하다.
+예를 들면:
+
+```javascript
+function createNumberRegExp(english) {
+    const PERIOD = english ? String.raw`\.`; // (A)
+    return new RegExp(`[0-9]+(${PERIOD}[0-9]+)?`);
+}
+```
+줄 A에서 String.raw는 정규표현식에서 역슬래시를 쓸 수 있게 한다. 일반 문자열에서 두번 이스케이프 해야 한다. 첫번째 정규표현식을 위한 점 이스케이프가 필요하다. 두번째 문자 리터럴을 위한 역슬래시 이스케이프가 필요하다.
+
+### 8.3.2 쉘 커맨드
+```javascript
 const proc = sh`ps ax | grep ${pid}`;
+```
 
-비트 스트링
+### 8.3.3 바이트 문자열
+```javascript
 const buffer = bytes`455336465457210a`;
+```
 
-HTTP 요청
+### 8.3.4 HTTP 요청
+```javascript
 POST`http://foo.org/bar?a=${a}&b=${b}
      Content-Type: application/json
      X-Credentials: ${credentials}
@@ -120,13 +151,16 @@ POST`http://foo.org/bar?a=${a}&b=${b}
        "bar": ${bar}}
      `
      (myOnReadyStateChangeHandler);
+```
 
-더 강력해진 정규 표현식
+### 8.3.5 더 강력해진 정규 표현식
 
-Steven Levithan는 태그드 템플릿 리터럴이 그의 정규표현식 라이브러리 XRegExp에서 사용되어진 방법의 예제를 주고 있다.
-너가 정규 표현식을 가지고 일한다면, XRegExp를 강력히 추천한다. 너는 많은 발전된 기능을 얻을 수 있다. 그러나 그것들은 생성 시에 약간의 성능상 불이익이 있다. 왜냐하면 XRegExp은 그것의 입력을 기존의 정규표현식으로 컴파일 하기 때문이다.
+Steven Levithan는 태그드 템플릿 리터럴이 그의 정규표현식 라이브러리 XRegExp에서 어떻게 사용되어지는 것에 대한 예제를 주고 있다.
+
+만약 정규 표현식을 가지고 일한다면, XRegExp를 강력히 추천한다. 당신은 많은 발전된 기능을 얻을 수 있다. 그러나 그것들은 생성 시에 한번 약간의 성능상 불이익이 있다. 왜냐하면 XRegExp은 그것의 입력을 기존의 정규표현식으로 컴파일 하기 때문이다.
 
 태그드 템플릿을 사용하지 않는다면, 너는 코드는 아래와 같을 것이다.
+```javascript
 var parts = '/2015/10/Page.html'.match(XRegExp(
   '^ # match at start of string only \n' +
   '/ (?<year> [^/]+ ) # capture top dir name as year \n' +
@@ -136,10 +170,12 @@ var parts = '/2015/10/Page.html'.match(XRegExp(
 ));
 
 console.log(parts.year); // 2015
+```
 
-우리는 XRegExp가 제공된 이름 있는 그룹(year, month, title)과x 플래그를 볼 수 있다.  그 플래그가 있으면 대부분의 화이트스페이스를 무시하고 주석을 삽입 할 수 있다.
-문자열 리터럴이 여기서 잘 동작하지 않는 두가지 이유가 있다. 첫째는 우리는 모든 정규표현식은 문자열 리터럴의 특수문자 처리를 위한 백슬래쉬가 두번 쓴 정규표현식 형태를 사용해야 한다. 둘째로 다중 라인처리가 성가시다. 추가적인문자들 대신에 너는 아마도 라인 마지막에 백슬래쉬를 쓸 것이다. 그러나 그것들은 다루기 힘들고 너는 여전히  \n을 통해 새로운 라인을 나타내야 한다. 이 두가지 문제들로 태그드 템플릿을 사용해라.
+XRegExp가 이름 있는 그룹(year, month, title)과x 플래그를 제공하는것을 볼 수 있다. 그 플래그가 있으면 대부분의 공백을 무시하고 주석을 삽입 할 수 있다.
+문자열 리터럴이 여기서 잘 동작하지 않는 두가지 이유가 있다. 첫째는 우리는 모든 정규표현식은 문자열 리터럴의 백슬래시 처리를 위한 정규표현식에 백슬래쉬가 두번 쳐야 한다. 둘째로 멀티 라인처리가 성가시다. 추가적인문자들 대신에 아마도 라인 마지막에 백슬래쉬를 쓸 수 있지만 그것들은 다루기 힘들고 여전히 \n을 통해 명시적으로 줄바꿈을 추가해야 한다. 이 두가지 문제는 태그드 템플릿통해 떨쳐버릴 수 있다.
 
+```javascript
 var parts = '/2015/10/Page.html'.match(XRegExp.rx`
     ^ # match at start of string only
     / (?<year> [^/]+ ) # capture top dir name as year
@@ -147,21 +183,27 @@ var parts = '/2015/10/Page.html'.match(XRegExp.rx`
     / (?<title> [^/]+ ) # capture base name as title
     \.html? $ # .htm or .html file ext at end of path
 `);
+```
 
-태그드 탬플릿은 또한 우리에게 ${v}을 통해 v값을 삽입할수 있게 한다. 나는 정규표현식 라이브러리에 문자열을 이스케이프 하고 정규표현식 축약어를 삽입하는 것을 기대하고 있다.
+태그드 탬플릿은 또한 ${v}을 통해 v값을 삽입할수 있게 한다. 나는 정규표현식 라이브러리에 문자열을 이스케이프 하고 정규표현식 축약어를 삽입하는 것을 기대하고 있다.
 
+```javascript
 var str   = 'really?';
 var regex = XRegExp.rx`(${str})*`;
+```
 
-이것은 아래에 해당 될 것이다.
-
+이것은 아래와 같다.
+```javascript
 var regex = XRegExp.rx`(really\?)*`;
+```
 
-쿼리 언어
+### 8.3.6 질의어
+
 예를 들면:
+```javascript
 $`a.${className}[href=~'//${domain}/']`
-
-이 돔 쿼리는 모든 a 태그와 css class 가 className이고, url이 주어진 domain인 것을 찾는다. 이 태그 함수 $는 인자들은 정확하게 이스케이프 하고, 문자열 연결 보다 더 안전한 접근을 보장한다.
+```
+이 돔 쿼리는 css class 가 className이고, url이 주어진 domain인 모든 a 태그를 찾는다. 이 태그 함수 $는 인자들은 정확하게 이스케이프 하고, 문자열 연결 보다 더 안전한 접근을 보장한다.
 React JSX를 통한 태그드 템플릿
 페이스북 리엑트는 “사용자 인터페이스를 구축하는 자바스크립트 라이브러리” 이다. 이것은 추가적인 언어 확장인 JSX를 가진다. JSX는 너가 유저인터페이스를 위한 버추얼돔 트리를 만들 수 있게 한다. 이 확장은 너의 코드를 더 간결하게 하지만 이것은 비표준이고 다른 자바스크립트 생태계를 호환성을 파괴한다.
 t7.js 라이브러리는 JSX와 다른 대안을 제공한다. t7 사용을 보자:

@@ -362,26 +362,26 @@ ES5 메서드인 `filter()`를 이용하면 빈 칸을 제거할 수 있다.
 [...['a',,'c']]    //[ 'a', undefined, 'c' ]
 ```
 
-##18.5 Configuring which objects are spread by concat() (Symbol.isConcatSpreadable)
+##18.5 concat 메서드에 의해 펼쳐질지 여부에 대한 설정(Symbol.isConcatSpreadable)
 
-You can configure how Array.prototype.concat() treats objects by adding an (own or inherited) property whose key is the well-known symbol Symbol.isConcatSpreadable and whose value is a boolean.
+`Symbol.isConcatSpreadable`에 true 혹은 false를 지정함으로써 `Array.prototype.concat()` 메서드가 인자로 지정한 객체들을 어떻게 취급하는지를 설정할 수 있다.
 
-###18.5.1 Default for Arrays: spreading
-By default, Array.prototype.concat() spreads Arrays into its result: their indexed elements become elements of the result:
+###18.5.1 배열의 기본값 : spreading(true)
+기본적으로 Array.prototype.concat()은 배열에 대해 펼친 상태로 결과에 반영한다.
 ```js
 const arr1 = ['c', 'd'];
 ['a', 'b'].concat(arr1, 'e');   // ['a', 'b', 'c', 'd', 'e']
 ```
 
-With Symbol.isConcatSpreadable, you can override the default and avoid spreading for Arrays:
+`Symbol.isConcatSpreadable`을 false로 지정하면 배열에 대해 펼쳐지지 않은 상태로 결합동작을 수행할 수 있다.
 ```js
 const arr2 = ['c', 'd'];
 arr2[Symbol.isConcatSpreadable] = false;
 ['a', 'b'].concat(arr2, 'e');    // ['a', 'b', ['c','d'], 'e']
 ```
 
-###18.5.2 Default for non-Arrays: no spreading
-For non-Arrays, the default is not to spread:
+###18.5.2 유사배열객체에 대한 기본값 : non-spreading(false)
+유사배열객체에 대해서는 기본적으로 펼치지 않은 채로 결합을 수행한다.
 ```js
 const arrayLike = {length: 2, 0: 'c', 1: 'd'};
 console.log(['a', 'b'].concat(arrayLike, 'e'));
@@ -391,7 +391,7 @@ console.log(Array.prototype.concat.call(arrayLike, ['e','f'], 'g'));
   // [arrayLike, 'e', 'f', 'g']
 ```
 
-You can use Symbol.isConcatSpreadable to force spreading:
+`Symbol.isConcatSpreadable`을 true로 지정하면 펼친 상태로 결합을 수행할 수 있다.
 ```js
 arrayLike[Symbol.isConcatSpreadable] = true;
 console.log(['a', 'b'].concat(arrayLike, 'e'));
@@ -400,8 +400,11 @@ console.log(Array.prototype.concat.call(arrayLike, ['e','f'], 'g'));
   // ['c', 'd', 'e', 'f', 'g']
 ```
 
-###18.5.3 Detecting Arrays
-How does concat() determine if a parameter is an Array? It uses the same algorithm as Array.isArray(). Whether or not Array.prototype is in the prototype chain makes no difference for that algorithm. That is important, because, in ES5 and earlier, hacks were used to subclass Array and those must continue to work (see the section on __proto__ in this book):
+_배열 및 유사배열객체 이외의 객체에 대해서는 무조건 non-spreading(false)로 동작한다._
+
+###18.5.3 배열 탐지
+`concat()` 메서드는 `Array.isArray()`와 동일한 알고리즘을 사용하여 파라미터가 배열인지 여부를 결정한다. 이 알고리즘은 `Array.prototype`이 프로토타입 체인에 속해있는지 여부와 관계 없이 잘 동작한다. ES5 및 그 이전 시절에는 이와 같이 동작하게 하기 위해 Array의 서브클래스에 핵을 사용했던 점에 비추어보면, 이는 매우 의미있는 변화이다(본 책의 __proto__ 섹션을 보자).
+> That is important, because, in ES5 and earlier, hacks were used to subclass Array and those must continue to work (see the section on __proto__ in this book).
 
 ```js
 const arr = [];
@@ -411,22 +414,26 @@ Object.setPrototypeOf(arr, null);
 Array.isArray(arr)     // true
 ```
 
-###18.5.4 Symbol.isConcatSpreadable in the standard library
-No object in the ES6 standard library has a property with the key Symbol.isConcatSpreadable. This mechanism therefore exists purely for browser APIs and user code.
 
-Consequences:
-- Subclasses of Array are spread by default (because their instances are Array objects).
-- A subclass of Array can prevent its instances from being spread by setting a property to false whose key is Symbol.isConcatSpreadable. That property can be a prototype property or an instance property.
-- Other Array-like objects are spread by concat() if property [Symbol.isConcatSpreadable] is true. That would enable one, for example, to turn on spreading for some Array-like DOM collections.
-- Typed Arrays are not spread. They don’t have a method concat(), either.
+###18.5.4 Symbol.isConcatSpreadable in the standard library
+ES6 표준 라이브러리의 어떤 객체도 Symbol.isConcatSpreadable을 키로 하는 프로퍼티를 갖고 있지 않다. 따라서 이 작동구조는 순수하게 browser API와 user code에서만 존재하는 것이다.
+
+결론 :
+- Array의 서브클래스는 기본적으로 펼쳐진다 (이들의 인스턴스가 배열이기 때문에)
+- Array의 서브클래스는 Symbol.isConcatSpreadable 프로퍼티를 false로 지정함으로써 그의 인스턴스가 concat 동작시에 펼쳐지는 것을 방지할 수 있다.
+- 유사배열객체는 Symbol.isConcatSpreadable 프로퍼티가 true일 경우에만 concat() 동작시에 펼쳐지게 된다.
+- Typed Arrays는 펼쳐지지 않으며, concat() 메서드를 갖고 있지 않다.
 
 > Symbol.isConcatSpreadable in the ES6 spec
-> In the description of Array.prototype.concat(), you can see that spreading requires an object to be Array-like (property length plus indexed elements).
+> Array.prototype.concat(), you can see that spreading requires an object to be Array-like (property length plus indexed elements).
 > Whether or not to spread an object is determined via the spec operation IsConcatSpreadable(). The last step is the default (equivalent to Array.isArray()) and the property [Symbol.isConcatSpreadable] is retrieved via a normal Get() operation, meaning that it doesn’t matter whether it is own or inherited.
 
-##18.6 The numeric range of Array indices
-For Arrays, ES6 still has the same rules as ES5:
+##18.6 배열 원소의 수량적 한계
+ES6의 배열은 ES5의 규칙을 그대로 따른다.
 
-Array lengths l are in the range 0 ≤ l ≤ 232−1.
-Array indices i are in the range 0 ≤ i < 232−1.
-However, Typed Arrays have a larger range of indices: 0 ≤ i < 232−1 (253−1 is the largest integer that JavaScript’s floating point numbers can safely represent). That’s why generic Array methods such as push() and unshift() allow a larger range of indices. Range checks appropriate for Arrays are performed elsewhere, whenever length is set.
+Array length l 프로퍼티는 0 ≤ l ≤ 2^32−1 의 범위 내에서만 존재 가능하다.
+Array 원소 i는 0 ≤ i < 2^32−1 의 범위 내에서만 존재 가능하다.
+반면 Typed Array의 원소는 더 넓은 범위 : 0 ≤ i < 2^53−1 에서 존재 가능하다 (2^53−1 은 Javascript가 안전(정확)하게 표현할 수 있는 가장 큰 정수이다). 
+
+> 다음의 굵은 글씨로 표시된부분은 오타가 아닐까 합니다.
+> However, Typed Arrays have a larger range of indices: **0 ≤ i < 2^32−1** (2^53−1 is the largest integer that JavaScript’s floating point numbers can safely represent). That’s why generic Array methods such as push() and unshift() allow a larger range of indices. Range checks appropriate for Arrays are performed elsewhere, whenever length is set.
