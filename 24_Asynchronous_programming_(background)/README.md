@@ -311,10 +311,13 @@ readFileFunctional('myfile.txt', { encoding: 'utf8' },
 
 ### 24.3.3 지속 - 통과 스타일 (Continuation-passing style)
 
+콜백을 사용하는 스타일(특히 전에 보여준 기능적인 벙식)은 continuation-passing style (CPS) 이라고 하는데 다음 단계를 명시적으로 파라미터로 보내기 때문이다. 이것은 next 와 when 의 발생을 통해 함수 호출에 더 많은 제어를 제공한다.
 
-The programming style of using callbacks (especially in the functional manner shown previously) is also called continuation-passing style (CPS), because the next step (the continuation) is explicitly passed as a parameter. This gives an invoked function more control over what happens next and when.
+<sub>The programming style of using callbacks (especially in the functional manner shown previously) is also called continuation-passing style (CPS), because the next step (the continuation) is explicitly passed as a parameter. This gives an invoked function more control over what happens next and when.</sub>
 
-The following code illustrates CPS:
+다음 코드는 CPS 를 보여준다.
+
+<sub>The following code illustrates CPS:</sub>
 
 ```javascript
 console.log('A');
@@ -336,13 +339,15 @@ function identity(input, callback) {
 }
 ```
 
-For each step, the control flow of the program continues inside the callback. This leads to nested functions, which are sometimes referred to as callback hell. However, you can often avoid nesting, because JavaScript’s function declarations are hoisted (their definitions are evaluated at the beginning of their scope). That means that you can call ahead and invoke functions defined later in the program. The following code uses hoisting to flatten the previous example.
+각 단계동안 프로그램 제어의 흐름은 콜백 안에서 계속된다. 이건 중첩 함수에 리드되는데 때때로 이는 때때로 콜백 헬로 불려진다. 하지만 자바스크립트의 함수 선언은 호이스트(함수 정의는 반드시 스코프의 처음에 평가된다) 이기에 중첩을 회피할 수 있다. 이 뜻은 프로그램에서 호출 전 함수 정의를 해둔다는걸 의미한다. 다음 코드는 이전 예제를 호이스팅을 사용하여 폈다.
+
+<sub>For each step, the control flow of the program continues inside the callback. This leads to nested functions, which are sometimes referred to as callback hell. However, you can often avoid nesting, because JavaScript’s function declarations are hoisted (their definitions are evaluated at the beginning of their scope). That means that you can call ahead and invoke functions defined later in the program. The following code uses hoisting to flatten the previous example.</sub>
 
 ```javascript
 console.log('A');
 identity('B', step2);
 function step2(result2) {
-    // The program continues here
+    // 프로그램은 여기서 계속된다. (The program continues here)
     console.log(result2);
     identity('C', step3);
     console.log('D');
@@ -351,10 +356,16 @@ function step3(result3) {
    console.log(result3);
 }
 console.log('E');
-More information on CPS is given in [3].
 ```
 
-### 24.3.4 Composing code in CPS
+CPS에 대한 더 많은 정보는 [3](http://www.2ality.com/2012/06/continuation-passing-style.html) 에 있다
+
+<sub>More information on CPS is given in [3](http://www.2ality.com/2012/06/continuation-passing-style.html).</sub>
+
+### 24.3.4 CPS 구성 코드 (Composing code in CPS)
+
+보통의 자바스크립트 스타일에서 코드 조각을 구성하는
+
 In normal JavaScript style, you compose pieces of code via:
 
 Putting them one after another. This is blindingly obvious, but it’s good to remind ourselves that concatenating code in normal style is sequential composition.
