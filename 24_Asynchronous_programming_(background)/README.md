@@ -255,13 +255,18 @@ openRequest.onerror = function (error) {
 };
 ```
 
-먼저 요청 객ㅔ를 만들고 결과 알림을 받기 위한 이벤트 리스너를 추가한다. 하지만 명시적으로 요청을 대기할 필요가 없고, open()으로 종료된다. 그것은 현재 task가 완료 된 뒤 실행된다. 당신은 open을 호출한 뒤 이벤트 핸들러를 등록할 수(실제로 해야 한다) 있다.
+먼저 요청 객체를 만들고 결과 알림을 받기 위한 이벤트 리스너를 추가한다. 하지만 명시적으로 요청을 대기할 필요가 없고, open()으로 종료된다. 그것은 현재 task가 완료 된 뒤 실행된다. 당신은 open을 호출한 뒤 이벤트 핸들러를 등록할 수(실제로 해야 한다) 있다.
 
 <sub>You first create a request object, to which you add event listeners that are notified of results. However, you don’t need to explicitly queue the request, that is done by open(). It is executed after the current task is finished. That is why you can (and in fact must) register event handlers after calling open().</sub>
 
-If you are used to multi-threaded programming languages, this style of handling requests probably looks strange, as if it may be prone to race conditions. But, due to run to completion, things are always safe.
+만일 멀티 스레드 프로그래밍 언어를 사용하고 있다면, 이런 결과 핸들링은 race condition 경향으로 보이는 이상한 스타일로 보일 것이다. 하지만 실행과 완료에서 언제나 안전한 상황을 보장한다.
 
-#### 24.3.1.2 Events don’t work well for single results
+<sub>If you are used to multi-threaded programming languages, this style of handling requests probably looks strange, as if it may be prone to race conditions. But, due to run to completion, things are always safe.</sub>
+
+#### 24.3.1.2 이벤트는 단일 결과로 작동하지 않는다 (Events don’t work well for single results)
+
+
+
 This style of handling asynchronously computed results is OK if you receive results multiple times. If, however, there is only a single result then the verbosity becomes a problem. For that use case, callbacks have become popular.
 
 ### 24.3.2 Asynchronous results via callbacks
