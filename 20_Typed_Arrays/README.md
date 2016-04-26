@@ -58,15 +58,16 @@ Two kinds of objects work together in the Typed Array API:
     *   `DataView` 버퍼 내 어느 바이트 오프셋에 있는 데이터에도 접근 가능하게 해주고, 몇몇 데이터 타입(`Uint8`, `Float64` 등)으로 변환해 준다.
 
 This is a diagram of the structure of the Typed Array API (notable: all Typed Arrays have a common superclass):
-다음은 타입화 배열 API 구조를 도식화한 다이어그램이다.(주의: 모든 타입화 배열은 공통 superclass 를 갖는다.)
+다음은 타입화 배열의 API 구조를 그린 다이어그램이다.(주의: 모든 타입화 배열은 공통 superclass 를 갖는다.)
 
 ![TypedArray](http://exploringjs.com/es6/images/typed-arrays----typed_arrays_class_diagram.jpg)
 
-### 20.2.1Element types
+### 20.2.1 요소 타입(element types)
 
 The following element types are supported by the API:
+다음의 요소 타입들은 API에서 지원한다.
 
-| Element type | Bytes | Description | C type |
+| 요소타입 | Bytes | Description | C type |
 | --- | --- | --- | --- |
 | Int8 | 1 | 8-bit signed integer | signed char |
 | Uint8 | 1 | 8-bit unsigned integer | unsigned char |
@@ -79,17 +80,23 @@ The following element types are supported by the API:
 | Float64 | 8 | 64-bit floating point | double |
 
 The element type `Uint8C` is special: it is not supported by `DataView` and only exists to enable `Uint8ClampedArray`. This Typed Array is used by the `canvas` element (where it replaces `CanvasPixelArray`). The only difference between `Uint8C` and `Uint8` is how overflow and underflow are handled (as explained in the next section). It is recommended to avoid the former – [quoting Brendan Eich](https://mail.mozilla.org/pipermail/es-discuss/2015-August/043902.html):
+`Uint8C` 요소 타입은 특별하다. `DataView`에서 지원하지 않고, 오로지 `Uint8ClampedArray`가 활성화 됐을 때 존재한다. 이 타입화 배열은 `canvas` 요소에서 (`CanvasPixelArray`를 대체하는데) 쓰인다. `Uint8C`와 `Uint8`의 유일한 차이점은 (다음장에서 설명하겠지만) 어떻게 오버플로우와 언더플로우를 다루고 있느냐이다. 앞의 `Uint8C`는 사용을 피하는 것을 추천한다. – [브랜든 아이크 인용](https://mail.mozilla.org/pipermail/es-discuss/2015-August/043902.html)
 
 > Just to be super-clear (and I was around when it was born), `Uint8ClampedArray` is _totally_ a historical artifact (of the HTML5 canvas element). Avoid unless you really are doing canvas-y things.
+가장 확실한 것은 (만들어질 시점에 함께 했으므로) `Uint8ClampedArray`은 오로지 (HTML5 canvas 요소의) 역사적 부산물이라는 것이다. 정말 canvas-y 같은 것을 하는 것이 아니라면 사용을 피하라.
 
-### 20.2.2 Handling overflow and underflow
+### 20.2.2 오버플로와 언더플로 다루기
 
 Normally, when a value is out of the range of the element type, modulo arithmetic is used to convert it to a value within range. For signed and unsigned integers that means that:
+일반적으로 어떤 값이 요소 타입의 범위를 벗어나게 되면, 모듈로 연산을 통해 범위 안의 값으로 변환한다. signed/unsigned integers에서는 다음과 같은 의미를 갖는다.
 
 *   The highest value plus one is converted to the lowest value (0 for unsigned integers).
+*   가장 높은 값에 1을 더하면 가장 낮은 값으로 변한다. (0은 unsingned integers )
 *   The lowest value minus one is converted to the highest value.
+*   가장 낮은 값에서 1을 빼면 가장 높은 값으로 변한다.
 
 Modulo conversion for unsigned 8-bit integers:
+unsigned 8비트 인티저의 모듈로 변환 예시 : 
 
 ```javascript
 > const uint8 = new Uint8Array(1);
@@ -103,6 +110,7 @@ Modulo conversion for unsigned 8-bit integers:
 255
 ```
 Modulo conversion for signed 8-bit integers:
+signed 8비트 인티저의 모듈로 변환 예시 : 
 
 ```javascript
 > const int8 = new Int8Array(1);
@@ -117,9 +125,12 @@ Modulo conversion for signed 8-bit integers:
 ```
 
 Clamped conversion is different:
+클램프 변환은 다르다.
 
 *   All underflowing values are converted to the lowest value.
+*   모든 언더플로 값은 가장 작은 값으로 변한다.
 *   All overflowing values are converted to the highest value.
+*   모든 오버플로 값은 가장 높은 값으로 변한다.
 
 ```javascript
 > const uint8c = new Uint8ClampedArray(1);
@@ -132,7 +143,7 @@ Clamped conversion is different:
 > uint8c[0] = -1; uint8c[0] // underflow
 0
 ```
-### 20.2.3 Endianness
+### 20.2.3 엔디언(Endianness)
 
 Whenever a type (such as `Uint16`) is stored as multiple bytes, _endianness_ matters:
 
