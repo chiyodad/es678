@@ -146,20 +146,29 @@ Clamped conversion is different:
 ### 20.2.3 엔디언(Endianness)
 
 Whenever a type (such as `Uint16`) is stored as multiple bytes, _endianness_ matters:
+타입이 (`Uint16` 같이) 멀티 바이트로 저장될 경우 엔디언 문제가 생긴다.
 
 *   Big endian: the most significant byte comes first. For example, the `Uint16` value 0xABCD is stored as two bytes – first 0xAB, then 0xCD.
+*   빅 엔디언(Big endian) : 가장 큰 단위의 바이트가 먼저 오는 것이다. 예를 들어 `Unint16` 값 0xABCD는 2바이트로 저장되는데, 0xAB가 먼저오고, 그 뒤로 0xCD가 온다.
 *   Little endian: the least significant byte comes first. For example, the `Uint16` value 0xABCD is stored as two bytes – first 0xCD, then 0xAB.
+*   리틀 엔디언(Little endian) : 가장 작은 단위의 바이트가 먼저 오는 것이다. 예를 들어 `Unint16` 값 0xABCD는 2바이트로 저장되는데, 0xCD가 먼저오고, 그 뒤로 0xAB가 온다.
 
 Endianness tends to be fixed per CPU architecture and consistent across native APIs. Typed Arrays are used to communicate with those APIs, which is why their endianness follows the endianness of the platform and can’t be changed.
+엔디언은 CPU 아키텍처를 따르고, 네이티브 API를 통틀어 일관성을 유지하려는 경향이 있다. 타입화 배열은 이런 API와 통신을 하기위해 사용되는데, 이는 플래폼의 엔디언을 따르고 변경할 수 없는 원인이 된다.
 
 On the other hand, the endianness of protocols and binary files varies and is fixed across platforms. Therefore, we must be able to access data with either endianness. DataViews serve this use case and let you specify endianness when you get or set a value.
+반면에 프로토콜의 엔디언과 이진 파일은 플래폼과 무관하게 다양하고, 고정되어 있다. 그러므로 우리는 모든 방식의 엔디언에 접근할 수 있어야만 한다. 데이터뷰(DataViews)는 이러한 다양한 사례를 제공해주고, 사용자가 값을 얻거나, 저장할 때 엔디언을 특정할 수 있도록 해준다. 
 
-[Quoting Wikipedia on Endianness](https://en.wikipedia.org/wiki/Endianness):
+[위키피디아의 엔디언에 관한 설명](https://en.wikipedia.org/wiki/Endianness):
 
 *   Big-endian representation is the most common convention in data networking; fields in the protocols of the Internet protocol suite, such as IPv4, IPv6, TCP, and UDP, are transmitted in big-endian order. For this reason, big-endian byte order is also referred to as network byte order.
+*   빅엔디언 표현은 데이터 네트워킹에서 매우 일반적인 규칙이다. IPv4나 IPv6, TCP, UDP 등과 같은 인터넷 프로토콜 스위트의 프로토콜 영역에서는 빅엔디언 순서로 전송된다. 이 때문에 빅엔디언 바이트 순서는 또한 네트워크 바이트 순서라고도 한다.
 *   Little-endian storage is popular for microprocessors in part due to significant historical influence on microprocessor designs by Intel Corporation.
+*   리틀엔디언 저장소는 주로 마이크로프로서 쓰이는데, 이는 인텔에서 디자인한 마이크로프로세서에 역사적으로 막대한 영향을 받았기 때문이다.
 
 You can use the following function to determine the endianness of a platform.
+다음 함수를 사용함으로써 플래폼의 엔디언을 결정할 수 있다. 
+
 ```javascript
 const BIG_ENDIAN = Symbol('BIG_ENDIAN');
 const LITTLE_ENDIAN = Symbol('LITTLE_ENDIAN');
@@ -178,10 +187,13 @@ function getPlatformEndianness() {
 ```
 
 There are also platforms that arrange _words_ (pairs of bytes) with a different endianness than bytes inside words. That is called mixed endianness. Should you want to support such a platform then it is easy to extend the previous code.
+플래폼 중에서 문자(바이트 짝)을 문자 안의 바이트보다는 다른 엔디언으로 정리할 때도 있다. 이를 혼합(mixed) 엔디언이라고 한다. 이러한 플래폼을 지원하고 싶다면, 위의 코드를 확장하는 것편이 나을 것이다.
 
-### 20.2.4 Negative indices
+### 20.2.4 음수 인덱스(Negative indices)
 
 With the bracket operator `[ ]`, you can only use non-negative indices (starting at 0). The methods of ArrayBuffers, Typed Arrays and DataViews work differently: every index can be negative. If it is, it counts backwards from the length. In other words, it is added to the length to produce a normal index. Therefore `-1` refers to the last element, `-2` to the second-last, etc. Methods of normal Arrays work the same way.
+`[ ]` 안에는 음수가 아닌 (0으로 시작하는) 인덱스만을 넣을 수 있다. 배열 버퍼의 메소드와 타입화 배열, 데이터뷰는 서로 다르게 작동한다. 모든 인덱스는 음수가 될 수 있다. 그렇다면, 길이를 뒤에서부터 셀 수도 있을 것이다. 다시 말해, 일반적인 인덱스를 만들기 위해 길이에 더해진다. 그러므로 `-1`은 마지막 요소를 가리키며, `-2`는 뒤에서 두번째, 그리고 나머지는 마찬가지다. 일반적인 배열의 메소드도 동일하다.
+
 
 ```javascript
 > const ui8 = Uint8Array.of(0, 1, 2);
@@ -190,11 +202,13 @@ Uint8Array [ 2 ]
 ```
 
 Offsets, on the other hand, must be non-negative. If, for example, you pass `-1` to:
+반면에 오프셋은 절대 음수이면 안된다. 예를 들어 다음과 같이 `-1`을 넣는다면
 
 ```javascript
 DataView.prototype.getInt8(byteOffset)
 ```
 then you get a `RangeError`.
+`RangeError` 가 발생한다.
 
 ## 20.3 ArrayBuffers
 
