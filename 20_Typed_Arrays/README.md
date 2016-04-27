@@ -35,7 +35,7 @@ console.log(dataView.getUint8(0)); // 5
 다음은 타입화 배열의 주 사용 예시이다.
 *   이진 데이터 처리 : HTML Canvas 요소에 쓰이는 이미지 데이터 조작, 이진 데이터 파싱, 이진 네트워크 프로토콜 처리 등.
 *   네이티브 API와의 통신 : 네이티브 API는 종종 이진 포맷으로 데이터를 주고 받는데, 기존의 자바스크립트에서는 이를 저장은 물론 조작도 할 수 없었다. 이는 어떤 API와 통신을 하든 호출 시마다 데이터를 자바스크립트에서 바이너리로, 그리고 그 반대로 변환해야 했다는 의미이다. 타입화 배열은 이런 병목 현상을 없애준다. 네이티브 API 중 WebGL은 타입화 배열이 만들어진 한 이유이다. 더 많은 정보는 “[타입화 배열:브라우저에서의 이진 데이터](http://www.html5rocks.com/en/tutorials/webgl/typed_arrays/#toc-history)”(Ilmari Heikkinen, HTML5 Rocks)라는 글의 “[타입화 배열의 역사](http://www.html5rocks.com/en/tutorials/webgl/typed_arrays/#toc-history)” 섹션에서 찾아 볼 수 있다. 
-*   
+  
 타입화 배열 API에서는 다음 두 가지 오브젝트가 함께 돌아간다.
 *   버퍼(Buffers) : 이진 데이터를 담고 있는 `ArrayBuffer`의 인스턴스
 *  뷰(Views): 이진 데이터 접근 메소드를 제공한다. 뷰에는 두 가지가 있다.
@@ -180,55 +180,38 @@ The signature of the constructor is:
 ```javascript
 ArrayBuffer(length : number)
 ```
-Invoking this constructor via `new` creates an instance whose capacity is `length` bytes. Each of those bytes is initially 0.
+
 `new` 연산자를 통해 이 생성자를 호출하면, `length` 만큼의 저장공간을 갖고 있는 인스턴스가 만들어진다. 각각의 바이트의 초깃값은 0이다. 
 
 ### 20.3.2 정적 `ArrayBuffer` 메소드
 
 *   `ArrayBuffer.isView(arg)`
-    Returns `true` if `arg` is an object and a view for an ArrayBuffer. Only Typed Arrays and DataViews have the required internal property `[[ViewedArrayBuffer]]`. That means that this check is roughly equivalent to checking whether `arg` is an instance of a Typed Array or of `DataView`.
    `arg`가 객체이고, 배열버퍼의 뷰이면 `true`를 반환하다. 오직 타입화 배열과 DataViews 에만 필수 내장 프로퍼티인 `[[ViewedArrayBuffer]]`가 있다. 이는 이렇게 확인는 것이 대략적으로나마  `arg`가 배열버퍼나 `DataView`의 인스턴스인지 아닌지를 체크하는 것과 비슷하다는 의미이다.   
 
 ### 20.3.3 `ArrayBuffer.prototype` 프로퍼티
 
 *   `get ArrayBuffer.prototype.byteLength`
-    Returns the capacity of this ArrayBuffer in bytes.
    배열버퍼의 바이트 저장 가능 길이를 리턴한다. 
 *   `ArrayBuffer.prototype.slice(start, end)`
-    Creates a new ArrayBuffer that contains the bytes of this ArrayBuffer whose indices are greater than or equal to `start` and less than `end`. `start` and `end` can be negative (see Sect. “[Negative indices](ch_typed-arrays.html#sec_negative-typed-array-indices)”).
    인덱스가 `start`보다 크거나 같고, `end`보다는 작은 배열버퍼의 바이트를 담고있는 새로운 배열버퍼를 만든다. `start` 와 `end`는 음수가 될 수도 있다. (다음 섹션을 볼 것 “[음수 인덱스](#2024-음수-인덱스negative-indices)”)
 
 ## 20.4 타입화 배열Typed Arrays
+다양한 형태의 타입화 배열은 단지 요소의 타입에 따른 것이다. 
 
-The various kinds of Typed Array are only different w.r.t. to the type of their elements:
-다양한 형태의 타입화 배열은 단지 요소의 타입에 따라 달라지는 것이다. 
-
-*   Typed Arrays whose elements are integers: `Int8Array`, `Uint8Array`, `Uint8ClampedArray`, `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`
 *   인티저형 타입화 배열 : `Int8Array`, `Uint8Array`, `Uint8ClampedArray`, `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`
-*   Typed Arrays whose elements are floats: `Float32Array`, `Float64Array`
 *   플로트형 타입화 배열 : `Float32Array`, `Float64Array`
 
 ### 20.4.1 타입화 배열 VS 일반 배열
-
-Typed Arrays are much like normal Arrays: they have a `length`, elements can be accessed via the bracket operator `[ ]` and they have all of the standard Array methods. They differ from Arrays in the following ways:
 타입화 배열은 일반 배열과 거의 비슷하다. 둘다 `length`가 있고, 각괄호 `[ ]`를 통해 요소에 접근하며, 표준 배열 메소드를 갖고 있다. 다른 점은 다음과 같다. 
 
-*   All of their elements have the same type, setting elements converts values to that type.
 *   모든 배열 요소는 동일한 타입이며, 세팅한 요소는 해당 타입의 값으로 변환 된다. 
-*   They are contiguous. Normal Arrays can have _holes_ (indices in the range [0, `arr.length`) that have no associated element), Typed Arrays can’t.
 *   요소들은 연속적이다. 일반 배열은 ([0, `arr.length`] 범위 안에 있는 인덱스 중) 관련 요소가 없는 _빈요소_가 없다. 
-*   Initialized with zeros. This is a consequence of the previous item:
-*   0으로 초기화 된다. 이것은 앞선 아이템의 결과이다. 
-    *   `new Array(10)` creates a normal Array without any elements (it only has holes).
-    *   `new Array(10)` 은 아무런 요소가 없는 일반 배열을 만든다.(빈요소만 존재한다.)
-    *   `new Uint8Array(10)` creates a Typed Array whose 10 elements are all 0.
-    *   `new Uint8Array(10)` 은 10개의 요소가 모두 0인 타입화 배열을 만든다. 
-*   An associated buffer. The elements of a Typed Array `ta` are not stored in `ta`, they are stored in an associated ArrayBuffer that can be accessed via `ta.buffer`.
+*   최초 생성시 0으로 초기화 된다. 이것은 앞에서 설명한 바 있다.
+    *   `new Array(10)`은 아무런 요소가 없는 일반 배열을 만든다.(빈요소만 존재한다.)
+    *   `new Uint8Array(10)`은 10개의 요소가 모두 0인 타입화 배열을 만든다. 
 *   연관 버퍼. 타입화 배열 `ta` 의 요소는 `ta`에 저장되지 않고, `ta.buffer`로 접근 가능한 연관 배열버퍼에 저장된다. 
 
 ### 20.4.2 타입화 배열은 이터러블(iterable)하다. 
-
-Typed Arrays implement a method whose key is `Symbol.iterator` and are therefore iterable (consult chapter “[Iterables and iterators](http://exploringjs.com/es6/ch_iteration.html#ch_iteration)” for more information). That means that you can use the `for-of` loop and similar mechanisms in ES6:
 타입화 배열은 `Symbol.iterator`가 키인 메소드를 상속받고 있기 때문에 이터러블하다. (더 많은 자료는 [이터터블과 이터레이터(Iterables and iterators)](http://exploringjs.com/es6/ch_iteration.html#ch_iteration) 장을 참고 할 것) 이는 `for-of` 루프와 ES6의 비슷한 메커니즘을 사용할 수 있다는 뜻이다. 
 
 ```javascript
@@ -241,19 +224,16 @@ for (const byte of ui8) {
 // 1
 // 2
 ```
-ArrayBuffers and DataViews are not iterable.
+
 배열버퍼와 DataView는 이터러블하지 않다. 
 
 ### 20.4.3 타입화 배열과 일반 배열 변환하기
-
-To convert a normal Array to a Typed Array, you make it the parameter of a Typed Array constructor. For example:
 일반 배열을 타입화 배열로 변환하려면 타입화 배열의 생성자에 인자값으로 넣으면 된다. 예를 들어
 
 ```javascript
 > const tarr = new Uint8Array([0,1,2]);
 ```
 
-The classic way to convert a Typed Array to an Array is to invoke `Array.prototype.slice` on it. This trick works for all Array-like objects (such as `arguments`) and Typed Arrays are Array-like.
 타입화 배열을 일반 배열로 변환하는 전통적인 방법은 `Array.prototype.slice`를 호출하는 것이다. 이 트릭은 모든 (`arguments` 같은) 유사 배열 객체에 사용 가능하고, 타입화 배열은 유사 배열이다. 
 
 ```javascript
@@ -261,7 +241,6 @@ The classic way to convert a Typed Array to an Array is to invoke `Array.prototy
 [ 0, 1, 2 ]
 ```
 
-In ES6, you can use the spread operator (`...`), because Typed Arrays are iterable:
 ES6에서는 타입화 배열이 이터러블하므로 펼침 연산자(`...`)도 사용할 수 있다. 
 
 ```javascript
@@ -269,7 +248,6 @@ ES6에서는 타입화 배열이 이터러블하므로 펼침 연산자(`...`)�
 [ 0, 1, 2 ]
 ```
 
-Another ES6 alternative is `Array.from()`, which works with either iterables or Array-like objects:
 다른 ES6 대체 구현체는 `Array.from()`인데, 이는 이터러블 객체 뿐만 아니라 유사 배열 객체에도 사용 가능하다.
 ```javascript
 > Array.from(tarr)
@@ -277,51 +255,37 @@ Another ES6 alternative is `Array.from()`, which works with either iterables or 
 ```
 
 ### 20.4.4 타입화 배열을 위한 종 패턴(species pattern)
+몇가지 메소드들은 `this`와 유사한 새로운 인스턴스를 생성한다. 종 패턴은 생성자가 어떻게 사용되야 할지 설정할 수 있게 해준다. 예를 들어 `MyArray`라는 `Arrya`의 서브클래스를 만든다면, `map()`이 `MyArray`의 인스턴스를 만드는 것이 기본 설정이다. 만약 `Array`의 인스턴스로 만들고 싶다면 종 패턴을 사용하면 된다. 자세한 설명은 클라스 장에 있는 “[종 패턴](https://github.com/chiyodad/es678/tree/master/15_Classes#157-종-패턴-the-species-pattern)”에 잘 나와있다. 
 
-Some methods create new instances that are similar to `this`. The species pattern lets you configure what constructor should be used to do so. For example, if you create a subclass `MyArray` of `Array` then the default is that `map()` creates instances of `MyArray`. If you want it to create instances of `Array`, you can use the species pattern to make that happen. Details are explained in Sect “[The species pattern](http://exploringjs.com/es6/ch_classes.html#sec_species-pattern)” in the chapter on classes.
-
-몇가지 메소드들은 `this`와 유사한 새로운 인스턴스를 생성한다. 종 패턴은 생성자가 어떻게 사용되야 할지 설정할 수 있게 해준다. 예를 들어 `MyArray`라는 `Arrya`의 서브클래스를 만든다면, `map()`이 `MyArray`의 인슨턴스를 만드는 것이 기본 설정이다. 만약 `Array`의 인스턴스로 만들고 싶다면 종 패턴을 사용하면 된다. 자세한 설명은 클라스 장에 있는 “[종 패턴](https://github.com/chiyodad/es678/tree/master/15_Classes#157-종-패턴-the-species-pattern)”에 잘 나와있다. 
-
-ArrayBuffers use the species pattern in the following locations:
 배열버퍼는 다음 장소에서 종 패턴을 사용한다. 
 
 *   `ArrayBuffer.prototype.slice()`
-*   Whenever an ArrayBuffer is cloned inside a Typed Array or DataView.
 *   타입화 배열이나 DataView 내부의 배열버퍼가 복제될 때마다.
 
-Typed Arrays use the species pattern in the following locations:
 타입화 배열은 종 패턴을 다음 장소에서 사용한다. 
 *   `TypedArray<T>.prototype.filter()`
 *   `TypedArray<T>.prototype.map()`
 *   `TypedArray<T>.prototype.slice()`
 *   `TypedArray<T>.prototype.subarray()`
 
-DataViews don’t use the species pattern.
 DataView는 종 패턴을 사용하지 않는다. 
 
 ### 20.4.5 타입화 배열 상속 계보
 
-As you could see in the diagram at the beginning of this chapter, all Typed Array classes (`Uint8Array` etc.) have a common superclass. I’m calling that superclass `TypedArray`, but it is not directly accessible from JavaScript (the ES6 specification calls it _the intrinsic object `%TypedArray%`_). `TypedArray.prototype` houses all methods of Typed Arrays.
 이 장 앞쪽의 다이어그램에서 볼 수 있듯이 (`Uint8Array` 등) 모든 타입화 배열은 하나의 공통 슈퍼클래스를 갖고 있다. 나는 이것을 슈퍼클래스 `TypedArray`라고 부르는데, 자바스크립트에서 직접 접근할 수는 없다(ES6 스펙에서는 이를 _내장 오브젝트 `%TypedArray%`_ 라고 한다). `TypedArray.prototype`은 모든 타입화 배열의 메소드를 담고 있다. 
 
 ### 20.4.6 정적 `TypedArray` 메소드
-
-Both static `TypedArray` methods are inherited by its subclasses .
 (`Uint8Array` 등) 모든 정적 `TypedArray` 메소드는 슈퍼클래스를 상속받는다. 
 
 #### 20.4.6.1 `TypedArray.of()`
-
-This method has the signature:
 이 메소드는 다음 시그니처를 갖는다.
 ```javascript
 TypedArray.of(...items)
 ```
 
-It creates a new Typed Array that is an instance of `this` (the class on which `of()` was invoked). The elements of that instance are the parameters of `of()`.
 이는 `this`(`of()`가 호출된 클래스) 대신 새로운 타입화 배열을 만든다. 해당 인스턴스의 요소는 `of()`의 인자이다. 
 
-You can think of `of()` as a custom literal for Typed Arrays:
-`of()`를 타입화 배열을 위한 커스텀 문자열로 여겨도 된다. 
+`of()`를 타입화 배열을 위한 커스텀 문자열로 여겨도 된다. :
 
 ```javascript
 > Float32Array.of(0.151, -8, 3.7)
@@ -329,24 +293,22 @@ Float32Array [ 0.151, -8, 3.7 ]
 ```
 
 #### 20.4.6.2 `TypedArray.from()`
-
-This method has the signature:
-이 메소드는 다음과 같은 시그니처를 갖고 있따. 
+이 메소드는 다음과 같은 시그니처를 갖고 있다. : 
 
 ```javascript
 TypedArray<U>.from(source : Iterable<T>, mapfn? : T => U, thisArg?)
 ```
-It converts the iterable `source` into an instance of `this` (a Typed Array).
+
 이는 이터러블 `source`를 `this`(타입화 배열)의 인스턴스로 바꿔준다. 
-For example, normal Arrays are iterable and can be converted with this method:
 예를 들어 일반 배열은 이터러블하고 이 메소드로 변경 가능하다. :
+
 ```javascript
 > Uint16Array.from([0, 1, 2])
 Uint16Array [ 0, 1, 2 ]
 ```
 
-Typed Arrays are iterable, too:
 타입화 배열 역시 이터러블하다. 
+
 ```javascript
 > const ui16 = Uint16Array.from(Uint8Array.of(0, 1, 2));
 > ui16 instanceof Uint16Array
@@ -355,21 +317,18 @@ true
 
 The optional `mapfn` lets you transform the elements of `source` before they become elements of the result. Why perform the two steps _mapping_ and _conversion_ in one go? Compared to performing the first step separately, via `source.map()`, there are two advantages:
  
-선택적 `mapfn` `source`의 요소를 결과의 요소가 되기 전으로 변경할 수 있도록 해준다. 왜 _매핑(mapping)_ 과 _컨벤션(conversion)_의 2가지 일을 한번에 수행할까? `source.map()`로 첫 번째 단계를 분리하여 수행하는 것과 비교해 보면 두 가지 이점이 있다.
-1.  No intermediate Array or Typed Array is needed.
+선택적 `mapfn` `source`의 요소를 결과의 요소가 되기 전으로 변경할 수 있도록 해준다. 왜 _매핑(mapping)_ 과 _컨벤션(conversion)_의 2가지 일을 한번에 수행할까? `source.map()`로 첫 번째 단계를 분리하여 수행하는 것과 비교해 보면 두 가지 장점이 있다.
+
 1.  중간에 배열이나 타입화 배열이 필요 없다.
-2.  When converting a Typed Array to a Typed Array whose elements have a higher precision, the mapping step can make use of that higher precision.
 2.  한 타입화 배열을 정밀도가 더 높은 요소를 타입화 배열로 변환 할 때 매핑 단계에서 더 높은 정밀도의 배열을 활용할 수 있다. 
 
-To illustrate the second advantage, let’s use `map()` to double the elements of a Typed Array:
-2번째 이점을 알아보기 위해 `map()` 을 사용하여 타입화 배열의 요소의 값을 2배로 만들어 보자.
+2번째 장점을 알아보기 위해 `map()` 을 사용하여 타입화 배열의 요소의 값을 2배로 만들어 보자.
 
 ```javascript
 > Int8Array.of(127, 126, 125).map(x => 2 * x)
 Int8Array [ -2, -4, -6 ]
 ```
 
-As you can see, the values overflow and are coerced into the `Int8` range of values. If map via `from()`, you can choose the type of the result so that values don’t overflow:
 보다시피 값들이 오버플로되고 `Int8` 범위의 값들로 강제로 변경되었다. 만약 `from()`을 통해 맵을 하면 결과값의 타입을 선택할 수 있고, 요소 값들은 오버플로되지 않을 것이다. 
 
 ```javascript
@@ -379,27 +338,19 @@ Int16Array [ 254, 252, 250 ]
 
 [According to Allen Wirfs-Brock](https://twitter.com/awbjs/status/585199958661472257), mapping between Typed Arrays was what motivated the `mapfn` parameter of `from()`.
 
-[Allen Wirfs-Brock에 따르면](https://twitter.com/awbjs/status/585199958661472257), mapping between Typed Arrays was what motivated the `mapfn` parameter of `from()`.
-타입화 배열간의 매핑은 `from()`의 `mapfn` 인자에 달렸다고 한다. 
+[Allen Wirfs-Brock에 따르면](https://twitter.com/awbjs/status/585199958661472257), 타입화 배열간의 매핑은 `from()`의 `mapfn` 인자에 달렸다고 한다. 
 
 ### 20.4.7 `TypedArray.prototype` 프로퍼티
-
-Indices accepted by Typed Array methods can be negative (they work like traditional Array methods that way). Offsets must be non-negative. For details, see Sect. “[Negative indices](ch_typed-arrays.html#sec_negative-typed-array-indices)”.
 타입화 배열 메소드 들이 받는 인덱스는 음수가 될 수 있다(전통적인 배열 메소드가 그런 방식으로 동작한다). 자세한 내용은 “[음수 인덱스](#2024-음수-인덱스negative-indices)”를 참고할 것.
 
 ##### 20.4.7.1 타입화 배열에만 있는 메소드
-
-The following properties are specific to Typed Arrays, normal Arrays don’t have them:
 다음 프로퍼티는 타입화 배열에만 존재하고, 일반 배열에는 없는 것들이다. 
 
 *   `get TypedArray<T>.prototype.buffer : ArrayBuffer`
-    Returns the buffer backing this Typed Array.
     해당 타입화 배열의 배열 버퍼를 반환한다. 
 *   `get TypedArray<T>.prototype.byteLength : number`
-    Returns the size in bytes of this Typed Array’s buffer.
     해당 타입화 배열의 사이즈를 배열한다.
 *   `get TypedArray<T>.prototype.byteOffset : number`
-    Returns the offset where this Typed Array “starts” inside its ArrayBuffer.
     해당 타입화 배열 내부의 배열버퍼의 "시작점(start)"의 오프셋을 반환한다.  
 *   `TypedArray<T>.prototype.set(arrayOrTypedArray, offset=0) : void`
     Copies all elements of `arrayOrTypedArray` to this Typed Array. The element at index 0 of `arrayOrTypedArray` is written to index `offset` of this Typed Array (etc.).
@@ -410,8 +361,6 @@ The following properties are specific to Typed Arrays, normal Arrays don’t hav
     Returns a new Typed Array that has the same buffer as this Typed Array, but a (generally) smaller range. If `begin` is non-negative then the first element of the resulting Typed Array is `this[begin]`, the second `this[begin+1]` (etc.). If `begin` in negative, it is converted appropriately.
 
 ##### 20.4.7.2 배열 메소드
-
-The following methods are basically the same as the methods of normal Arrays:
 다음 메소드는 기본적으로 일반 배열과 동일하다. 
 
 *   `TypedArray<T>.prototype.copyWithin(target : number, start : number, end = this.length) : This`
@@ -459,25 +408,18 @@ The following methods are basically the same as the methods of normal Arrays:
 *   `TypedArray<T>.prototype.values() : Iterable<T>`
     Returns an iterable over the values of this Typed Array.
 
-Due to all of these methods being available for Arrays, you can consult the following two sources to find out more about how they work:
 위의 모든 메소드들은 일반 배열 메소드에서도 사용할 수 있기 때문에, 다음 두 가지 소스를 보고 어떻게 동작하는지 참고할 것.
 
 *   The following methods are new in ES6 and explained in chapter “[New Array features](ch_arrays.html#ch_arrays)”: `copyWithin`, `entries`, `fill`, `find`, `findIndex`, `keys`, `values`.
-*   
-*   All other methods are explained in chapter “[Arrays](http://speakingjs.com/es5/ch18.html)” of “Speaking JavaScript”.
 *   다른 메소드들은 "자바스크립트를 말하다"의 “[배열](http://speakingjs.com/es5/ch18.html)” 장에서 확인 할 수 있다. 
 
-Note that while normal Array methods are generic (any Array-like `this` is OK), the methods listed in this section are not (`this` must be a Typed Array).
 일반 배열 메소드들은 제네릭한 반면에(어떤 유사 배열이 `this`이든 괜찮다), 이 절에서 나열한 메소드들은 그렇지 않다(`this`는 타입화 배열이어야만 한다). 
 
 ### 20.4.8 `«ElementType»Array` 생성자
-
-Each Typed Array constructor has a name that follows the pattern `«ElementType»Array`, where `«ElementType»` is one of the element types in the table at the beginning. That means that there are 9 constructors for Typed Arrays: `Int8Array`, `Uint8Array`, `Uint8ClampedArray` (element type `Uint8C`), `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`, `Float32Array`, `Float64Array`.
 각각의 타입화 배열 생성자는 `«ElementType»Array` 패턴의 이름을 갖고 있고, ``«ElementType»`은 처음 보여준 표의 요소 타입 중 하나이다. 
 따라서 타입화 배열에는 다음  9개의 생성자가 존재한다. `Int8Array`, `Uint8Array`, `Uint8ClampedArray` (요소 타입  `Uint8C`), `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`, `Float32Array`, `Float64Array`.
 
-Each constructor has five _overloaded_ versions – it behaves differently depending on how many arguments it receives and what their types are:
-각각의 생성자는 5개의 _오버로딩_버전이 존재하는데, 각각의 인자 타입과 개수에 따라 다르게 동작한다. 
+각각의 생성자는 5개의 _오버로딩_버전이 존재하는데, 각각의 인자 타입과 개수에 따라 다르게 동작한다. :
 
 *   `«ElementType»Array(buffer, byteOffset=0, length?)`
     Creates a new Typed Array whose buffer is `buffer`. It starts accessing the buffer at the given `byteOffset` and will have the given `length`. Note that `length` counts elements of the Typed Array (with 1–4 bytes each), not bytes.
@@ -490,8 +432,7 @@ Each constructor has five _overloaded_ versions – it behaves differently depen
 *   `«ElementType»Array(arrayLikeObject)`
     Treats `arrayLikeObject` like an Array and creates a new TypedArray that has the same length and elements. Values that are too large or small are converted appropriately.
 
-The following code shows three different ways of creating the same Typed Array:
-다음 코드는 동일한 타입화 배열을 생성하는 3가지 다른 방법을 보여준다. 
+다음 코드는 동일한 타입화 배열을 생성하는 3가지 다른 방법을 보여준다. :
 
 ```javascript
 const tarr1 = new Uint8Array([1,2,3]);
@@ -503,10 +444,10 @@ tarr3[0] = 0;
 tarr3[1] = 1;
 tarr3[2] = 2;
 ```
+
 ### 20.4.9 정적 `«ElementType»Array` 프로퍼티
 
 *   `«ElementType»Array.BYTES_PER_ELEMENT`
-    Counts how many bytes are needed to store a single element:
     요소 하나를 저장하기 위해서 얼마나 많은 바이트가 필요한지 센다. 
 
     ```javascript
@@ -525,14 +466,12 @@ tarr3[2] = 2;
 
 #### 20.4.11 타입화 배열 합치기(Concatenating Typed Arrays)
 
-Typed Arrays don’t have a method `concat()`, like normal Arrays do. The work-around is to use the method
 타입화 배열은 일반 배열과 달리 `concat()` 메소드가 따로 없다. 따라서 이를 사용하기 위해서는 우회해야 한다. 
 
 ```javascript
 typedArray.set(arrayOrTypedArray, offset=0)
 ```
 
-That method copies an existing Typed Array (or normal Array) into `typedArray` at index `offset`. Then you only have to make sure that `typedArray` is big enough to hold all (Typed) Arrays you want to concatenate:
 이 메소드는 타입화 배열(또는 일반 배열)을 `offset`위치에 있는 `typeArray`로 복사해 넣는다. 그러면 `typeArray` 를 합치고자하는 모든 (타입화) 배열의 크기 만큼만 만들어 주기만 하면 된다. 
 
 
@@ -577,7 +516,6 @@ console.log(concatenate(Uint8Array, Uint8Array.of(1, 2), Uint8Array.of(3, 4)));
 
 ### 20.6 타입화 배열을 지원하는 브라우저 API
 
-Typed Arrays have been around for a while, so there are quite a few browser APIs that support them.
 타입화 배열은 그동안 계속 있었기 때문에 꽤 많은 브라우저 API가 이를 지원한다. 
 
 #### 20.6.1 File API
@@ -751,21 +689,13 @@ More information on the structure of JPEG files:
 *   “[JPEG File Interchange Format: File format structure](https://en.wikipedia.org/wiki/JPEG_File_Interchange_Format#File_format_structure)” (on Wikipedia)
 
 ## 20.8 가용성
-
-Much of the Typed Array API is implemented by all modern JavaScript engines, but several features are new to ECMAScript 6:
 대부분의 타입화 배열 API가 모던 자바스크립트 엔진에서 동작하지만, 다음 특징들은 ES6에서 새로 도입 된 것이다. 
 
-*   Static methods borrowed from Arrays: `TypedArray<T>.from()`, `TypedArray<T>.of()`
 *   배열에서 가져온 정적 메소드 : `TypedArray<T>.from()`, `TypedArray<T>.of()`
-*   Prototype methods borrowed from Arrays: `TypedArray<T>.prototype.map()` etc.
 *   배열에서 가져온 프로토타입 메소드 : `TypedArray<T>.prototype.map()` 등.
-*   Typed Arrays are iterable
 *   타입화 배열은 이터러블하다.
-*   Support for the species pattern
 *   종 패턴 지원
-*   An inheritance hierarchy where `TypedArray<T>` is the superclass of all Typed Array classes
 *   `TypedArray<T>`가 모든 타입화 배열 클래스의 슈퍼클래스인 상속 구조인 점
 
-It may take a while until these are available everywhere. As usual kangax’ “[ES6 compatibility table](https://kangax.github.io/compat-table/es6/#typed_arrays)” describes the status quo.
 아마도 모든 곳에서 쓸 수 있게 되기까지는 시간이 좀 걸릴 것이다. 여느 때처럼  kangax’ “[ES6 compatibility table](https://kangax.github.io/compat-table/es6/#typed_arrays)”에서 확인 가능하다. 
 
