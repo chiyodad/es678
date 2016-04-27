@@ -15,15 +15,11 @@ const dataView = new DataView(typedArray.buffer);
 console.log(dataView.getUint8(0)); // 5
 ```
 
-Instances of `ArrayBuffer` store the binary data to be processed. Two kinds of views are used to access the data:
 `ArrayBuffer` 인스턴스는 처리를 위해 이진 데이터를 저장한다. 데이터에 접근할 수 있는 View에는 다음과 같이 2가지가 있다. 
 
-* Typed Arrays (`Uint8Array, Int16Array, Float32Array,` etc.) interpret the ArrayBuffer as an indexed sequence of elements of a single type.
 * 타입화 배열(`Uint8Array`, `Int16Array`, `Float32Array` 등등)은 ArrayBuffer 를 싱글 타입의 요소의 인덱스 시퀀스로 번역한다.
-* Instances of DataView let you access data as elements of several types (`Uint8, Int16, Float32,` etc.), at any byte offset inside an ArrayBuffer.
 * DataView 인스턴스는 ArrayBuffer 안에 있는 어떤 바이트 오프셋에서도 몇몇 타입(`Uint8`, `Int16`, `Float32` 등등)의 요소처럼 데이터에 접근 가능하게 해준다. 
 
-The following browser APIs support Typed Arrays ([details are mentioned in a dedicated section](http://exploringjs.com/es6/ch_typed-arrays.html#sec_browser-apis-supporting-typed-arrays)):
 아래의 브라우저 API는 타입화 배열을 지원한다. ([자세한 내용은 각 섹션에서 살펴 볼 것.](http://exploringjs.com/es6/ch_typed-arrays.html#sec_browser-apis-supporting-typed-arrays)):
 
 *   File API
@@ -34,37 +30,24 @@ The following browser APIs support Typed Arrays ([details are mentioned in a ded
 *   기타 등등
 
 ## 20.2 소개
-
-Much data one encounters on the web is text: JSON files, HTML files, CSS files, JavaScript code, etc. For handling such data, JavaScript’s built-in string data type works well. However, until a few years ago, JavaScript was ill-equipped to handle binary data. On 8 February 2011, [the Typed Array Specification 1.0](https://www.khronos.org/registry/typedarray/specs/1.0/) standardized facilities for handling binary data. By now, Typed Arrays are [well supported](http://caniuse.com/#feat=typedarrays) by various engines. With ECMAScript 6, they became part of the core language and gained many methods in the process that were previously only available for Arrays (`map()`, `filter()`, etc.).
-
 웹에서 마주치는 많은 데이터(JSON 파일, HTML 파일, CSS 파일, 자바스크립트 코드 등)는 텍스트이다. 이런 데이터를 다루는데 자바스크립트 내장(built-in) 스트링 데이터 타입은 충분히 쓸만하다. 그러나 몇 년 전만 해도 자바스크립트로 이진 데이터를 다루기는 쉽지 않았다. 2011년 8월, 이진 데이터를 위한 [타입화 배열 스펙 1.0](https://www.khronos.org/registry/typedarray/specs/1.0/)이 표준화 되었다. 이제는 타입화 배열를 다양 엔진에서 [제대로 지원한다](http://caniuse.com/#feat=typedarrays). ES6에 이르러 타입화 배열은 언어 중심(core)의 한 부분이 되었고, 이전에는 배열에서만 사용 가능했던 많은 메소드(`map()`, `filter()` 등등)도 얻게 되었다.
 
-The main uses cases for Typed Arrays are:
 다음은 타입화 배열의 주 사용 예시이다.
-*   Processing binary data: manipulating image data in HTML Canvas elements, parsing binary files, handling binary network protocols, etc.
 *   이진 데이터 처리 : HTML Canvas 요소에 쓰이는 이미지 데이터 조작, 이진 데이터 파싱, 이진 네트워크 프로토콜 처리 등.
-*   Interacting with native APIs: Native APIs often receive and return data in a binary format, which you could neither store nor manipulate well in traditional JavaScript. That meant that whenever you were communicating with such an API, data had to be converted from JavaScript to binary and back, for every call. Typed Arrays eliminate this bottleneck. One example of communicating with native APIs is WebGL, for which Typed Arrays were initially created. Section “[History of Typed Arrays](http://www.html5rocks.com/en/tutorials/webgl/typed_arrays/#toc-history)” of the article “[Typed Arrays: Binary Data in the Browser](http://www.html5rocks.com/en/tutorials/webgl/typed_arrays/#toc-history)” (by Ilmari Heikkinen for HTML5 Rocks) has more information.
 *   네이티브 API와의 통신 : 네이티브 API는 종종 이진 포맷으로 데이터를 주고 받는데, 기존의 자바스크립트에서는 이를 저장은 물론 조작도 할 수 없었다. 이는 어떤 API와 통신을 하든 호출 시마다 데이터를 자바스크립트에서 바이너리로, 그리고 그 반대로 변환해야 했다는 의미이다. 타입화 배열은 이런 병목 현상을 없애준다. 네이티브 API 중 WebGL은 타입화 배열이 만들어진 한 이유이다. 더 많은 정보는 “[타입화 배열:브라우저에서의 이진 데이터](http://www.html5rocks.com/en/tutorials/webgl/typed_arrays/#toc-history)”(Ilmari Heikkinen, HTML5 Rocks)라는 글의 “[타입화 배열의 역사](http://www.html5rocks.com/en/tutorials/webgl/typed_arrays/#toc-history)” 섹션에서 찾아 볼 수 있다. 
-
-Two kinds of objects work together in the Typed Array API:
-타입화 배열 API에서는 다음 두 가지 오브젝트가 함께 동작한다.
-*   Buffers: Instances of `ArrayBuffer` hold the binary data.
+*   
+타입화 배열 API에서는 다음 두 가지 오브젝트가 함께 돌아간다.
 *   버퍼(Buffers) : 이진 데이터를 담고 있는 `ArrayBuffer`의 인스턴스
-*   Views: provide the methods for accessing the binary data. There are two kinds of views:
-    *   An instance of a Typed Array constructor (`Uint8Array`, `Float64Array`, etc.) works much like a normal Array, but only allows a single type for its elements and doesn’t have holes.
-    *   An instance of `DataView` lets you access data at any byte offset in the buffer, and interprets that data as one of several types (`Uint8`, `Float64`, etc.).
 *  뷰(Views): 이진 데이터 접근 메소드를 제공한다. 뷰에는 두 가지가 있다.
     *   타입화 배열 생성자(`Uint8Array`, `Float64Array` 등등)의 인스턴스는 일반 배열과 매우 흡사하게 동작하지만, 오직 한 가지 타입의 요소만 허용하고 빈 요소는 갖지 않는다.
     *   `DataView` 버퍼 내 어느 바이트 오프셋에 있는 데이터에도 접근 가능하게 해주고, 몇몇 데이터 타입(`Uint8`, `Float64` 등)으로 변환해 준다.
 
-This is a diagram of the structure of the Typed Array API (notable: all Typed Arrays have a common superclass):
 다음은 타입화 배열의 API 구조를 그린 다이어그램이다.(주의: 모든 타입화 배열은 공통 superclass 를 갖는다.)
 
 ![TypedArray](http://exploringjs.com/es6/images/typed-arrays----typed_arrays_class_diagram.jpg)
 
 ### 20.2.1 요소 타입(element types)
 
-The following element types are supported by the API:
 다음의 요소 타입들은 API에서 지원한다.
 
 | 요소타입 | Bytes | Description | C type |
@@ -79,25 +62,17 @@ The following element types are supported by the API:
 | Float32 | 4 | 32-bit floating point | float |
 | Float64 | 8 | 64-bit floating point | double |
 
-The element type `Uint8C` is special: it is not supported by `DataView` and only exists to enable `Uint8ClampedArray`. This Typed Array is used by the `canvas` element (where it replaces `CanvasPixelArray`). The only difference between `Uint8C` and `Uint8` is how overflow and underflow are handled (as explained in the next section). It is recommended to avoid the former – [quoting Brendan Eich](https://mail.mozilla.org/pipermail/es-discuss/2015-August/043902.html):
 `Uint8C` 요소 타입은 특별하다. `DataView`에서 지원하지 않고, 오로지 `Uint8ClampedArray`가 활성화 됐을 때 존재한다. 이 타입화 배열은 `canvas` 요소에서 (`CanvasPixelArray`를 대체하는데) 쓰인다. `Uint8C`와 `Uint8`의 유일한 차이점은 (다음장에서 설명하겠지만) 어떻게 오버플로우와 언더플로우를 다루고 있느냐이다. 앞의 `Uint8C`는 사용을 피하는 것을 추천한다. – [브랜든 아이크 인용](https://mail.mozilla.org/pipermail/es-discuss/2015-August/043902.html)
 
-> Just to be super-clear (and I was around when it was born), `Uint8ClampedArray` is _totally_ a historical artifact (of the HTML5 canvas element). Avoid unless you really are doing canvas-y things.
-가장 확실한 것은 (만들어질 시점에 함께 했으므로) `Uint8ClampedArray`은 _오로지_ (HTML5 canvas 요소의) 역사적 부산물이라는 것이다. 정말 canvas-y 같은 것을 하는 것이 아니라면 사용을 피하라.
+> 가장 확실한 것은 (만들어질 시점에 함께 했으므로) `Uint8ClampedArray`은 _오로지_ (HTML5 canvas 요소의) 역사적 부산물이라는 것이다. 정말 canvas-y 같은 것을 하는 것이 아니라면 사용을 피하라.
 
 ### 20.2.2 오버플로와 언더플로 다루기
-
-Normally, when a value is out of the range of the element type, modulo arithmetic is used to convert it to a value within range. For signed and unsigned integers that means that:
 일반적으로 어떤 값이 요소 타입의 범위를 벗어나게 되면, 모듈로 연산을 통해 범위 안의 값으로 변환한다. signed/unsigned integers에서는 다음과 같은 의미를 갖는다.
 
-*   The highest value plus one is converted to the lowest value (0 for unsigned integers).
 *   가장 높은 값에 1을 더하면 가장 낮은 값으로 변한다. (0은 unsingned integers )
-*   The lowest value minus one is converted to the highest value.
 *   가장 낮은 값에서 1을 빼면 가장 높은 값으로 변한다.
 
-Modulo conversion for unsigned 8-bit integers:
 unsigned 8비트 인티저의 모듈로 변환 예시 : 
-
 ```javascript
 > const uint8 = new Uint8Array(1);
 > uint8[0] = 255; uint8[0] // highest value within range
@@ -109,9 +84,8 @@ unsigned 8비트 인티저의 모듈로 변환 예시 :
 > uint8[0] = -1; uint8[0] // underflow
 255
 ```
-Modulo conversion for signed 8-bit integers:
-signed 8비트 인티저의 모듈로 변환 예시 : 
 
+signed 8비트 인티저의 모듈로 변환 예시 : 
 ```javascript
 > const int8 = new Int8Array(1);
 > int8[0] = 127; int8[0] // highest value within range
@@ -124,13 +98,10 @@ signed 8비트 인티저의 모듈로 변환 예시 :
 127
 ```
 
-Clamped conversion is different:
-클램프 변환은 다르다.
+클램프(clamped) 변환은 다르다.
 
-*   All underflowing values are converted to the lowest value.
 *   모든 언더플로 값은 가장 작은 값으로 변한다.
-*   All overflowing values are converted to the highest value.
-*   모든 오버플로 값은 가장 높은 값으로 변한다.
+*   모든 오버플로 값은 가장 큰 값으로 변한다.
 
 ```javascript
 > const uint8c = new Uint8ClampedArray(1);
@@ -144,30 +115,20 @@ Clamped conversion is different:
 0
 ```
 ### 20.2.3 엔디언(Endianness)
-
-Whenever a type (such as `Uint16`) is stored as multiple bytes, _endianness_ matters:
 타입이 (`Uint16` 같이) 멀티 바이트로 저장될 경우 _엔디언_ 문제가 발생한다.
 
-*   Big endian: the most significant byte comes first. For example, the `Uint16` value 0xABCD is stored as two bytes – first 0xAB, then 0xCD.
 *   빅 엔디언(Big endian) : 가장 큰 단위의 바이트가 먼저 오는 것이다. 예를 들어 `Unint16` 값 0xABCD는 2바이트로 저장되는데, 0xAB가 먼저오고, 그 뒤로 0xCD가 온다.
-*   Little endian: the least significant byte comes first. For example, the `Uint16` value 0xABCD is stored as two bytes – first 0xCD, then 0xAB.
 *   리틀 엔디언(Little endian) : 가장 작은 단위의 바이트가 먼저 오는 것이다. 예를 들어 `Unint16` 값 0xABCD는 2바이트로 저장되는데, 0xCD가 먼저오고, 그 뒤로 0xAB가 온다.
 
-Endianness tends to be fixed per CPU architecture and consistent across native APIs. Typed Arrays are used to communicate with those APIs, which is why their endianness follows the endianness of the platform and can’t be changed.
-엔디언은 CPU 아키텍처를 따르고, 네이티브 API를 통틀어 일관성을 유지하려는 경향이 있다. 타입화 배열은 이런 API와 통신을 하기위해 사용되는데, 이는 플래폼의 엔디언을 따르고 변경할 수 없는 원인이 된다.
+엔디언은 CPU 아키텍처를 따르고, 네이티브 API를 통틀어 일관성을 유지하려는 경향이 있다. 타입화 배열은 이런 API와 통신을 하기위해 사용되는데, 이로인해 해당 플래폼의 엔디언을 따르고 변경이 불가능하다.
 
-On the other hand, the endianness of protocols and binary files varies and is fixed across platforms. Therefore, we must be able to access data with either endianness. DataViews serve this use case and let you specify endianness when you get or set a value.
 반면에 프로토콜의 엔디언과 이진 파일은 플래폼과 무관하게 다양하고, 고정되어 있다. 그러므로 우리는 모든 방식의 엔디언에 접근할 수 있어야만 한다. DataViews는 이러한 다양한 사례를 제공해주고, 사용자가 값을 얻거나, 저장할 때 엔디언을 특정할 수 있도록 해준다. 
 
 [위키피디아의 엔디언에 관한 설명](https://en.wikipedia.org/wiki/Endianness):
-
-*   Big-endian representation is the most common convention in data networking; fields in the protocols of the Internet protocol suite, such as IPv4, IPv6, TCP, and UDP, are transmitted in big-endian order. For this reason, big-endian byte order is also referred to as network byte order.
 *   빅엔디언 표현은 데이터 네트워킹에서 매우 일반적인 규칙이다. IPv4나 IPv6, TCP, UDP 등과 같은 인터넷 프로토콜 스위트의 프로토콜 영역에서는 빅엔디언 순서로 전송된다. 이 때문에 빅엔디언 바이트 순서는 또한 네트워크 바이트 순서라고도 한다.
-*   Little-endian storage is popular for microprocessors in part due to significant historical influence on microprocessor designs by Intel Corporation.
 *   리틀엔디언 저장소는 주로 마이크로프로서 쓰이는데, 이는 인텔에서 디자인한 마이크로프로세서에 역사적으로 막대한 영향을 받았기 때문이다.
 
-You can use the following function to determine the endianness of a platform.
-다음 함수를 사용함으로써 플래폼의 엔디언을 결정할 수 있다. 
+다음 함수를 통해 플래폼의 엔디언 종류를 확인할 수 있다. 
 
 ```javascript
 const BIG_ENDIAN = Symbol('BIG_ENDIAN');
@@ -191,7 +152,6 @@ There are also platforms that arrange _words_ (pairs of bytes) with a different 
 
 ### 20.2.4 음수 인덱스(Negative indices)
 
-With the bracket operator `[ ]`, you can only use non-negative indices (starting at 0). The methods of ArrayBuffers, Typed Arrays and DataViews work differently: every index can be negative. If it is, it counts backwards from the length. In other words, it is added to the length to produce a normal index. Therefore `-1` refers to the last element, `-2` to the second-last, etc. Methods of normal Arrays work the same way.
 `[ ]` 안에는 음수가 아닌 (0으로 시작하는) 인덱스만을 넣을 수 있다. 배열 버퍼의 메소드와 타입화 배열, DataViews는 서로 다르게 동작한다. 모든 인덱스는 음수가 될 수 있다. 그렇다면, 길이를 뒤에서부터 셀 수도 있을 것이다. 다시 말해, 일반적인 인덱스를 만들기 위해 길이에 더해진다. 그러므로 `-1`은 마지막 요소를 가리키며, `-2`는 뒤에서 두번째, 그리고 나머지는 마찬가지다. 일반적인 배열의 메소드도 동일하다.
 
 
@@ -201,18 +161,15 @@ With the bracket operator `[ ]`, you can only use non-negative indices (starting
 Uint8Array [ 2 ]
 ```
 
-Offsets, on the other hand, must be non-negative. If, for example, you pass `-1` to:
 반면에 오프셋은 절대 음수여서는 안된다. 예를 들어 다음과 같이 `-1`을 넣는다면
 
 ```javascript
 DataView.prototype.getInt8(byteOffset)
 ```
-then you get a `RangeError`.
 `RangeError` 가 발생한다.
 
 ## 20.3 배열버퍼(ArrayBuffers)
 
-ArrayBuffers store the data, _views_ (Typed Arrays and DataViews) let you read and change it. In order to create a DataView, you need to provide its constructor with an ArrayBuffer. Typed Array constructors can optionally create an ArrayBuffer for you.
 배열버퍼는 데이터를 저장하고, _뷰_(타입화 배열과 DataView)는 그것을 읽고 변경할 수 있게 해준다. DataView 를 만들기 위해서는 배열버퍼를 갖고 있는 생성자를 만들어줘야 한다. 타입화 배열 생성자는 선택적으로 배열버퍼를 만들 수 있게 해준다.   
 
 ### 20.3.1 `ArrayBuffer` 생성자
