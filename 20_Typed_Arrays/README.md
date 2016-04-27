@@ -319,66 +319,77 @@ Another ES6 alternative is `Array.from()`, which works with either iterables or 
 [ 0, 1, 2 ]
 ```
 
-### 20.4.4 타입화 배열을 위한 몇가지 패턴
+### 20.4.4 타입화 배열을 위한 종 패턴(species pattern)
 
 Some methods create new instances that are similar to `this`. The species pattern lets you configure what constructor should be used to do so. For example, if you create a subclass `MyArray` of `Array` then the default is that `map()` creates instances of `MyArray`. If you want it to create instances of `Array`, you can use the species pattern to make that happen. Details are explained in Sect “[The species pattern](http://exploringjs.com/es6/ch_classes.html#sec_species-pattern)” in the chapter on classes.
 
+몇가지 메소드들은 `this`와 유사한 새로운 인스턴스를 생성한다. 종 패턴은 생성자가 어떻게 사용되야 할지 설정할 수 있게 해준다. 예를 들어 `MyArray`라는 `Arrya`의 서브클래스를 만든다면, `map()`이 `MyArray`의 인슨턴스를 만드는 것이 기본 설정이다. 만약 `Array`의 인스턴스로 만들고 싶다면 종 패턴을 사용하면 된다. 자세한 설명은 클라스 장에 있는 “[종 패턴](https://github.com/chiyodad/es678/tree/master/15_Classes#157-종-패턴-the-species-pattern)”에 잘 나와있다. 
+
 ArrayBuffers use the species pattern in the following locations:
+배열버퍼는 다음 장소에서 종 패턴을 사용한다. 
 
 *   `ArrayBuffer.prototype.slice()`
 *   Whenever an ArrayBuffer is cloned inside a Typed Array or DataView.
+*   타입화 배열이나 DataView 내부의 배열버퍼가 복제될 때마다.
 
 Typed Arrays use the species pattern in the following locations:
-
+타입화 배열은 종 패턴을 다음 장소에서 사용한다. 
 *   `TypedArray<T>.prototype.filter()`
 *   `TypedArray<T>.prototype.map()`
 *   `TypedArray<T>.prototype.slice()`
 *   `TypedArray<T>.prototype.subarray()`
 
 DataViews don’t use the species pattern.
+DataView는 종 패턴을 사용하지 않는다. 
 
-### 20.4.5 The inheritance hierarchy of Typed Arrays
+### 20.4.5 타입화 배열 상속 계보
 
 As you could see in the diagram at the beginning of this chapter, all Typed Array classes (`Uint8Array` etc.) have a common superclass. I’m calling that superclass `TypedArray`, but it is not directly accessible from JavaScript (the ES6 specification calls it _the intrinsic object `%TypedArray%`_). `TypedArray.prototype` houses all methods of Typed Arrays.
+이 장 앞쪽의 다이어그램에서 볼 수 있듯이 (`Uint8Array` 등) 모든 타입화 배열은 하나의 공통 슈퍼클래스를 갖고 있다. 나는 이것을 슈퍼클래스 `TypedArray`라고 부르는데, 자바스크립트에서 직접 접근할 수는 없다(ES6 스펙에서는 이를 _내장 오브젝트 `%TypedArray%`_ 라고 한다). `TypedArray.prototype`은 모든 타입화 배열의 메소드를 담고 있다. 
 
-### 20.4.6 Static `TypedArray` methods
+### 20.4.6 정적 `TypedArray` 메소드
 
-Both static `TypedArray` methods are inherited by its subclasses (`Uint8Array` etc.).
+Both static `TypedArray` methods are inherited by its subclasses .
+(`Uint8Array` 등) 모든 정적 `TypedArray` 메소드는 슈퍼클래스를 상속받는다. 
 
 #### 20.4.6.1 `TypedArray.of()`
 
 This method has the signature:
+이 메소드는 다음 시그니처를 갖는다.
 ```javascript
 TypedArray.of(...items)
 ```
 
 It creates a new Typed Array that is an instance of `this` (the class on which `of()` was invoked). The elements of that instance are the parameters of `of()`.
+이는 `this`(`of()`가 호출된 클래스) 대신 새로운 타입화 배열을 만든다. 해당 인스턴스의 요소는 `of()`의 인자이다. 
 
 You can think of `of()` as a custom literal for Typed Arrays:
+`of()`를 타입화 배열을 위한 커스텀 문자열로 여겨도 된다. 
 
 ```javascript
 > Float32Array.of(0.151, -8, 3.7)
 Float32Array [ 0.151, -8, 3.7 ]
 ```
+
 #### 20.4.6.2 `TypedArray.from()`
 
 This method has the signature:
+이 메소드는 다음과 같은 시그니처를 갖고 있따. 
 
 ```javascript
 TypedArray<U>.from(source : Iterable<T>, mapfn? : T => U, thisArg?)
 ```
-
 It converts the iterable `source` into an instance of `this` (a Typed Array).
-
+이는 이터러블 `source`를 `this`(타입화 배열)의 인스턴스로 바꿔준다. 
 For example, normal Arrays are iterable and can be converted with this method:
-
+예를 들어 일반 배열은 이터러블하고 이 메소드로 변경 가능하다. :
 ```javascript
 > Uint16Array.from([0, 1, 2])
 Uint16Array [ 0, 1, 2 ]
 ```
 
 Typed Arrays are iterable, too:
-
+타입화 배열 역시 이터러블하다. 
 ```javascript
 > const ui16 = Uint16Array.from(Uint8Array.of(0, 1, 2));
 > ui16 instanceof Uint16Array
@@ -386,11 +397,15 @@ true
 ```
 
 The optional `mapfn` lets you transform the elements of `source` before they become elements of the result. Why perform the two steps _mapping_ and _conversion_ in one go? Compared to performing the first step separately, via `source.map()`, there are two advantages:
-
+ 
+선택적 `mapfn` `source`의 요소를 결과의 요소가 되기 전으로 변경할 수 있도록 해준다. 왜 _매핑(mapping)_ 과 _컨벤션(conversion)_의 2가지 일을 한번에 수행할까? `source.map()`로 첫 번째 단계를 분리하여 수행하는 것과 비교해 보면 두 가지 이점이 있다.
 1.  No intermediate Array or Typed Array is needed.
+1.  중간에 배열이나 타입화 배열이 필요 없다.
 2.  When converting a Typed Array to a Typed Array whose elements have a higher precision, the mapping step can make use of that higher precision.
+2.  한 타입화 배열을 정밀도가 더 높은 요소를 타입화 배열로 변환 할 때 매핑 단계에서 더 높은 정밀도의 배열을 활용할 수 있다. 
 
 To illustrate the second advantage, let’s use `map()` to double the elements of a Typed Array:
+2번째 이점을 알아보기 위해 `map()` 을 사용하여 타입화 배열의 요소의 값을 2배로 만들어 보자.
 
 ```javascript
 > Int8Array.of(127, 126, 125).map(x => 2 * x)
@@ -398,6 +413,7 @@ Int8Array [ -2, -4, -6 ]
 ```
 
 As you can see, the values overflow and are coerced into the `Int8` range of values. If map via `from()`, you can choose the type of the result so that values don’t overflow:
+보다시피 값들이 오버플로되고 `Int8` 범위의 값들로 강제로 변경되었다. 만약 `from()`을 통해 맵을 하면 결과값의 타입을 선택할 수 있고, 요소 값들은 오버플로되지 않을 것이다. 
 
 ```javascript
 > Int16Array.from(Int8Array.of(127, 126, 125), x => 2 * x)
@@ -405,6 +421,9 @@ Int16Array [ 254, 252, 250 ]
 ```
 
 [According to Allen Wirfs-Brock](https://twitter.com/awbjs/status/585199958661472257), mapping between Typed Arrays was what motivated the `mapfn` parameter of `from()`.
+
+[Allen Wirfs-Brock에 따르면](https://twitter.com/awbjs/status/585199958661472257), mapping between Typed Arrays was what motivated the `mapfn` parameter of `from()`.
+타입화 배열간의 매핑은 `from()`의 `mapfn` 인자에 달렸다고 한다. 
 
 ### 20.4.7 `TypedArray.prototype` properties
 
