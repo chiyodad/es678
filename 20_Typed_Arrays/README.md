@@ -83,7 +83,7 @@ The element type `Uint8C` is special: it is not supported by `DataView` and only
 `Uint8C` 요소 타입은 특별하다. `DataView`에서 지원하지 않고, 오로지 `Uint8ClampedArray`가 활성화 됐을 때 존재한다. 이 타입화 배열은 `canvas` 요소에서 (`CanvasPixelArray`를 대체하는데) 쓰인다. `Uint8C`와 `Uint8`의 유일한 차이점은 (다음장에서 설명하겠지만) 어떻게 오버플로우와 언더플로우를 다루고 있느냐이다. 앞의 `Uint8C`는 사용을 피하는 것을 추천한다. – [브랜든 아이크 인용](https://mail.mozilla.org/pipermail/es-discuss/2015-August/043902.html)
 
 > Just to be super-clear (and I was around when it was born), `Uint8ClampedArray` is _totally_ a historical artifact (of the HTML5 canvas element). Avoid unless you really are doing canvas-y things.
-가장 확실한 것은 (만들어질 시점에 함께 했으므로) `Uint8ClampedArray`은 오로지 (HTML5 canvas 요소의) 역사적 부산물이라는 것이다. 정말 canvas-y 같은 것을 하는 것이 아니라면 사용을 피하라.
+가장 확실한 것은 (만들어질 시점에 함께 했으므로) `Uint8ClampedArray`은 _오로지_ (HTML5 canvas 요소의) 역사적 부산물이라는 것이다. 정말 canvas-y 같은 것을 하는 것이 아니라면 사용을 피하라.
 
 ### 20.2.2 오버플로와 언더플로 다루기
 
@@ -146,7 +146,7 @@ Clamped conversion is different:
 ### 20.2.3 엔디언(Endianness)
 
 Whenever a type (such as `Uint16`) is stored as multiple bytes, _endianness_ matters:
-타입이 (`Uint16` 같이) 멀티 바이트로 저장될 경우 엔디언 문제가 생긴다.
+타입이 (`Uint16` 같이) 멀티 바이트로 저장될 경우 _엔디언_ 문제가 발생한다.
 
 *   Big endian: the most significant byte comes first. For example, the `Uint16` value 0xABCD is stored as two bytes – first 0xAB, then 0xCD.
 *   빅 엔디언(Big endian) : 가장 큰 단위의 바이트가 먼저 오는 것이다. 예를 들어 `Unint16` 값 0xABCD는 2바이트로 저장되는데, 0xAB가 먼저오고, 그 뒤로 0xCD가 온다.
@@ -157,7 +157,7 @@ Endianness tends to be fixed per CPU architecture and consistent across native A
 엔디언은 CPU 아키텍처를 따르고, 네이티브 API를 통틀어 일관성을 유지하려는 경향이 있다. 타입화 배열은 이런 API와 통신을 하기위해 사용되는데, 이는 플래폼의 엔디언을 따르고 변경할 수 없는 원인이 된다.
 
 On the other hand, the endianness of protocols and binary files varies and is fixed across platforms. Therefore, we must be able to access data with either endianness. DataViews serve this use case and let you specify endianness when you get or set a value.
-반면에 프로토콜의 엔디언과 이진 파일은 플래폼과 무관하게 다양하고, 고정되어 있다. 그러므로 우리는 모든 방식의 엔디언에 접근할 수 있어야만 한다. 데이터뷰(DataViews)는 이러한 다양한 사례를 제공해주고, 사용자가 값을 얻거나, 저장할 때 엔디언을 특정할 수 있도록 해준다. 
+반면에 프로토콜의 엔디언과 이진 파일은 플래폼과 무관하게 다양하고, 고정되어 있다. 그러므로 우리는 모든 방식의 엔디언에 접근할 수 있어야만 한다. DataViews는 이러한 다양한 사례를 제공해주고, 사용자가 값을 얻거나, 저장할 때 엔디언을 특정할 수 있도록 해준다. 
 
 [위키피디아의 엔디언에 관한 설명](https://en.wikipedia.org/wiki/Endianness):
 
@@ -187,12 +187,12 @@ function getPlatformEndianness() {
 ```
 
 There are also platforms that arrange _words_ (pairs of bytes) with a different endianness than bytes inside words. That is called mixed endianness. Should you want to support such a platform then it is easy to extend the previous code.
-플래폼 중에서 문자(바이트 짝)을 문자 안의 바이트보다는 다른 엔디언으로 정리할 때도 있다. 이를 혼합(mixed) 엔디언이라고 한다. 이러한 플래폼을 지원하고 싶다면, 위의 코드를 확장하는 것편이 나을 것이다.
+플래폼 중에서 _문자_(바이트 짝)을 문자 안의 바이트보다는 다른 엔디언으로 정리할 때도 있다. 이를 혼합(mixed) 엔디언이라고 한다. 이러한 플래폼을 지원하고 싶다면, 위의 코드를 확장하는 것편이 나을 것이다.
 
 ### 20.2.4 음수 인덱스(Negative indices)
 
 With the bracket operator `[ ]`, you can only use non-negative indices (starting at 0). The methods of ArrayBuffers, Typed Arrays and DataViews work differently: every index can be negative. If it is, it counts backwards from the length. In other words, it is added to the length to produce a normal index. Therefore `-1` refers to the last element, `-2` to the second-last, etc. Methods of normal Arrays work the same way.
-`[ ]` 안에는 음수가 아닌 (0으로 시작하는) 인덱스만을 넣을 수 있다. 배열 버퍼의 메소드와 타입화 배열, 데이터뷰는 서로 다르게 작동한다. 모든 인덱스는 음수가 될 수 있다. 그렇다면, 길이를 뒤에서부터 셀 수도 있을 것이다. 다시 말해, 일반적인 인덱스를 만들기 위해 길이에 더해진다. 그러므로 `-1`은 마지막 요소를 가리키며, `-2`는 뒤에서 두번째, 그리고 나머지는 마찬가지다. 일반적인 배열의 메소드도 동일하다.
+`[ ]` 안에는 음수가 아닌 (0으로 시작하는) 인덱스만을 넣을 수 있다. 배열 버퍼의 메소드와 타입화 배열, DataViews는 서로 다르게 동작한다. 모든 인덱스는 음수가 될 수 있다. 그렇다면, 길이를 뒤에서부터 셀 수도 있을 것이다. 다시 말해, 일반적인 인덱스를 만들기 위해 길이에 더해진다. 그러므로 `-1`은 마지막 요소를 가리키며, `-2`는 뒤에서 두번째, 그리고 나머지는 마찬가지다. 일반적인 배열의 메소드도 동일하다.
 
 
 ```javascript
@@ -202,7 +202,7 @@ Uint8Array [ 2 ]
 ```
 
 Offsets, on the other hand, must be non-negative. If, for example, you pass `-1` to:
-반면에 오프셋은 절대 음수이면 안된다. 예를 들어 다음과 같이 `-1`을 넣는다면
+반면에 오프셋은 절대 음수여서는 안된다. 예를 들어 다음과 같이 `-1`을 넣는다면
 
 ```javascript
 DataView.prototype.getInt8(byteOffset)
@@ -210,51 +210,69 @@ DataView.prototype.getInt8(byteOffset)
 then you get a `RangeError`.
 `RangeError` 가 발생한다.
 
-## 20.3 ArrayBuffers
+## 20.3 배열버퍼(ArrayBuffers)
 
 ArrayBuffers store the data, _views_ (Typed Arrays and DataViews) let you read and change it. In order to create a DataView, you need to provide its constructor with an ArrayBuffer. Typed Array constructors can optionally create an ArrayBuffer for you.
+배열버퍼는 데이터를 저장하고, _뷰_(타입화 배열과 DataView)는 그것을 읽고 변경할 수 있게 해준다. DataView 를 만들기 위해서는 배열버퍼를 갖고 있는 생성자를 만들어줘야 한다. 타입화 배열 생성자는 선택적으로 배열버퍼를 만들 수 있게 해준다.   
 
-### 20.3.1 `ArrayBuffer` constructor
+### 20.3.1 `ArrayBuffer` 생성자
 
 The signature of the constructor is:
+생성자 시그니처는 다음과 같다. 
+
 ```javascript
 ArrayBuffer(length : number)
 ```
 Invoking this constructor via `new` creates an instance whose capacity is `length` bytes. Each of those bytes is initially 0.
+`new` 연산자를 통해 이 생성자를 호출하면, `length` 만큼의 저장공간을 갖고 있는 인스턴스가 만들어진다. 각각의 바이트의 초깃값은 0이다. 
 
-### 20.3.2 Static `ArrayBuffer` methods
+### 20.3.2 정적 `ArrayBuffer` 메소드
 
 *   `ArrayBuffer.isView(arg)`
     Returns `true` if `arg` is an object and a view for an ArrayBuffer. Only Typed Arrays and DataViews have the required internal property `[[ViewedArrayBuffer]]`. That means that this check is roughly equivalent to checking whether `arg` is an instance of a Typed Array or of `DataView`.
+   `arg`가 객체이고, 배열버퍼의 뷰이면 `true`를 반환하다. 오직 타입화 배열과 DataViews 에만 필수 내장 프로퍼티인 `[[ViewedArrayBuffer]]`가 있다. 이는 이렇게 확인는 것이 대략적으로나마  `arg`가 배열버퍼나 `DataView`의 인스턴스인지 아닌지를 체크하는 것과 비슷하다는 의미이다.   
 
-### 20.3.3 `ArrayBuffer.prototype` properties
+### 20.3.3 `ArrayBuffer.prototype` 프로퍼티
 
 *   `get ArrayBuffer.prototype.byteLength`
     Returns the capacity of this ArrayBuffer in bytes.
+   배열버퍼의 바이트 저장 가능 길이를 리턴한다. 
 *   `ArrayBuffer.prototype.slice(start, end)`
     Creates a new ArrayBuffer that contains the bytes of this ArrayBuffer whose indices are greater than or equal to `start` and less than `end`. `start` and `end` can be negative (see Sect. “[Negative indices](ch_typed-arrays.html#sec_negative-typed-array-indices)”).
+   인덱스가 `start`보다 크거나 같고, `end`보다는 작은 배열버퍼의 바이트를 담고있는 새로운 배열버퍼를 만든다. `start` 와 `end`는 음수가 될 수도 있다. (다음 섹션을 볼 것 “[음수 인덱스](#2024-음수-인덱스negative-indices)”)
 
-## 20.4 Typed Arrays
+## 20.4 타입화 배열Typed Arrays
 
 The various kinds of Typed Array are only different w.r.t. to the type of their elements:
+다양한 형태의 타입화 배열은 단지 요소의 타입에 따라 달라지는 것이다. 
 
 *   Typed Arrays whose elements are integers: `Int8Array`, `Uint8Array`, `Uint8ClampedArray`, `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`
+*   인티저형 타입화 배열 : `Int8Array`, `Uint8Array`, `Uint8ClampedArray`, `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`
 *   Typed Arrays whose elements are floats: `Float32Array`, `Float64Array`
+*   플로트형 타입화 배열 : `Float32Array`, `Float64Array`
 
-### 20.4.1 Typed Arrays versus normal Arrays
+### 20.4.1 타입화 배열 VS 일반 배열
 
 Typed Arrays are much like normal Arrays: they have a `length`, elements can be accessed via the bracket operator `[ ]` and they have all of the standard Array methods. They differ from Arrays in the following ways:
+타입화 배열은 일반 배열과 거의 비슷하다. 둘다 `length`가 있고, 각괄호 `[ ]`를 통해 요소에 접근하며, 표준 배열 메소드를 갖고 있다. 다른 점은 다음과 같다. 
 
 *   All of their elements have the same type, setting elements converts values to that type.
+*   모든 배열 요소는 동일한 타입이며, 세팅한 요소는 해당 타입의 값으로 변환 된다. 
 *   They are contiguous. Normal Arrays can have _holes_ (indices in the range [0, `arr.length`) that have no associated element), Typed Arrays can’t.
+*   요소들은 연속적이다. 일반 배열은 ([0, `arr.length`] 범위 안에 있는 인덱스 중) 관련 요소가 없는 _빈요소_가 없다. 
 *   Initialized with zeros. This is a consequence of the previous item:
+*   0으로 초기화 된다. 이것은 앞선 아이템의 결과이다. 
     *   `new Array(10)` creates a normal Array without any elements (it only has holes).
+    *   `new Array(10)` 은 아무런 요소가 없는 일반 배열을 만든다.(빈요소만 존재한다.)
     *   `new Uint8Array(10)` creates a Typed Array whose 10 elements are all 0.
+    *   `new Uint8Array(10)` 은 10개의 요소가 모두 0인 타입화 배열을 만든다. 
 *   An associated buffer. The elements of a Typed Array `ta` are not stored in `ta`, they are stored in an associated ArrayBuffer that can be accessed via `ta.buffer`.
+*   연관 버퍼. 타입화 배열 `ta` 의 요소는 `ta`에 저장되지 않고, `ta.buffer`로 접근 가능한 연관 배열버퍼에 저장된다. 
 
-### 20.4.2 Typed Arrays are iterable
+### 20.4.2 타입화 배열은 이터러블(iterable)하다. 
 
 Typed Arrays implement a method whose key is `Symbol.iterator` and are therefore iterable (consult chapter “[Iterables and iterators](http://exploringjs.com/es6/ch_iteration.html#ch_iteration)” for more information). That means that you can use the `for-of` loop and similar mechanisms in ES6:
+타입화 배열은 `Symbol.iterator`가 키인 메소드를 상속받고 있기 때문에 이터러블하다. (더 많은 자료는 [이터터블과 이터레이터(Iterables and iterators)](http://exploringjs.com/es6/ch_iteration.html#ch_iteration) 장을 참고 할 것) 이는 `for-of` 루프와 ES6의 비슷한 메커니즘을 사용할 수 있다는 뜻이다. 
 
 ```javascript
 const ui8 = Uint8Array.of(0,1,2);
@@ -267,16 +285,19 @@ for (const byte of ui8) {
 // 2
 ```
 ArrayBuffers and DataViews are not iterable.
+배열버퍼와 DataView는 이터러블하지 않다. 
 
-### 20.4.3 Converting Typed Arrays to and from normal Arrays
+### 20.4.3 타입화 배열과 일반 배열 변환하기
 
 To convert a normal Array to a Typed Array, you make it the parameter of a Typed Array constructor. For example:
+일반 배열을 타입화 배열로 변환하려면 타입화 배열의 생성자에 인자값으로 넣으면 된다. 예를 들어
 
 ```javascript
 > const tarr = new Uint8Array([0,1,2]);
 ```
 
 The classic way to convert a Typed Array to an Array is to invoke `Array.prototype.slice` on it. This trick works for all Array-like objects (such as `arguments`) and Typed Arrays are Array-like.
+타입화 배열을 일반 배열로 변환하는 전통적인 방법은 `Array.prototype.slice`를 호출하는 것이다. 이 트릭은 모든 (`arguments` 같은) 유사 배열 객체에 사용 가능하고, 타입화 배열은 유사 배열이다. 
 
 ```javascript
 > Array.prototype.slice.call(tarr)
@@ -284,6 +305,7 @@ The classic way to convert a Typed Array to an Array is to invoke `Array.prototy
 ```
 
 In ES6, you can use the spread operator (`...`), because Typed Arrays are iterable:
+ES6에서는 타입화 배열이 이터러블하므로 펼침 연산자(`...`)도 사용할 수 있다. 
 
 ```javascript
 > [...tarr]
@@ -291,12 +313,13 @@ In ES6, you can use the spread operator (`...`), because Typed Arrays are iterab
 ```
 
 Another ES6 alternative is `Array.from()`, which works with either iterables or Array-like objects:
+다른 ES6 대체 구현체는 `Array.from()`인데, 이는 이터러블 객체 뿐만 아니라 유사 배열 객체에도 사용 가능하다.
 ```javascript
 > Array.from(tarr)
 [ 0, 1, 2 ]
 ```
 
-### <span class="section-number">20.4.4</span> The Species pattern for Typed Arrays
+### 20.4.4 타입화 배열을 위한 몇가지 패턴
 
 Some methods create new instances that are similar to `this`. The species pattern lets you configure what constructor should be used to do so. For example, if you create a subclass `MyArray` of `Array` then the default is that `map()` creates instances of `MyArray`. If you want it to create instances of `Array`, you can use the species pattern to make that happen. Details are explained in Sect “[The species pattern](http://exploringjs.com/es6/ch_classes.html#sec_species-pattern)” in the chapter on classes.
 
