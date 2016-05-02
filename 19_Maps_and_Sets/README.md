@@ -32,7 +32,7 @@ Array(나 iterable) 를 [key, value] 로 짝지어 Map의 초기 데이터로 �
 const map = new Map([
     [ 1, 'one' ],
     [ 2, 'two' ],
-    [ 3, 'three' ], // trailing comma is ignored
+    [ 3, 'three' ], // trailing comma is ignored // 끝에 컴마는 무시됨
 ]);
 ```
 ### 19.1.2 Sets
@@ -443,7 +443,9 @@ function strMapToObj(strMap) {
     const obj = Object.create(null);
     for (const [k,v] of strMap) {
         // We don’t escape the key '__proto__'
+        //__proto__를 피하지 않음
         // which can cause problems on older engines
+        //구 엔진에서 문제가 생길 수 있으므로
         obj[k] = v;
     }
     return obj;
@@ -457,6 +459,7 @@ function objToStrMap(obj) {
 }
 ```
 Let’s use these two functions:
+이 두 함수를 이용해보자:
 ```javascript
 > const myMap = new Map().set('yes', true).set('no', false);
 
@@ -467,8 +470,10 @@ Let’s use these two functions:
 [ [ 'yes', true ], [ 'no', false ] ]
 ```
 #### 19.2.9.2 The conversion to and from JSON
+JSON으로, JSON으로부터의 변환
 
 With these helper functions, the conversion to JSON works as follows:
+이 두 헬퍼 함수로 제이슨으로 형변환은 아래와 같이 동작한다 :
 ```javascript
 function strMapToJson(strMap) {
     return JSON.stringify(strMapToObj(strMap));
@@ -478,6 +483,7 @@ function jsonToStrMap(jsonStr) {
 }
 ```
 This is an example of using these functions:
+이 함수를 이용한 예시이다 :
 ```javascript
 > const myMap = new Map().set('yes', true).set('no', false);
 
@@ -488,41 +494,56 @@ This is an example of using these functions:
 Map {'yes' => true, 'no' => false}
 ```
 ### 19.2.10 Map API
-
+맵 API
 Constructor:
+생성자 :
 
     new Map(entries? : Iterable<[any,any]>)
     If you don’t provide the parameter iterable then an empty Map is created. If you do provide an iterable over [key, value] pairs then those pairs are used to add entries to the Map. For example:
+    이터러블을 변수로 넘기지 않으면 빈 맵이 생성된다. [키, 값] 쌍의 이터러블을 제공하면 이 쌍은 맵의 엔트리로 추가된다.
+    예를 들면:
 ```javascript
       const map = new Map([
           [ 1, 'one' ],
           [ 2, 'two' ],
-          [ 3, 'three' ], // trailing comma is ignored
+          [ 3, 'three' ], // trailing comma is ignored // 끝에 컴마는 무시됨
       ]);
 ```
 Handling single entries:
+하나의 앤트리를 다루기:
 
     Map.prototype.get(key) : any
+    키와 매핑된 값을 리턴한다. 맵에 그런 키가 없으면 undefined가 반환됨.
     Returns the value that key is mapped to in this Map. If there is no key key in this Map, undefined is returned.
     Map.prototype.set(key, value) : this
+    주어진 키에 주어진 값을 맵핑시킴. 이미 있는 엔트리의 키라면 수정될 것이고 아니면 새로 생성될 것이다.
+    이 메쏘드는 this를 리턴하고 이는 체이닝이 가능함을 의미한다.
     Maps the given key to the given value. If there is already an entry whose key is key, it is updated. Otherwise, a new entry is created. This method returns this, which means that you can chain it.
     Map.prototype.has(key) : boolean
+    이 키가 이 맵에 있는지 없는지를 반환.
     Returns whether the given key exists in this Map.
     Map.prototype.delete(key) : boolean
+    엔트리에 이 키가 있다면 삭제되고 true를, 아니라면 아무일도 발생하지 않고 false를 반환한다.
     If there is an entry whose key is key, it is removed and true is returned. Otherwise, nothing happens and false is returned.
 
 Handling all entries:
+모든 엔트리 다루기.:
 
     get Map.prototype.size : number
+    맵에 몇개의 엔트리가 들어있는지를 반환함.
     Returns how many entries there are in this Map.
     Map.prototype.clear() : void
+    맵의 모든 엔트리를 제거함.
     Removes all entries from this Map.
 
 Iterating and looping: happens in the order in which entries were added to a Map.
+반복과 루프:는 맵에 엔트리가 추가된 순서대로 일어난다.
 
     Map.prototype.entries() : Iterable<[any,any]>
+    맵의 [키,밸류] 쌍의 각 엔트리를 반환한다. 쌍의 배열은 언제나 길이가 2이다.
     Returns an iterable with one [key,value] pair for each entry in this Map. The pairs are Arrays of length 2.
     Map.prototype.forEach((value, key, collection) => void, thisArg?) : void
+    첫번째 인자는 
     The first parameter is a callback that is invoked once for each entry in this Map. If thisArg is provided, this is set to it for each invocation. Otherwise, this is set to undefined.
     Map.prototype.keys() : Iterable<any>
     Returns an iterable over all keys in this Map.
